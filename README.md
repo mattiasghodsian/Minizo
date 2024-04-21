@@ -18,10 +18,11 @@
 
 # Features
 
-- browsing by folder.
-- managing files.
-- grab youtube video and convert to audio file.
-
+- **Browsing by folder:** Dive into folders to view the files stored within them.
+- **File Management:** Easily delete or relocate files within your collection.
+- **Fast search:** YouTube Music fast search.
+- **Grab video:** Capture videos from various sources and effortlessly convert them into audio files.
+- more coming...
 
 # Requirements
 - [Node.js](https://nodejs.org/en)
@@ -29,9 +30,4 @@
 - [ffmpeg](https://ffmpeg.org/)
 
 # TODO
-- [ ] Docker file (+ydl +ffmpeg)
-- [ ] Frontend
-- [ ] Dev mode
-- [ ] Obtain meta data on track from Musicbrainz
-- [ ] Write meta data to file
-- [ ] Download files from frontend
+[Read current todo #issue01](https://github.com/mattiasghodsian/Minizo/issues/1)
