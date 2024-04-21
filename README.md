@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://github.com/mattiasghodsian/Iroh/">
-    <img alt="Iroh" src="assets/logo.svg?raw=true" height="150">
+  <a href="https://github.com/mattiasghodsian/Minizo/">
+    <img alt="Iroh" src="https://imgur.com/25ISXaS.png" height="150">
   </a>
   <p  align="center">Minizo is a sleek web app built with Node.js, Express.js, and Vue.js. <br> Minizo lets users effortlessly browse and manage their music collection and obtain tracks.</p>
 </p>
