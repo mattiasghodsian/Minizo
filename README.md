@@ -30,4 +30,4 @@
 - [ffmpeg](https://ffmpeg.org/)
 
 # TODO
-[Read current todo #issue01](https://github.com/mattiasghodsian/Minizo/issues/1)
+Read current todo [issue #1](https://github.com/mattiasghodsian/Minizo/issues/1)
