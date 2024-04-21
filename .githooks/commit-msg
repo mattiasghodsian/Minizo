@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Validate commit log
+commit_regex='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|types)([\w ]*)?: .{1,200}$'
+
+if ! grep -iqE "$commit_regex" "$1"; then
+    echo
+    echo "  Error: proper commit message format is required for automated changelog generation."
+    echo
+    echo "  - Commit message can not be made without using one of the allowed keywords:"
+    echo "  - feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|type"
+    echo
+    exit 1
+fi
