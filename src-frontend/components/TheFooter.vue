@@ -19,6 +19,6 @@ onMounted(async (): Promise<void> => {
     v{{ apiStore.version }}
     <span v-if="apiStore.environment == 'dev'"> dev-mode</span>
     <br />
-    Made with love <span class="text-minizo-red">♥️</span>
+    Made with <span class="text-minizo-red">♥️</span>
   </div>
 </template>
