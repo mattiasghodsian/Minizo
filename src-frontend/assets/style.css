@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-neutral-300;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-minizo-red;
+}
