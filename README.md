@@ -23,7 +23,7 @@
 - **Fast search:** YouTube Music fast search.
 - **Grab video:** Capture videos from various sources and effortlessly convert them into audio files.
 - more coming...
-- 
+
 ## Project background 
 This project began as a solution to access and manage my audio files beyond my local network, but it grew into something else over time. And now, Minizo is open for everyone to enjoy.
 
@@ -31,6 +31,11 @@ This project began as a solution to access and manage my audio files beyond my l
 - [Node.js](https://nodejs.org/en)
 - [youtube-dl](https://github.com/ytdl-org/youtube-dl)
 - [ffmpeg](https://ffmpeg.org/)
+
+## Screenshots
+| [![](https://imgur.com/tzGOxMJ.png)](https://imgur.com/tzGOxMJ.png) | [![](https://imgur.com/7WyVeYu.png)](https://imgur.com/7WyVeYu.png) | [![](https://imgur.com/1HCEUqD.png)](https://imgur.com/1HCEUqD.png) | [![](https://imgur.com/U4fKDGg.png)](https://imgur.com/U4fKDGg.png) |
+| :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: |
+
 
 # TODO
 Read current todo [issue #1](https://github.com/mattiasghodsian/Minizo/issues/1)
