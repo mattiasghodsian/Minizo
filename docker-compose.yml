@@ -6,7 +6,7 @@ services:
       - 3000:3000
     volumes:
       - ./:/srv
-      - /home/rakma/Music:/music:ro
+      - /home/user/Music:/music:ro
     restart: always
 
 networks:
