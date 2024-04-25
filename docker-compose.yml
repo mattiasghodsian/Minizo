@@ -1,12 +1,12 @@
 version: "3"
 services:
   minizo:
-    build: ./docker
+    build: .
     ports:
       - 3000:3000
     volumes:
       - ./:/srv
-      - /home/user/Music:/music:ro
+      - /home/user/Music:/music:rw
     restart: always
 
 networks:
