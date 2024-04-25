@@ -3,6 +3,9 @@ FROM node:18
 LABEL maintainer="mattiasghodsian"
 LABEL description="Docker image for Minizo"
 LABEL org.opencontainers.image.url="https://github.com/mattiasghodsian/Minizo"
+LABEL org.opencontainers.image.source="https://github.com/mattiasghodsian/Minizo"
+LABEL org.opencontainers.image.description="Docker image for Minizo"
+LABEL org.opencontainers.image.licenses="GPL-3.0"
 
 RUN apt-get update && \
     apt-get install -y git make python3 zip pandoc ffmpeg && \
