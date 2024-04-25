@@ -38,7 +38,7 @@ export const download = (req, res) => {
     '--metadata-from-title',
     '%(artist)s - %(title)s',
     '-o',
-    `${savePath}/%(title)s.%(ext)s`
+    `${savePath}/%(artist)s - %(title)s.%(ext)s`
   ];
 
   if (format === "mp3" || format === "mp4") {
