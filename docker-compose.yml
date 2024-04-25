@@ -1,0 +1,15 @@
+version: "3"
+services:
+  minizo:
+    build: ./docker
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/srv
+      - /home/rakma/Music:/music:ro
+    restart: always
+
+networks:
+  default:
+    name: minizo
+    external: true
