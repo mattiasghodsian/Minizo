@@ -8,6 +8,7 @@ LABEL org.opencontainers.image.source="https://github.com/mattiasghodsian/Minizo
 LABEL org.opencontainers.image.description="Docker image for Minizo"
 LABEL org.opencontainers.image.licenses="GPL-3.0"
 
+# Update and install needed packages
 RUN apt-get update && \
     apt-get install -y git make python3 zip pandoc ffmpeg && \
     apt-get clean
@@ -26,5 +27,9 @@ RUN youtube-dl --version
 WORKDIR /srv
 # COPY . .
 EXPOSE 3000
+
+# Create music folder and set permissions
+RUN mkdir /music
+RUN chown -R $(id -u):$(id -g) /music
 
 CMD ["npm", "run", "serve"]
