@@ -2,18 +2,25 @@ import express from 'express';
 import path from 'path';
 import * as fs from 'fs';
 import { viewDirectory, deleteFile, relocateFile } from '../controllers/directoryController.js';
-import { download , getMeta, downloadFile} from '../controllers/downloadController.js';
+import { download , downloadFile} from '../controllers/downloadController.js';
+import { search, getRelease } from '../controllers/metaController.js'
 
 const backendRouter = express.Router();
 
+// File & Directory Routes
 backendRouter.get('/files/:directory', viewDirectory);
 backendRouter.delete('/files/:directory', deleteFile);
 backendRouter.post('/files/relocate/:directory', relocateFile);
 
+// Download Routes
 backendRouter.post('/download', download);
 backendRouter.get('/download/file', downloadFile);
-backendRouter.get('/download/meta', getMeta);
 
+// Meta Routes
+backendRouter.get('/meta/search', search);
+backendRouter.get('/meta/release', getRelease);
+
+// Misc Routes
 backendRouter.get('/info', (req, res) => {
   const MUSIC_STORAGE = process.env.MUSIC_STORAGE;
   const directories = fs.readdirSync(MUSIC_STORAGE)
