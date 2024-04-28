@@ -22,7 +22,9 @@
 - **File Management:** Easily delete or relocate files within your collection.
 - **Fast search:** YouTube Music fast search.
 - **Grab video:** Capture videos from various sources and effortlessly convert them into audio files.
-- more coming...
+- **Authentication:** Enable optional basic authentication for the project.
+- **MusicBrainz:** Retrieve metadata from MusicBrainz (token required).
+- and much more.
 
 ## Project background 
 This project began as a solution to access and manage my audio files beyond my local network, but it grew into something else over time. And now, Minizo is open for everyone to enjoy.
@@ -31,6 +33,16 @@ This project began as a solution to access and manage my audio files beyond my l
 - [Node.js](https://nodejs.org/en)
 - [youtube-dl](https://github.com/ytdl-org/youtube-dl)
 - [ffmpeg](https://ffmpeg.org/)
+
+# How to 
+- Clone down the project `git clone git@github.com:mattiasghodsian/Minizo.git`
+- Install all dependencies `npm install` and create a new .env file `cp .env.example .env` and fill in all fields
+- Run the project with `npm run serve` and visit `http://localhost:3000`
+
+# Docker
+- Clone down the project and install npm dependencies.
+- Change user and music volume path and run `docker-compose build`
+- Spin up the project `docker-compose up -d` and visit `http://localhost:3000`
 
 ## Screenshots
 | [![](https://imgur.com/tzGOxMJ.png)](https://imgur.com/tzGOxMJ.png) | [![](https://imgur.com/7WyVeYu.png)](https://imgur.com/7WyVeYu.png) | [![](https://imgur.com/1HCEUqD.png)](https://imgur.com/1HCEUqD.png) | [![](https://imgur.com/U4fKDGg.png)](https://imgur.com/U4fKDGg.png) |
