@@ -144,7 +144,11 @@ onMounted(async (): Promise<void> => {
         </thead>
         <tbody class="">
           <tr class="cursor-pointer hover:bg-minizo-base hover:text-white" v-for="(result, index) in results" :key="index">
-            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.artist">{{ result['artist-credit'][0].name }}</td>
+            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.artist">
+              <span v-for="(artist, aIndex) in result['artist-credit']" :key="aIndex">
+                {{ artist.name }} {{ artist.joinphrase }}
+              </span>
+            </td>
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.track">{{ result.title }}</td>
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.release">{{ result.date }}</td>
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.country">{{ result.country }}</td>
@@ -153,7 +157,7 @@ onMounted(async (): Promise<void> => {
           </tr>
         </tbody>
       </table>
-  </div>
+    </div>
 
     <div class="flex w-full">
       <BaseButton @click="handleAction('close')"
