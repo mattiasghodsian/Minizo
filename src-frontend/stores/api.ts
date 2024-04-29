@@ -206,7 +206,35 @@ export const useApiStore = defineStore('api', {
       } catch (error) {
         throw error.response;
       }
-    }
+    },
+    async metaSearch(artist: string, track: string) {
+      let axiosConfig = {
+        ...defaultConfig,
+        method: 'get',
+        url: `api/meta/search`,
+        params: {
+          artist: artist,
+          track: track,
+        }
+      }
+
+      if (this.auth && this.authStatus){
+        axiosConfig = {
+          ...axiosConfig,
+          auth: {
+            username: this.username,
+            password: this.password
+          }
+        };
+      }
+
+      return await axios.request(axiosConfig)
+      .then((response) => {
+        return response.data;
+      }).catch((error) => {
+        throw error.response;
+      });
+    },
   },
   getters: {
   },
