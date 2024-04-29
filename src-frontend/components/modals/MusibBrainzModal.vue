@@ -130,28 +130,30 @@ onMounted(async (): Promise<void> => {
       <TextInput class="w-1/2" :placeholder="track" @input="updateProperty('track', $event)" />
     </div>
 
-    <table class="table-auto w-full text-sm">
-      <thead class="border-b">
-        <tr>
-          <th class="py-1 px-3 text-left" v-if="!settings.artist">Artist</th>
-          <th class="py-1 px-3 text-left" v-if="!settings.track">Track</th>
-          <th class="py-1 px-3 text-left" v-if="!settings.release">Release</th>
-          <th class="py-1 px-3 text-left" v-if="!settings.country">Country</th>
-          <th class="py-1 px-3 text-left" v-if="!settings.label">Label</th>
-          <th class="py-1 px-3 text-left" v-if="!settings.score">Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="cursor-pointer hover:bg-minizo-base hover:text-white" v-for="(result, index) in results" :key="index">
-          <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.artist">{{ result['artist-credit'][0].name }}</td>
-          <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.track">{{ result.title }}</td>
-          <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.release">{{ result.date }}</td>
-          <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.country">{{ result.country }}</td>
-          <td class="py-1 px-3" v-if="!settings.label">{{ result['label-info'][0].label.name }}</td>
-          <td class="py-1 px-3" v-if="!settings.score">{{ result.score }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="w-full max-h-[300px] overflow-y-scroll overflow-x-auto">
+      <table class="table-auto w-full text-sm">
+        <thead class="border-b">
+          <tr>
+            <th class="py-1 px-3 text-left" v-if="!settings.artist">Artist</th>
+            <th class="py-1 px-3 text-left" v-if="!settings.track">Track</th>
+            <th class="py-1 px-3 text-left" v-if="!settings.release">Release</th>
+            <th class="py-1 px-3 text-left" v-if="!settings.country">Country</th>
+            <th class="py-1 px-3 text-left" v-if="!settings.label">Label</th>
+            <th class="py-1 px-3 text-left" v-if="!settings.score">Score</th>
+          </tr>
+        </thead>
+        <tbody class="">
+          <tr class="cursor-pointer hover:bg-minizo-base hover:text-white" v-for="(result, index) in results" :key="index">
+            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.artist">{{ result['artist-credit'][0].name }}</td>
+            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.track">{{ result.title }}</td>
+            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.release">{{ result.date }}</td>
+            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.country">{{ result.country }}</td>
+            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.label">{{ result['label-info'][0].label.name }}</td>
+            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.score">{{ result.score }}</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
 
     <div class="flex w-full">
       <BaseButton @click="handleAction('close')"
