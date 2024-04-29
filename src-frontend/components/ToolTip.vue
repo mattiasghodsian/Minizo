@@ -19,7 +19,7 @@ const handler = (): void => {
 <template>
   <div class="relative">
     <IconInfo class="w-[19px] h-[19px] cursor-pointer" @mouseenter="handler" @mouseleave="handler" />
-    <div v-if="toggle" class="absolute  z-10 left-4 -top-0.5 whitespace-nowrap bg-black text-xs px-3 py-1 rounded-full left-[calc(100% + 10px)] top-0">
+    <div v-if="toggle" class="absolute  z-10 left-4 -top-0.5 whitespace-nowrap bg-black text-white text-xs px-3 py-1 rounded-full left-[calc(100% + 10px)] top-0">
       {{ description }}
     </div>
   </div>
