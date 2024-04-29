@@ -5,12 +5,15 @@ import IconDownload from '@/components/icons/IconDownload.vue';
 import IconYouTube from '@/components/icons/IconYouTube.vue';
 import IconTrashcan from '@/components/icons/IconTrashcan.vue';
 import IconFolder from '@/components/icons/IconFolder.vue';
+import IconBrain from '@/components/icons/IconBrain.vue';
 import YesNoModal from '@/components/modals/YesNoModal.vue';
 import MoveFile from '@/components/modals/MoveFile.vue';
+import MusicBrainzModal from '@/components/modals/MusibBrainzModal.vue';
 
 const apiStore = useApiStore();
 const deleteModal = ref<boolean>(false);
 const moveModal = ref<boolean>(false);
+const musicBrainzModal = ref<boolean>(false);
 
 const props = defineProps({
   index: {
@@ -50,6 +53,10 @@ const toggleDeleteModal = (): void => {
   deleteModal.value = !deleteModal.value;
 }
 
+const toggleMusicBrainzModal = (): void => {
+  musicBrainzModal.value = !musicBrainzModal.value;
+}
+
 const downloadFile = async (): Promise<void> => {
   await apiStore.downloadFile(props.fileName, apiStore.currentViewDIrectory);
 }
@@ -63,8 +70,12 @@ const toggleMoveModal = (): void => {
   <Teleport to="body">
     <YesNoModal v-if="deleteModal" @close="toggleDeleteModal()" @doAction="deleteFile()" />
     <MoveFile v-if="moveModal" :fileName="fileName" :index="index" @close="toggleMoveModal()" />
+    <MusicBrainzModal v-if="musicBrainzModal" :fileName="fileName" @close="toggleMusicBrainzModal()" />
   </Teleport>
   <ul class="flex justify-center gap-2">
+    <li class="flex justify-center align-middle">
+      <IconBrain class="w-[22px] cursor-pointer" @click="toggleMusicBrainzModal()" />
+    </li>
     <li class="flex justify-center align-middle">
       <IconDownload class="w-[16px] cursor-pointer" @click="downloadFile()" />
     </li>
