@@ -60,10 +60,10 @@ export const search = async (req, res) => {
   }
 
   try {
-    const response = await musicbrainzSearch(artist, track);
+    const mbzResponse = await musicbrainzSearch(artist, track);
     return res.status(200).send({
       status: 200,
-      message: response
+      ...mbzResponse
     });
   } catch (err) {
     return res.status(500).send({
@@ -96,7 +96,7 @@ export const getRelease = async (req, res) => {
     const mbzResponse = await musicbrainzRelease(id);
     return res.status(200).send({
       status: 200,
-      message: mbzResponse
+      ...mbzResponse
     });
   } catch (err) {
     return res.status(500).send({
