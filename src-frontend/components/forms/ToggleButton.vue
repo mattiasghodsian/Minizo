@@ -30,8 +30,8 @@ const handler = (): void => {
 </script>
 
 <template>
-  <div class="flex justify-center items-center gap-2" :class="{ 'ml-9' : !tooltip }">
-    <ToolTip v-if="tooltip" class="shadow" :description="tooltip"></ToolTip>
+  <div class="flex justify-center items-center gap-2">
+    <ToolTip v-if="tooltip" class="shadow -mr-4 border-2 border-minizo-base rounded-full" :description="tooltip"></ToolTip>
     <div class="flex flex-col">
       <BaseButton :class="{ 'bg-minizo-green': toggle, 'bg-minizo-red': !toggle }" @click="handler">
         {{ selectedText() }}

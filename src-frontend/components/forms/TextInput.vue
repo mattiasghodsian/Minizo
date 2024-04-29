@@ -21,7 +21,6 @@ const emit = defineEmits([
 const handler = (): void => {
   emit('input', selectedValue.value );
 }
-
 </script>
 
 <template>
