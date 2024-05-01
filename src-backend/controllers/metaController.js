@@ -5,8 +5,9 @@ import {logger} from '../helpers/loggerHelper.js';
 import { hasEnvArgs, isValidFormat, handleDownloadError, handleMetaError } from '../helpers/bitwiseHelper.js';
 import { checkDirectoryExists, checkFileExists } from '../helpers/bitwiseHelper.js';
 import { musicbrainzSearch, musicbrainzRelease } from '../helpers/axiosHelper.js';
+import * as mm from 'music-metadata';
 
-export const getFileMeta = (req, res) => {
+export const getFileMeta = async (req, res) => {
 
   const storage = process.env.MUSIC_STORAGE || null;
   const directory = req.query.directoryname || null;
@@ -32,11 +33,18 @@ export const getFileMeta = (req, res) => {
   checkDirectoryExists(directoryPath, res);
   checkFileExists(filePath, fileName, res);
 
-
-  return res.status(200).send({
-    status: 200,
-    message: 'response here'
+  await mm.parseFile(filePath)
+  .then(metadata => {
+    return res.status(200).send({
+      status: 200,
+      file: filePath,
+      ...metadata,
+    });
+  })
+  .catch(error => {
+    console.error(error.message);
   });
+
 };
 
 export const search = async (req, res) => {

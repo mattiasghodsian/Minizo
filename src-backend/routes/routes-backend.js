@@ -3,7 +3,7 @@ import path from 'path';
 import * as fs from 'fs';
 import { viewDirectory, deleteFile, relocateFile } from '../controllers/directoryController.js';
 import { download , downloadFile} from '../controllers/downloadController.js';
-import { search, getRelease } from '../controllers/metaController.js'
+import { search, getRelease, getFileMeta } from '../controllers/metaController.js'
 
 const backendRouter = express.Router();
 
@@ -19,6 +19,7 @@ backendRouter.get('/download/file', downloadFile);
 // Meta Routes
 backendRouter.get('/meta/search', search);
 backendRouter.get('/meta/release', getRelease);
+backendRouter.get('/meta/file', getFileMeta);
 
 // Misc Routes
 backendRouter.get('/info', (req, res) => {
