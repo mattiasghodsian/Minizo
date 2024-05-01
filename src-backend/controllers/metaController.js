@@ -38,7 +38,9 @@ export const getFileMeta = async (req, res) => {
     return res.status(200).send({
       status: 200,
       file: filePath,
-      ...metadata,
+      format: metadata.format ?? null,
+      tags: metadata.native[metadata.format.tagTypes[0]] ?? null,
+      common: metadata.common
     });
   })
   .catch(error => {
