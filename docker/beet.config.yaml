@@ -1,0 +1,14 @@
+directory: /music
+import:
+    copy: no
+    write: yes
+    log: beetslog.txt
+plugins: inline convert fetchart embedart lastgenre
+convert:
+    auto: no
+embedart:
+    auto: yes
+    remove_art_file: yes
+lastgenre:
+    auto: yes
+    count: 2
