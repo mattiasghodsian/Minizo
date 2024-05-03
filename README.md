@@ -33,6 +33,7 @@ This project began as a solution to access and manage my audio files beyond my l
 - [Node.js](https://nodejs.org/en)
 - [youtube-dl](https://github.com/ytdl-org/youtube-dl)
 - [ffmpeg](https://ffmpeg.org/)
+- [beets](https://github.com/beetbox/beets)
 
 # How to 
 - Clone down the project `git clone git@github.com:mattiasghodsian/Minizo.git`
