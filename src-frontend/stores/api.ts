@@ -22,7 +22,8 @@ export const useApiStore = defineStore('api', {
     authStatus: false,
     directories: [],
     currentViewDIrectory: '',
-    fileList: {}
+    fileList: {},
+    fileMetaData: []
   }),
   actions: {
     async getAbout() {
@@ -235,6 +236,34 @@ export const useApiStore = defineStore('api', {
         throw error.response;
       });
     },
+    async getFileMeta(file: string){
+      let axiosConfig = {
+        ...defaultConfig,
+        method: 'get',
+        url: `api/meta/file`,
+        params: {
+          directoryname: this.currentViewDIrectory,
+          filename: file,
+        }
+      }
+
+      if (this.auth && this.authStatus){
+        axiosConfig = {
+          ...axiosConfig,
+          auth: {
+            username: this.username,
+            password: this.password
+          }
+        };
+      }
+
+      return await axios.request(axiosConfig)
+      .then((response) => {
+        return response.data;
+      }).catch((error) => {
+        throw error.response;
+      });
+    }
   },
   getters: {
   },
