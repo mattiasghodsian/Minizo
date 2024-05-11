@@ -1,13 +1,14 @@
 version: "3"
 services:
   minizo:
-    build: ./docker
+    image: rakma/minizo:latest
+    # build: ./docker
     ports:
       - 3000:3000
     volumes:
-      - ./:/srv
-      - /home/user/Music:/music:rw
-    user: 1000:1000 # change this to your user
+      - .env:/srv/.env
+      - /home/user/music:/music:rw
+    user: 1000:1000
     restart: always
 
 networks:
