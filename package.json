@@ -1,6 +1,6 @@
 {
   "name": "minizo",
-  "version": "0.0.0",
+  "version": "0.1.2",
   "description": "Minizo is a sleek web app built with Node.js, Express.js, and Vue.js. Minizo lets users effortlessly browse and manage their music collection and obtain tracks.",
   "private": true,
   "type": "module",
