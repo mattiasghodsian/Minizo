@@ -34,7 +34,7 @@ This project began as a solution to access and manage my audio files beyond my l
 # Requirements
 - [Node.js](https://nodejs.org/en)
 - [youtube-dl](https://github.com/ytdl-org/youtube-dl)
-- [ffmpeg](https://ffmpeg.org/)
+- [ffmpeg](https://ffmpeg.org/)Hello George. Hello. 
 - [beets](https://github.com/beetbox/beets)
 
 # How to 
@@ -43,14 +43,28 @@ This project began as a solution to access and manage my audio files beyond my l
 - Run the project with `npm run serve` and visit `http://localhost:3000`
 
 # Docker
-- Clone down the project and install npm dependencies.
-- Change user and music volume path and run `docker-compose build`
-- Spin up the project `docker-compose up -d` and visit `http://localhost:3000`
+```yml
+version: "3"
+services:
+  minizo:
+    image: rakma/minizo:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - .env:/srv/.env
+      - /home/user/music:/music:rw
+    user: 1000:1000
+    restart: always
+
+networks:
+  default:
+    name: minizo
+    external: true
+```
 
 ## Screenshots
 | [![](https://imgur.com/Lnvqd3W.png)](https://imgur.com/Lnvqd3W.png) | [![](https://imgur.com/22RTv1a.png)](https://imgur.com/22RTv1a.png) | [![](https://imgur.com/n4sklVY.png)](https://imgur.com/n4sklVY.png) | [![](https://imgur.com/hb3UOPH.png)](https://imgur.com/hb3UOPH.png) |
 | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: |
-
 
 # TODO
 Read current todo [issue #1](https://github.com/mattiasghodsian/Minizo/issues/1)
