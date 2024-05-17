@@ -15,6 +15,7 @@ const settings = ref<{}>({
   country: false,
   label: false,
   score: false,
+  type: false,
 });
 
 const emit = defineEmits([
@@ -67,6 +68,9 @@ const updateProperty = (propertyName: string, value: any): void => {
       break;
     case 'settingsScore':
       settings.value.score = value;
+      break;
+    case 'settingsType':
+      settings.value.type = value;
       break;
   }
 }
@@ -123,6 +127,10 @@ onMounted(async (): Promise<void> => {
         <label class="text-white text-xs">Toggle Score field: </label>
         <ToggleButton @input="updateProperty('settingsScore', $event)" />
       </div>
+      <div class="flex items-center justify-between">
+        <label class="text-white text-xs">Toggle Type field: </label>
+        <ToggleButton @input="updateProperty('settingsType', $event)" />
+      </div>
     </div>
 
     <div class="flex w-full gap-2 border-t border-b">
@@ -139,6 +147,7 @@ onMounted(async (): Promise<void> => {
             <th class="py-1 px-3 text-left" v-if="!settings.release">Release</th>
             <th class="py-1 px-3 text-left" v-if="!settings.country">Country</th>
             <th class="py-1 px-3 text-left" v-if="!settings.label">Label</th>
+            <th class="py-1 px-3 text-left" v-if="!settings.type">Type</th>
             <th class="py-1 px-3 text-left" v-if="!settings.score">Score</th>
           </tr>
         </thead>
@@ -153,6 +162,7 @@ onMounted(async (): Promise<void> => {
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.release">{{ result.date }}</td>
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.country">{{ result.country }}</td>
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.label">{{ result['label-info'][0].label.name }}</td>
+            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.type">{{ result['release-group']['primary-type'] }}</td>
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.score">{{ result.score }}</td>
           </tr>
         </tbody>
