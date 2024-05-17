@@ -2,7 +2,7 @@ import * as path from 'path';
 import { execa } from 'execa';
 import * as fs from 'fs';
 import {logger} from '../helpers/loggerHelper.js';
-import { hasEnvArgs, isValidFormat, handleDownloadError, handleMetaError } from '../helpers/bitwiseHelper.js';
+import { hasEnvArgs, isValidFormat, handleDownloadError, handleMetaError, handleWriteMetaError } from '../helpers/bitwiseHelper.js';
 import { checkDirectoryExists, checkFileExists } from '../helpers/bitwiseHelper.js';
 import { musicbrainzSearch, musicbrainzRelease } from '../helpers/axiosHelper.js';
 import * as mm from 'music-metadata';
@@ -114,4 +114,47 @@ export const getRelease = async (req, res) => {
       message: err
     });
   }
+};
+
+export const writeMetaToFile = (req, res) => {
+
+  const beets = process.env.BEETWRITE_PATH || null;
+  const storage = process.env.MUSIC_STORAGE || null;
+  const directory = req.query.directoryname || null;
+  const fileName = req.query.filename || null;
+  const releaseID = req.query.releaseid || null
+
+  if (directory === null) {
+    return res.status(400).send({
+      status: 400,
+      message: 'directory must be provided.'
+    });
+  }
+
+  if (fileName === null && releaseID === null) {
+    return res.status(400).send({
+      status: 400,
+      message: 'filename and releaseid must be provided.'
+    });
+  }
+
+  const directoryPath = path.join(storage, directory);
+  const filePath      = path.join(directoryPath, fileName);
+
+  checkDirectoryExists(directoryPath, res);
+  checkFileExists(filePath, fileName, res);
+
+  (async () => {
+    try {
+      const { stdout } = await execa('bash', [beets, filePath, releaseID], {
+        input: 'A\n',
+      });
+      res.send({
+        status: 200,
+        message: "Meta writen to file."
+      });
+    } catch (error) {
+      handleWriteMetaError(error, res);
+    }
+  })();
 };

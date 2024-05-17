@@ -42,6 +42,11 @@ export const handleDownloadError = (error, res) => {
   res.status(500).send({ message: 'Download Failed.', data: error.message });
 };
 
+export const handleWriteMetaError = (error, res) => {
+  logger.error(error.message);
+  res.status(500).send({ message: 'Write meta Failed.', data: error.message });
+};
+
 export const handleMetaError = (error, res) => {
   logger.error(error.message);
   res.status(500).send({ message: 'Data fetching failed.', data: error.message });
