@@ -217,7 +217,7 @@ onMounted(async (): Promise<void> => {
       </BaseButton>
       <BaseButton v-if="releaseId" @click="writeMetaData()"
         class="rounded-none w-full shadow-none bg-minizo-base hover:opacity-70 transition delay-75">
-        <IconLoading v-if="isLoading" class="w-[18px] h-[18px] animate-spin" />
+        <IconLoading v-if="isLoading" class="w-[18px] h-[18px] mx-auto animate-spin" />
         <span v-else>Write</span>
       </BaseButton>
     </div>
