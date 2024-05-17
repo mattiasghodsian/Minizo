@@ -32,27 +32,15 @@ RUN /venv/bin/pip install --upgrade pip
 ENV PATH="/venv/bin:$PATH"
 RUN /venv/bin/pip install beets requests pylast
 
+# Expose port & set WORKDIR
+WORKDIR /srv
+EXPOSE 3000
+
 # Create/Copy/Permissions
 COPY beet.config.yaml /root/.config/beets/config.yaml
 COPY scripts /scripts
 RUN chmod -R +x /scripts
 RUN mkdir /music
 RUN chown -R $(id -u):$(id -g) /music
-
-# Create srv directory and set user
-RUN mkdir -p /srv && \
-chown -R node:node /srv
-
-# Change user
-USER node
-
-# Clone Minizo and install packages
-RUN git clone https://github.com/mattiasghodsian/Minizo.git /srv
-# RUN chown -R $(id -u):$(id -g) /srv
-RUN cd /srv && npm install && cp .env.sample .env && npm run build-only
-
-# Last actions
-WORKDIR /srv
-EXPOSE 3000
 
 CMD ["npm", "run", "serve"]
