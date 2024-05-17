@@ -45,7 +45,6 @@ const converImage = (): Promise<string> => {
 
 onMounted(async (): Promise<void> => {
   converImage().then(res => {
-    console.log(res);
     imageSrc.value = res;
   })
   .catch(error => {
