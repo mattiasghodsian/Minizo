@@ -2,12 +2,17 @@
 import { ref, onMounted } from 'vue';
 import { useApiStore } from '@/stores/api.ts';
 import BaseModal from '@/components/modals/BaseModal.vue';
+import IconLoading from '@/components/icons/IconLoading.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
 
 const apiStore = useApiStore();
 const artist = ref<string>('');
 const track = ref<string>('');
 const results = ref<[]>([]);
 const toggleSettings = ref<boolean>(false);
+const releaseId = ref<string>('');
+const errorMessage = ref<string>();
+const isLoading = ref<boolean>(false);
 const settings = ref<{}>({
   artist: false,
   track: false,
@@ -92,6 +97,25 @@ const search = async (): Promise<void> => {
   });
 }
 
+const setReleaseId = (id: string) => {
+  errorMessage.value = "";
+  releaseId.value = id;
+}
+
+const writeMetaData = async (): Promise<void> => {
+  isLoading.value = true;
+  await apiStore.postFileMeta(
+    props.fileName,
+    releaseId.value
+  ).then(() => {
+    emit('close');
+  }).catch(err => {
+    errorMessage.value = err.data.message;
+  }).finally(() => {
+    isLoading.value = false;
+  });
+}
+
 onMounted(async (): Promise<void> => {
   const fileParts = splitFileName(props.fileName);
   artist.value = fileParts[0] ?? '';
@@ -101,6 +125,8 @@ onMounted(async (): Promise<void> => {
 
 <template>
   <BaseModal header="Search metadata" headerSmall="MusicBrainz">
+
+    <ErrorMessage v-if="errorMessage" :message="errorMessage" />
 
     <div v-if="toggleSettings" class="grid grid-cols-3 bg-minizo-base w-full px-2 py-2 gap-2 items-center justify-center">
       <div class="flex items-center justify-between">
@@ -152,7 +178,14 @@ onMounted(async (): Promise<void> => {
           </tr>
         </thead>
         <tbody class="">
-          <tr class="cursor-pointer hover:bg-minizo-base hover:text-white" v-for="(result, index) in results" :key="index" :data-id="result.id">
+          <tr 
+            class="cursor-pointer hover:bg-minizo-base hover:text-white"
+            v-for="(result, index) in results"
+            :key="index"
+            :data-id="result.id"
+            @click="setReleaseId(result.id)"
+            :class="{'bg-minizo-base text-white': releaseId === result.id}"
+            >
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.artist">
               <span v-for="(artist, aIndex) in result['artist-credit']" :key="aIndex">
                 {{ artist.name }} {{ artist.joinphrase }}
@@ -181,6 +214,11 @@ onMounted(async (): Promise<void> => {
       <BaseButton @click="handleAction('search')"
         class="rounded-none w-full shadow-none bg-minizo-green hover:opacity-70 transition delay-75">
         Search
+      </BaseButton>
+      <BaseButton v-if="releaseId" @click="writeMetaData()"
+        class="rounded-none w-full shadow-none bg-minizo-base hover:opacity-70 transition delay-75">
+        <IconLoading v-if="isLoading" class="w-[18px] h-[18px] animate-spin" />
+        <span v-else>Write</span>
       </BaseButton>
     </div>
   </BaseModal>

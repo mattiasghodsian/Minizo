@@ -263,7 +263,36 @@ export const useApiStore = defineStore('api', {
       }).catch((error) => {
         throw error.response;
       });
-    }
+    },
+    async postFileMeta(fileName: string, releaseId: string) {
+      let axiosConfig = {
+        ...defaultConfig,
+        method: 'post',
+        url: `api/meta/file`,
+        params: {
+          filename: fileName,
+          directoryname: this.currentViewDIrectory,
+          releaseid: releaseId,
+        }
+      }
+
+      if (this.auth && this.authStatus){
+        axiosConfig = {
+          ...axiosConfig,
+          auth: {
+            username: this.username,
+            password: this.password
+          }
+        };
+      }
+
+      return await axios.request(axiosConfig)
+      .then((response) => {
+        return response.data;
+      }).catch((error) => {
+        throw error.response;
+      });
+    },
   },
   getters: {
   },
