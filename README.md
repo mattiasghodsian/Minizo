@@ -48,7 +48,7 @@ This project began as a solution to access and manage my audio files beyond my l
 - Spin up the project `docker-compose up -d` and visit `http://localhost:3000`
 
 ## Screenshots
-| [![](https://imgur.com/tzGOxMJ.png)](https://imgur.com/tzGOxMJ.png) | [![](https://imgur.com/7WyVeYu.png)](https://imgur.com/7WyVeYu.png) | [![](https://imgur.com/1HCEUqD.png)](https://imgur.com/1HCEUqD.png) | [![](https://imgur.com/U4fKDGg.png)](https://imgur.com/U4fKDGg.png) |
+| [![](https://imgur.com/Lnvqd3W.png)](https://imgur.com/Lnvqd3W.png) | [![](https://imgur.com/22RTv1a.png)](https://imgur.com/22RTv1a.png) | [![](https://imgur.com/n4sklVY.png)](https://imgur.com/n4sklVY.png) | [![](https://imgur.com/hb3UOPH.png)](https://imgur.com/hb3UOPH.png) |
 | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: |
 
 
