@@ -152,7 +152,7 @@ onMounted(async (): Promise<void> => {
           </tr>
         </thead>
         <tbody class="">
-          <tr class="cursor-pointer hover:bg-minizo-base hover:text-white" v-for="(result, index) in results" :key="index">
+          <tr class="cursor-pointer hover:bg-minizo-base hover:text-white" v-for="(result, index) in results" :key="index" :data-id="result.id">
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.artist">
               <span v-for="(artist, aIndex) in result['artist-credit']" :key="aIndex">
                 {{ artist.name }} {{ artist.joinphrase }}
