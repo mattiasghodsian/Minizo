@@ -34,7 +34,7 @@ This project began as a solution to access and manage my audio files beyond my l
 # Requirements
 - [Node.js](https://nodejs.org/en)
 - [youtube-dl](https://github.com/ytdl-org/youtube-dl)
-- [ffmpeg](https://ffmpeg.org/)Hello George. Hello. 
+- [ffmpeg](https://ffmpeg.org/)
 - [beets](https://github.com/beetbox/beets)
 
 # How to 
