@@ -264,16 +264,26 @@ export const useApiStore = defineStore('api', {
         throw error.response;
       });
     },
-    async postFileMeta(fileName: string, releaseId: string) {
+    async postFileMeta(fileName: string, releaseId: string, rename: string = "") {
+
+      let params = {
+        filename: fileName,
+        directoryname: this.currentViewDIrectory,
+        releaseid: releaseId,
+      }
+
+      if (rename){
+        params = {
+          ...params,
+          rename: rename
+        }
+      }
+
       let axiosConfig = {
         ...defaultConfig,
         method: 'post',
         url: `api/meta/file`,
-        params: {
-          filename: fileName,
-          directoryname: this.currentViewDIrectory,
-          releaseid: releaseId,
-        }
+        params: params
       }
 
       if (this.auth && this.authStatus){

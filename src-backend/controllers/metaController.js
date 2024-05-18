@@ -2,7 +2,7 @@ import * as path from 'path';
 import { execa } from 'execa';
 import * as fs from 'fs';
 import {logger} from '../helpers/loggerHelper.js';
-import { hasEnvArgs, isValidFormat, handleDownloadError, handleMetaError, handleWriteMetaError } from '../helpers/bitwiseHelper.js';
+import { hasEnvArgs, isValidFormat, handleDownloadError, handleMetaError, handleWriteMetaError, justLogg } from '../helpers/bitwiseHelper.js';
 import { checkDirectoryExists, checkFileExists } from '../helpers/bitwiseHelper.js';
 import { musicbrainzSearch, musicbrainzRelease } from '../helpers/axiosHelper.js';
 import * as mm from 'music-metadata';
@@ -35,6 +35,7 @@ export const getFileMeta = async (req, res) => {
 
   await mm.parseFile(filePath)
   .then(metadata => {
+    console.log(metadata);
     return res.status(200).send({
       status: 200,
       file: filePath,
@@ -122,7 +123,8 @@ export const writeMetaToFile = (req, res) => {
   const storage = process.env.MUSIC_STORAGE || null;
   const directory = req.query.directoryname || null;
   const fileName = req.query.filename || null;
-  const releaseID = req.query.releaseid || null
+  const releaseID = req.query.releaseid || null;
+  const renameTo = req.query.rename || null;
 
   if (directory === null) {
     return res.status(400).send({
@@ -140,6 +142,7 @@ export const writeMetaToFile = (req, res) => {
 
   const directoryPath = path.join(storage, directory);
   const filePath      = path.join(directoryPath, fileName);
+  const fileExtension = path.extname(filePath);
 
   checkDirectoryExists(directoryPath, res);
   checkFileExists(filePath, fileName, res);
@@ -149,6 +152,16 @@ export const writeMetaToFile = (req, res) => {
       const { stdout } = await execa('bash', [beets, filePath, releaseID], {
         input: 'A\n',
       });
+
+      // optional file rename
+      if (renameTo){
+        let newFileName = renameTo + fileExtension;
+        let newFilePath = path.join(directoryPath, newFileName);
+        fs.rename(filePath, newFilePath, (err) => {
+          if (err) justLogg(err);
+        });
+      }
+
       res.send({
         status: 200,
         message: "Meta writen to file."

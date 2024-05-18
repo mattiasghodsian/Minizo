@@ -47,6 +47,10 @@ export const handleWriteMetaError = (error, res) => {
   res.status(500).send({ message: 'Write meta Failed.', data: error.message });
 };
 
+export const justLogg = (error) => {
+  logger.error(error.message);
+};
+
 export const handleMetaError = (error, res) => {
   logger.error(error.message);
   res.status(500).send({ message: 'Data fetching failed.', data: error.message });

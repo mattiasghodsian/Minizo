@@ -11,6 +11,7 @@ const track = ref<string>('');
 const results = ref<[]>([]);
 const toggleSettings = ref<boolean>(false);
 const releaseId = ref<string>('');
+const newFileName = ref<string>();
 const errorMessage = ref<string>();
 const isLoading = ref<boolean>(false);
 const settings = ref<{}>({
@@ -21,6 +22,7 @@ const settings = ref<{}>({
   label: false,
   score: false,
   type: false,
+  renameFile: false
 });
 
 const emit = defineEmits([
@@ -77,6 +79,9 @@ const updateProperty = (propertyName: string, value: any): void => {
     case 'settingsType':
       settings.value.type = value;
       break;
+    case 'settingsRenameFile':
+      settings.value.renameFile = value;
+      break;
   }
 }
 
@@ -97,8 +102,13 @@ const search = async (): Promise<void> => {
   });
 }
 
-const setReleaseId = (id: string) => {
+const setReleaseId = (artist: [], track: string, id: string) => {
   errorMessage.value = "";
+  newFileName.value = "";
+  if (settings.value.renameFile && artist && track){
+    const artists = artist.map(a => `${a.name}${a.joinphrase ? ` ${a.joinphrase}` : ''}`);
+    newFileName.value = `${artists.join(' ')} - ${track}`;
+  }
   releaseId.value = id;
 }
 
@@ -106,7 +116,8 @@ const writeMetaData = async (): Promise<void> => {
   isLoading.value = true;
   await apiStore.postFileMeta(
     props.fileName,
-    releaseId.value
+    releaseId.value,
+    newFileName.value
   ).then(() => {
     emit('close');
   }).catch(err => {
@@ -129,33 +140,37 @@ onMounted(async (): Promise<void> => {
     <ErrorMessage v-if="errorMessage" :message="errorMessage" />
 
     <div v-if="toggleSettings" class="grid grid-cols-3 bg-minizo-base w-full px-2 py-2 gap-2 items-center justify-center">
-      <div class="flex items-center justify-between">
+      <div class="flex items-center gap-1 justify-between">
         <label class="text-white text-xs">Toggle Artist field: </label>
         <ToggleButton @input="updateProperty('settingsArtist', $event)" />
       </div>
-      <div class="flex items-center justify-between">
+      <div class="flex items-center gap-1 justify-between">
         <label class="text-white text-xs">Toggle Track field: </label>
         <ToggleButton @input="updateProperty('settingsTrack', $event)" />
       </div>
-      <div class="flex items-center justify-between">
+      <div class="flex items-center gap-1 justify-between">
         <label class="text-white text-xs">Toggle Release field: </label>
         <ToggleButton @input="updateProperty('settingsRelease', $event)" />
       </div>
-      <div class="flex items-center justify-between">
+      <div class="flex items-center gap-1 justify-between">
         <label class="text-white text-xs">Toggle Country field: </label>
         <ToggleButton @input="updateProperty('settingsCountry', $event)" />
       </div>
-      <div class="flex items-center justify-between">
+      <div class="flex items-center gap-1 justify-between">
         <label class="text-white text-xs">Toggle Label field: </label>
         <ToggleButton @input="updateProperty('settingsLabel', $event)" />
       </div>
-      <div class="flex items-center justify-between">
+      <div class="flex items-center gap-1 justify-between">
         <label class="text-white text-xs">Toggle Score field: </label>
         <ToggleButton @input="updateProperty('settingsScore', $event)" />
       </div>
-      <div class="flex items-center justify-between">
+      <div class="flex items-center gap-1 justify-between">
         <label class="text-white text-xs">Toggle Type field: </label>
         <ToggleButton @input="updateProperty('settingsType', $event)" />
+      </div>
+      <div class="flex items-center gap-1 justify-between">
+        <label class="text-white text-xs">Rename file on write: </label>
+        <ToggleButton @input="updateProperty('settingsRenameFile', $event)" />
       </div>
     </div>
 
@@ -183,7 +198,7 @@ onMounted(async (): Promise<void> => {
             v-for="(result, index) in results"
             :key="index"
             :data-id="result.id"
-            @click="setReleaseId(result.id)"
+            @click="setReleaseId(result['artist-credit'], result.title, result.id)"
             :class="{'bg-minizo-base text-white': releaseId === result.id}"
             >
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.artist">
