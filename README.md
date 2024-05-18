@@ -43,6 +43,7 @@ This project began as a solution to access and manage my audio files beyond my l
 - Run the project with `npm run serve` and visit `http://localhost:3000`
 
 # Docker
+***Nightly releases** come with the latest source but are unstable and not recommended for production use.*
 ```yml
 version: "3"
 services:
