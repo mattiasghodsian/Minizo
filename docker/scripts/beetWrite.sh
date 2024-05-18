@@ -8,6 +8,8 @@ fi
 file="$1"
 releaseID="$2"
 
+rm /home/node/.config/beets/library.db
+
 command="beet import --write -S $releaseID"
 
 echo "A" | ${command} "${file}"
