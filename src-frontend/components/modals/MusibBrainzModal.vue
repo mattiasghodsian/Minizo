@@ -209,7 +209,7 @@ onMounted(async (): Promise<void> => {
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.track">{{ result.title }}</td>
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.release">{{ result.date }}</td>
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.country">{{ result.country }}</td>
-            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.label">{{ result['label-info'][0].label.name }}</td>
+            <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.label && result['label-info']">{{ result['label-info'][0].label.name }}</td>
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.type">{{ result['release-group']['primary-type'] }}</td>
             <td class="py-1 px-3 whitespace-nowrap" v-if="!settings.score">{{ result.score }}</td>
           </tr>
