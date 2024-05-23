@@ -11,6 +11,11 @@
     </a>
     <a href="https://github.com/mattiasghodsian/Minizo/stargazers" target="_new"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/mattiasghodsian/Minizo?style=for-the-badge&logo=github&label=Stars&color=blue"></a>
     <a href="https://github.com/mattiasghodsian/Minizo/network/members" target="_new"><img alt="GitHub forks" src="https://img.shields.io/github/forks/mattiasghodsian/Minizo?style=for-the-badge&logo=github&label=Forks&color=blue"></a>
+  
+</p>
+<p align="center">
+  <a href="https://github.com/mattiasghodsian/Minizo/actions" target="_new"><img alt="Build Nightly" src="https://img.shields.io/github/actions/workflow/status/mattiasghodsian/Minizo/docker-build-and-push.yml?style=for-the-badge&logo=github&label=Build+Nightly&color=blue">
+    </a>
     <a href="https://github.com/mattiasghodsian/Minizo/releases/latest" target="_new"><img alt="Latest Release" src="https://img.shields.io/github/v/release/mattiasghodsian/Minizo?style=for-the-badge&logo=github&label=Latest%20Release&color=blue"></a>
     <a href="https://hub.docker.com/r/rakma/minizo" target="_new"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/rakma/minizo?style=for-the-badge&logo=docker&label=Pulls&color=blue">
     </a>
