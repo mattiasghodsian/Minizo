@@ -148,8 +148,9 @@ export const writeMetaToFile = async (req, res) => {
   checkFileExists(filePath, fileName, res);
 
   // Remove beets db file to avoid issues
-  fs.unlink(beetsDB);
-  console.log(beetsDB);
+  if (fs.existsSync(beetsDB)) {
+    fs.unlink(beetsDB);
+  }
 
   try {
     const beetProcess = execa("beet",
