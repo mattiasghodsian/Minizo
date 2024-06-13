@@ -119,7 +119,7 @@ export const getRelease = async (req, res) => {
 
 export const writeMetaToFile = (req, res) => {
 
-  const beets = process.env.BEETWRITE_PATH || null;
+  const beetsDB = process.env.BEETS_DB || null;
   const storage = process.env.MUSIC_STORAGE || null;
   const directory = req.query.directoryname || null;
   const fileName = req.query.filename || null;
@@ -147,27 +147,35 @@ export const writeMetaToFile = (req, res) => {
   checkDirectoryExists(directoryPath, res);
   checkFileExists(filePath, fileName, res);
 
-  (async () => {
-    try {
-      const { stdout } = await execa('bash', [beets, filePath, releaseID], {
-        input: 'A\n',
-      });
+  // Remove beets db file to avoid issues
+  fs.unlink(beetsDB);
 
-      // optional file rename
-      if (renameTo){
-        let newFileName = renameTo + fileExtension;
-        let newFilePath = path.join(directoryPath, newFileName);
-        fs.rename(filePath, newFilePath, (err) => {
-          if (err) justLogg(err);
-        });
-      }
+  const beetsArgs = [
+    'import',
+    '--write', 
+    '-S',
+    releaseID,
+    filePath
+  ];
 
-      res.send({
-        status: 200,
-        message: "Meta writen to file."
+  execa("beet", beetsArgs, { input: 'A\n' })
+  .then(({ stdout }) => {
+
+    if (renameTo){
+      let newFileName = renameTo + fileExtension;
+      let newFilePath = path.join(directoryPath, newFileName);
+      fs.rename(filePath, newFilePath, (err) => {
+        if (err) justLogg(err);
       });
-    } catch (error) {
-      handleWriteMetaError(error, res);
     }
-  })();
+
+    res.send({
+      status: 200,
+      message: `Meta import completed: ${filePath}`,
+      stdout: stdout
+    });
+    
+  }).catch((error) => {
+    handleWriteMetaError(error, res);
+  });
 };
