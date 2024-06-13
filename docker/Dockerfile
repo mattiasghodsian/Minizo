@@ -34,9 +34,6 @@ RUN /venv/bin/pip install beets requests pylast
 
 # Create/Copy/Permissions
 COPY beet.config.yaml /root/.config/beets/config.yaml
-COPY scripts /scripts
-RUN chmod -R +x /scripts && \
-chown -R node:node /scripts
 RUN mkdir /music
 RUN chown -R $(id -u):$(id -g) /music
 
