@@ -148,7 +148,7 @@ export const writeMetaToFile = (req, res) => {
   checkFileExists(filePath, fileName, res);
 
   // Remove beets db file to avoid issues
-  fs.unlink(beetsDB);
+  // fs.unlink(beetsDB);
 
   const beetsArgs = [
     'import',
