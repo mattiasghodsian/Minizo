@@ -117,7 +117,7 @@ export const getRelease = async (req, res) => {
   }
 };
 
-export const writeMetaToFile = (req, res) => {
+export const writeMetaToFile = async (req, res) => {
 
   const beetsDB = process.env.BEETS_DB || null;
   const storage = process.env.MUSIC_STORAGE || null;
@@ -148,34 +148,44 @@ export const writeMetaToFile = (req, res) => {
   checkFileExists(filePath, fileName, res);
 
   // Remove beets db file to avoid issues
-  // fs.unlink(beetsDB);
+  fs.unlink(beetsDB);
+  console.log(beetsDB);
 
-  const beetsArgs = [
-    'import',
-    '--write', 
-    '-S',
-    releaseID,
-    filePath
-  ];
+  try {
+    const beetProcess = execa("beet",
+      ['import', '--write', '-S', releaseID, filePath],
+      { stdio: ['pipe', 'pipe', 'inherit'] }
+    );
 
-  execa("beet", beetsArgs, { input: 'A\n' })
-  .then(({ stdout }) => {
+    // Send 'A' to stdin after a short delay to ensure process is ready
+    setTimeout(() => {
+      if (beetProcess.stdin) {
+        beetProcess.stdin.write('A\n');
+        beetProcess.stdin.end();
+      } else {
+        handleWriteMetaError('Failed to send input: stdin is not available.', res);
+      }
+    }, 500);
 
-    if (renameTo){
-      let newFileName = renameTo + fileExtension;
-      let newFilePath = path.join(directoryPath, newFileName);
-      fs.rename(filePath, newFilePath, (err) => {
-        if (err) justLogg(err);
+    const { stderr } = await beetProcess;
+
+    if (typeof stderr === 'undefined'){
+      if (renameTo){
+        let newFileName = renameTo + fileExtension;
+        let newFilePath = path.join(directoryPath, newFileName);
+        fs.rename(filePath, newFilePath, (err) => {
+          if (err) justLogg(err);
+        });
+      }
+
+      res.send({
+        status: 200,
+        message: `Meta import completed: ${filePath}`
       });
+    }else {
+      handleWriteMetaError(stderr, res);
     }
-
-    res.send({
-      status: 200,
-      message: `Meta import completed: ${filePath}`,
-      stdout: stdout
-    });
-    
-  }).catch((error) => {
+  } catch (error) {
     handleWriteMetaError(error, res);
-  });
+  }
 };
