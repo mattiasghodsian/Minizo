@@ -1,4 +1,4 @@
-name: Build and Push nightly image
+name: Build and Push latest image
 
 on:
   push:
@@ -28,4 +28,4 @@ jobs:
           context: ./docker
           file: ./docker/Dockerfile
           push: true
-          tags: rakma/minizo:nightly
+          tags: rakma/minizo:latest
