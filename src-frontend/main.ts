@@ -27,9 +27,6 @@ app.use(PrimeVue, {
         options: {
             prefix: 'p',
             darkModeSelector: '',
-            // cassLayer: false
-            // cssLayer: true,
-            // order: 'tailwind-base, tailwind-utilities, primevue'
         }  
     }
 });
