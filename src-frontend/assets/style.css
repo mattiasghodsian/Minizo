@@ -12,5 +12,9 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-minizo-red;
+    @apply bg-gray-800;
+}
+
+body{
+    @apply bg-minizo-dark
 }
