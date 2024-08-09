@@ -13,7 +13,6 @@ import router from './router';
 const app = createApp(App);
 
 import InputText from 'primevue/inputtext';
-import ToggleButton from 'primevue/togglebutton';
 import ToggleSwitch from 'primevue/toggleswitch';
 import Select from 'primevue/select';
 import Button from 'primevue/button';
@@ -35,7 +34,6 @@ app.use(ToastService);
 app.component('InputText', InputText);
 app.component('Dialog', Dialog);
 app.component('ToggleSwitch', ToggleSwitch);
-app.component('ToggleButton', ToggleButton);
 app.component('Select', Select);
 app.component('Button', Button);
 app.component('Toast', Toast);

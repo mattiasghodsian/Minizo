@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { RouterView } from 'vue-router';
 import NavBar from '@/components/NavBar.vue';
 import { useApiStore } from '@/stores/api.ts';
+import AuthModal from './components/modals/AuthModal.vue';
 
 import IconLogo from '@/components/icons/IconLogo.vue';
 import IconGithub from '@/components/icons/IconGithub.vue';
@@ -11,16 +12,13 @@ import IconBuyMeCoffe from '@/components/icons/IconBuyMeCoffe.vue';
 import IconLibrepay from '@/components/icons/IconLibrepay.vue';
 
 const toggleMenu = ref<boolean>(false);
-
 const apiStore = useApiStore();
 
-onMounted(async (): Promise<void> => {
-  await apiStore.getAbout();
-});
 </script>
 
 <template>
   <Toast />
+  <AuthModal />
   <nav class="fixed z-30 w-full bg-gray-800 border-b border-gray-600">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
@@ -65,7 +63,7 @@ onMounted(async (): Promise<void> => {
 
   <div class="flex flex-col pt-16 overflow-hidden">
     <NavBar :toggle="toggleMenu" />
-    <div class="w-[100%-16rem] relative h-full overflow-y-auto lg:ml-64 ">
+    <div class="w-[100%-16rem] relative h-full overflow-y-auto lg:ml-64">
       <main class="p-4 my-6 mx-4">
         <RouterView />
       </main>

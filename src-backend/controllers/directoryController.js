@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {logger} from '../helpers/loggerHelper.js';
+import { logger } from '../helpers/loggerHelper.js';
 import { checkDirectoryExists, checkFileExists, handleFileError } from '../helpers/bitwiseHelper.js';
 
 export const viewDirectory = (req, res) => {
@@ -19,7 +19,18 @@ export const viewDirectory = (req, res) => {
           return musicExtensions.includes(extension);
         });
       }
-      res.send(files);
+
+      res.send(files.map(function (file) {
+        const lastDotIndex = file.lastIndexOf('.');
+        const name = file.slice(0, lastDotIndex);
+        const type = file.slice(lastDotIndex + 1);
+
+        return {
+          file: file,
+          name: name,
+          type: type
+        };
+      }));
     })
     .catch((err) => {
       handleFileError(err, '', res, 'Error reading directory.');

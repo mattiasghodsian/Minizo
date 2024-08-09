@@ -33,7 +33,7 @@ const isCurrentPage = (slug: string): boolean => {
             </li>
           </ul>
           <div class="pt-2 space-y-2">
-            <RouterLink v-for="(directory, index) in apiStore.directories" to="/manager" :key="index" class="flex items-center p-2 text-base transition duration-75 rounded-lg text-gray-200 hover:bg-gray-700">
+            <RouterLink v-for="(directory, index) in apiStore.directories" :to="{ name: 'manager', params: { directory: directory} }" :key="index" class="flex items-center p-2 text-base transition duration-75 rounded-lg text-gray-200 hover:bg-gray-700">
               <IconFolder class="w-5 h-5 fill-gray-400 group-hover:fill-white"/>
               <span class="ml-3" sidebar-toggle-item="">{{ directory }}</span>
             </RouterLink>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useApiStore } from '@/stores/api.ts';
-import BaseModal from '@/components/modals/BaseModal.vue';
+// import BaseModal from '@/components/modals/BaseModal.vue';
 import IconLoading from '@/components/icons/IconLoading.vue';
 import ErrorMessage from '@/components/ErrorMessage.vue';
 
@@ -135,7 +135,7 @@ onMounted(async (): Promise<void> => {
 </script>
 
 <template>
-  <BaseModal header="Search metadata" headerSmall="MusicBrainz">
+  <!-- <BaseModal header="Search metadata" headerSmall="MusicBrainz">
 
     <ErrorMessage v-if="errorMessage" :message="errorMessage" />
 
@@ -236,5 +236,5 @@ onMounted(async (): Promise<void> => {
         <span v-else>Write</span>
       </BaseButton>
     </div>
-  </BaseModal>
+  </BaseModal> -->
 </template>
