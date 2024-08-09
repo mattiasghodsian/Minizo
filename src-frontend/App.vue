@@ -2,10 +2,9 @@
 import { ref, onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 import NavBar from '@/components/NavBar.vue';
-import TheFooter from '@/components/TheFooter.vue';
 import { useApiStore } from '@/stores/api.ts';
 
-import TheLogo from '@/components/icons/IconLogo.vue';
+import IconLogo from '@/components/icons/IconLogo.vue';
 import IconGithub from '@/components/icons/IconGithub.vue';
 import IconDocker from '@/components/icons/IconDocker.vue';
 import IconBuyMeCoffe from '@/components/icons/IconBuyMeCoffe.vue';
@@ -35,7 +34,7 @@ onMounted(async (): Promise<void> => {
             </svg>
           </button>
           <label class="flex ml-2 md:mr-24">
-            <TheLogo class="h-8 mr-3" />
+            <IconLogo class="h-8 mr-3" />
             <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Minizo v{{
             apiStore.version }}
               <span class="text-xs" v-if="apiStore.environment == 'dev'"> [dev-mode]</span> </span>
@@ -70,7 +69,6 @@ onMounted(async (): Promise<void> => {
       <main class="p-4 my-6 mx-4">
         <RouterView />
       </main>
-      <TheFooter />
     </div>
   </div>
 </template>

@@ -18,6 +18,7 @@ import ToggleSwitch from 'primevue/toggleswitch';
 import Select from 'primevue/select';
 import Button from 'primevue/button';
 import Toast from 'primevue/toast';
+import Dialog from 'primevue/dialog';
 
 app.use(createPinia());
 app.use(router);
@@ -32,6 +33,7 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.component('InputText', InputText);
+app.component('Dialog', Dialog);
 app.component('ToggleSwitch', ToggleSwitch);
 app.component('ToggleButton', ToggleButton);
 app.component('Select', Select);

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import BaseModal from '@/components/modals/BaseModal.vue';
 import { useApiStore } from '@/stores/api.ts';
-import ErrorMessage from '@/components/ErrorMessage.vue';
+import Password from 'primevue/password';
+import IconLogo from '../icons/IconLogo.vue';
+import { useToast } from 'primevue/usetoast';
 
+const toast = useToast();
 const apiStore = useApiStore();
 const username = ref<string>();
 const password = ref<string>();
@@ -12,7 +14,7 @@ const error = ref<string>('');
 const updateProperty = (propertyName: string, value: any): void => {
   switch (propertyName) {
     case 'username':
-    username.value = value;
+      username.value = value;
       break;
     case 'password':
       password.value = value;
@@ -23,43 +25,87 @@ const updateProperty = (propertyName: string, value: any): void => {
 }
 
 const handler = async (): Promise<void> => {
-  if (!username.value || username.value.length == 0){
-    error.value = "Please provide a username!";
+  if (!username.value || username.value.length == 0) {
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Please provide a username!',
+      life: 3000
+    });
+    return;
   }
 
-  if (!password.value || password.value.length == 0){
-    error.value = "Please provide a password!";
+  if (!password.value || password.value.length == 0) {
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Please provide a password!',
+      life: 3000
+    });
+    return;
   }
 
-  // store usr/pass
   apiStore.username = username.value;
   apiStore.password = password.value;
 
   await apiStore.testAuth().then(response => {
-    // do nothing
-  }).catch( err => {
-    error.value = err.data.message;
+    toast.add({
+      severity: 'success',
+      summary: 'Authenticated',
+      detail: 'Authenticated successfully',
+      life: 3000
+    });
+  }).catch(err => {
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: err.data.message,
+      life: 3000
+    });
   });
 }
 
 </script>
 
 <template>
-  <BaseModal header="Authenticate" headerSmall="Basic Auth">
-    <ErrorMessage v-if="error" :message="error" />
-    <TextInput
-    class="bg-minizo-base text-white"
-    placeholder="username"
-    @input="updateProperty('username', $event)"
-    />
-    <TextInput
-      type="password"
-      class="bg-minizo-base text-white"
-      placeholder="password"
-      @input="updateProperty('password', $event)"
-    />
-    <BaseButton @click="handler" class="rounded-none w-full shadow-none bg-minizo-green hover:opacity-70 transition delay-75">
-      Authenticate
-    </BaseButton>
-  </BaseModal>
+  <Dialog :visible="apiStore.auth && !apiStore.authStatus" modal :closable="false" class="bg-white"
+    :showHeader="false" :style="{ width: '20rem' }" pt:root:class="!border-0 pt-4  overflow-hidden !bg-minizo-dark !text-white"
+    pt:mask:class="backdrop-blur-sm">
+
+    <div class="flex flex-col w-full gap-2">
+      <div class="flex flex-col items-center justify-center">
+        <IconLogo class="w-16 h-16"/>
+        <h1 class="text-lg">Authenticate</h1>
+      </div>
+  
+      <div class="flex flex-col">
+        <label for="username" class="text-white text-xs" placeholder="Username">Username</label>
+        <InputText v-model="username" id="username" placeholder="Username" />
+      </div>
+  
+      <div class="flex flex-col w-full">
+        <label for="password" class="text-white text-xs" placeholder="Username">Password</label>
+        <Password v-model="password" id="password" :feedback="false" placeholder="Password" toggleMask  />
+      </div>
+  
+      <div class="flex flex-col w-full">
+        <Button type="button" label="Authenticate" severity="danger" class="!w-full" @click="handler"></Button>
+      </div>
+    </div>
+
+    <!-- <div class="flex flex-col px-8 py-8 gap-6 rounded-2xl">
+      <div class="flex items-center gap-4 mb-4">
+        <label for="username" class="font-semibold w-24">Username</label>
+        <InputText id="username" class="flex-auto" autocomplete="off" />
+      </div>
+      <div class="flex items-center gap-4 mb-8">
+        <label for="email" class="font-semibold w-24">Email</label>
+        <InputText id="email" class="flex-auto" autocomplete="off" />
+      </div>
+      <div class="flex justify-end gap-2">
+        <Button type="button" label="Authenticate" @click="handler"></Button>
+      </div>
+    </div> -->
+
+  </Dialog>
 </template>
