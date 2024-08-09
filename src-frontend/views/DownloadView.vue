@@ -81,7 +81,7 @@ const download = async (): Promise<void> => {
     </div>
     <div class="flex gap-2 flex-col justify-center">
       <div class="bg-gray-700 p-1 rounded-full overflow-hidden relative z-10">
-        <InputText v-model="videoUrl" class="w-full px-8 h-10 md:h-16 rounded-full" unstyled
+        <InputText v-model="videoUrl" class="w-full px-4 md:px-8 h-10 md:h-16 rounded-full" unstyled
           placeholder="https://music.youtube.com/watch?v=xxxxxxxxxxx" />
         <Button type="button" label="Download" severity="danger" iconPos="right" class="!absolute top-1 right-1 h-10 md:h-16 !rounded-full" :loading="loading" @click="download()"/>
       </div>
