@@ -55,7 +55,7 @@ const actionList = [
     }
   },
   {
-    label: 'Meta data',
+    label: 'Write meta',
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         showMetaDataModal.value = !showMetaDataModal.value;
