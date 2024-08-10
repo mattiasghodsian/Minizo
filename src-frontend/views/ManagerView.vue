@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute } from 'vue-router';
 import { useApiStore } from '@/stores/api.ts';
 import IconFolder from '@/components/icons/IconFolder.vue';
 import { useToast } from 'primevue/usetoast';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
 import SplitButton from 'primevue/splitbutton';
+import MetaDataModal from '@/components/modals/MetaDataModal.vue'
 
 const toast = useToast();
 const apiStore = useApiStore();
 const route = useRoute();
 const viewAllFiles = ref<boolean>(false);
-const selectedTrack = ref<Object>({});
+const selectedTrack = ref<Object>();
+const showMetaDataModal = ref<boolean>(false);
 
 const actionList = [
   {
@@ -58,7 +58,7 @@ const actionList = [
     label: 'Meta data',
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
-        
+        showMetaDataModal.value = !showMetaDataModal.value;
       } else {
         toast.add({
           severity: 'error',
@@ -120,13 +120,22 @@ const getFiles = async (): Promise<void> => {
   });
 }
 
+watch(
+  () => route.params.directory,
+   async (newValue, oldValue) => {
+    await getFiles();
+  }
+);
+
 onMounted(async (): Promise<void> => {
   await getFiles();
 });
 </script>
 
 <template>
-  <section class="flex flex-col gap-8 mb-2 top-20 bg-minizo-dark z-10">
+  <MetaDataModal :show="showMetaDataModal" :track="selectedTrack ?? {}" @close="showMetaDataModal = false" />
+
+  <section class="flex flex-col gap-8 mb-4 top-20 bg-minizo-dark z-10">
     <div class="flex justify-between">
       <div class="flex flex-row gap-2 items-center">
         <IconFolder class="w-5 h-5 fill-gray-400 group-hover:fill-white" />
@@ -135,7 +144,7 @@ onMounted(async (): Promise<void> => {
       <div class="flex items-center justify-center md:justify-normal gap-2 text-white">
         <div class="flex items-center gap-2">
           <label class="text-sm">View all files</label>
-          <ToggleSwitch v-model="viewAllFiles" />
+          <ToggleSwitch v-model="viewAllFiles" @change="getFiles" />
         </div>
         <SplitButton :model="actionList" severity="danger">
           <span class="flex items-center font-bold">
@@ -147,7 +156,6 @@ onMounted(async (): Promise<void> => {
   </section>
 
   <section class="flex flex-col gap-8">
-    <span class="text-white">{{ selectedTrack }}</span>
     <DataTable v-model:selection="selectedTrack" :value="apiStore.fileList" selectionMode="single" dataKey="name">
       <Column selectionMode="single" headerStyle="width: 3rem"></Column>
       <Column field="name" header="Name" footer="Name" sortable></Column>
