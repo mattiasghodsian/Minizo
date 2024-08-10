@@ -9,20 +9,6 @@ const toast = useToast();
 const apiStore = useApiStore();
 const username = ref<string>();
 const password = ref<string>();
-const error = ref<string>('');
-
-const updateProperty = (propertyName: string, value: any): void => {
-  switch (propertyName) {
-    case 'username':
-      username.value = value;
-      break;
-    case 'password':
-      password.value = value;
-      break;
-  }
-
-  error.value = null;
-}
 
 const handler = async (): Promise<void> => {
   if (!username.value || username.value.length == 0) {
@@ -79,12 +65,12 @@ const handler = async (): Promise<void> => {
       </div>
   
       <div class="flex flex-col">
-        <label for="username" class="text-white text-xs" placeholder="Username">Username</label>
+        <label for="username" class="text-white text-xs">Username</label>
         <InputText v-model="username" id="username" placeholder="Username" />
       </div>
   
       <div class="flex flex-col w-full">
-        <label for="password" class="text-white text-xs" placeholder="Username">Password</label>
+        <label for="password" class="text-white text-xs">Password</label>
         <Password v-model="password" id="password" :feedback="false" placeholder="Password" toggleMask  />
       </div>
   
@@ -92,20 +78,5 @@ const handler = async (): Promise<void> => {
         <Button type="button" label="Authenticate" severity="danger" class="!w-full" @click="handler"></Button>
       </div>
     </div>
-
-    <!-- <div class="flex flex-col px-8 py-8 gap-6 rounded-2xl">
-      <div class="flex items-center gap-4 mb-4">
-        <label for="username" class="font-semibold w-24">Username</label>
-        <InputText id="username" class="flex-auto" autocomplete="off" />
-      </div>
-      <div class="flex items-center gap-4 mb-8">
-        <label for="email" class="font-semibold w-24">Email</label>
-        <InputText id="email" class="flex-auto" autocomplete="off" />
-      </div>
-      <div class="flex justify-end gap-2">
-        <Button type="button" label="Authenticate" @click="handler"></Button>
-      </div>
-    </div> -->
-
   </Dialog>
 </template>
