@@ -91,6 +91,7 @@ const writeMetaData = async (): Promise<void> => {
 }
 
 const closeDialog = () => {
+  currentStep.value = 1;
   emit('close');
 } 
 
