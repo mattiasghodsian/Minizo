@@ -64,7 +64,7 @@ const apiStore = useApiStore();
   <div class="flex flex-col pt-16 overflow-hidden">
     <NavBar :toggle="toggleMenu" />
     <div class="w-[100%-16rem] relative h-full overflow-y-auto lg:ml-64">
-      <main class="p-4 my-6 mx-4">
+      <main class="p-5">
         <RouterView />
       </main>
     </div>
