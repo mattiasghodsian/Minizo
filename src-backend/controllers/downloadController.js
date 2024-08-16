@@ -1,8 +1,7 @@
 import * as path from 'path';
 import { execa } from 'execa';
 import * as fs from 'fs';
-import {logger} from '../helpers/loggerHelper.js';
-import { hasEnvArgs, isValidFormat, handleDownloadError, handleMetaError } from '../helpers/bitwiseHelper.js';
+import { isValidFormat, handleDownloadError } from '../helpers/bitwiseHelper.js';
 import { checkDirectoryExists, checkFileExists } from '../helpers/bitwiseHelper.js';
 
 export const download = (req, res) => {
@@ -35,10 +34,9 @@ export const download = (req, res) => {
     format,
     '--audio-quality',
     '0',
-    '--metadata-from-title',
-    '%(artist)s - %(title)s',
     '-o',
-    `${savePath}/%(artist)s - %(title)s.%(ext)s`
+    `${savePath}/%(artist)s - %(title)s.%(ext)s`,
+    '--force-overwrites'
   ];
 
   if (format === "mp3" || format === "mp4") {
@@ -52,11 +50,10 @@ export const download = (req, res) => {
   // add url as last arg.
   ytdlArgs.push(url);
 
-  execa('youtube-dl', ytdlArgs)
+  execa(process.env.YOUTUBE_DL_PATH, ytdlArgs)
     .then(({ stdout }) => {
-
       let fileName = "";
-      const pathRegex = /\[ffmpeg\] Destination: (.+)/;
+      const pathRegex = /\[ExtractAudio] Destination: (.+)/;
       const pathMatch = stdout.match(pathRegex);
       const path = pathMatch ? pathMatch[1] : null;
 
@@ -72,6 +69,7 @@ export const download = (req, res) => {
       });
     })
     .catch((error) => {
+      console.log(stdout)
       handleDownloadError(error, res);
     });
 };

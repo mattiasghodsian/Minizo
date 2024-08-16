@@ -35,7 +35,6 @@ export const getFileMeta = async (req, res) => {
 
   await mm.parseFile(filePath)
   .then(metadata => {
-    console.log(metadata);
     return res.status(200).send({
       status: 200,
       file: filePath,

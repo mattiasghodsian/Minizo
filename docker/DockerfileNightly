@@ -8,6 +8,8 @@ LABEL org.opencontainers.image.source="https://github.com/mattiasghodsian/Minizo
 LABEL org.opencontainers.image.description="Docker image for Minizo"
 LABEL org.opencontainers.image.licenses="GPL-3.0"
 
+ARG YTDLP_VERSION=2024.08.06
+
 # Update and install needed packages
 RUN apt-get update && \
     apt-get install -y git make python3 python3-pip python3-venv zip pandoc ffmpeg && \
@@ -16,12 +18,9 @@ RUN apt-get update && \
 # Create a symlink to specify the Python interpreter
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
-# Clone & Compile youtube-dl
-RUN git clone https://github.com/ytdl-org/youtube-dl.git /tmp/youtube-dl
-RUN cd /tmp/youtube-dl && python setup.py install && make
-RUN cp /tmp/youtube-dl/bin/youtube-dl /usr/bin/youtube-dl
-RUN chmod a+rx /usr/bin/youtube-dl
-RUN youtube-dl --version
+# Install yt-dlp
+RUN wget -O /usr/bin/yt-dlp "https://github.com/yt-dlp/yt-dlp/releases/download/${YTDLP_VERSION}/yt-dlp_linux" && \
+    chmod a+rx /usr/bin/yt-dlp
 
 # Create a virtual environment
 RUN python3 -m venv /venv
@@ -47,7 +46,7 @@ USER node
 # Clone Minizo and install packages
 RUN git clone https://github.com/mattiasghodsian/Minizo.git /srv
 # RUN chown -R $(id -u):$(id -g) /srv
-RUN cd /srv && npm install && cp .env.sample .env && npm run build-only
+RUN cd /srv && git checkout develop && npm install && cp .env.sample .env && npm run build-only
 
 # Last actions
 WORKDIR /srv
