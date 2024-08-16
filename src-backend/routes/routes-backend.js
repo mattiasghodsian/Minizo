@@ -32,7 +32,7 @@ backendRouter.get('/info', (req, res) => {
 
   res.send({
     'name': 'Minizo',
-    'version': '0.1.4',
+    'version': '0.2.0',
     'github': 'https://github.com/mattiasghodsian/Minizo',
     'environment': process.env.ENV,
     'musicStorage': MUSIC_STORAGE,

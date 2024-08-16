@@ -1,6 +1,6 @@
 {
   "name": "minizo",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Minizo is a sleek web app built with Node.js, Express.js, and Vue.js. Minizo lets users effortlessly browse and manage their music collection and obtain tracks.",
   "private": true,
   "type": "module",
@@ -17,6 +17,7 @@
   },
   "license": "GPL-3.0",
   "dependencies": {
+    "@primevue/themes": "^4.0.4",
     "@tailwindcss/forms": "^0.5.7",
     "axios": "^1.6.8",
     "child_process": "^1.0.2",
@@ -24,11 +25,13 @@
     "execa": "^8.0.1",
     "express": "^4.19.2",
     "express-basic-auth": "^1.2.1",
+    "flat": "^6.0.1",
     "fs": "^0.0.1-security",
     "music-metadata": "^7.14.0",
     "node-taglib-sharp": "^5.2.3",
     "path": "^0.12.7",
     "pinia": "^2.1.7",
+    "primevue": "^4.0.4",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
     "winston": "^3.13.0"

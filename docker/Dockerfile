@@ -1,7 +1,7 @@
 FROM node:18
 
 LABEL maintainer="mattiasghodsian"
-LABEL version="0.1.6"
+LABEL version="0.2.0"
 LABEL description="Docker image for Minizo"
 LABEL org.opencontainers.image.url="https://github.com/mattiasghodsian/Minizo"
 LABEL org.opencontainers.image.source="https://github.com/mattiasghodsian/Minizo"

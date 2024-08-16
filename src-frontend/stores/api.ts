@@ -9,6 +9,8 @@ let defaultConfig = {
   },
 };
 
+const baseUrl = import.meta.env.BASE_URL;
+
 export const useApiStore = defineStore('api', {
   state: () => ({
     name: 'Minizo',
@@ -23,14 +25,13 @@ export const useApiStore = defineStore('api', {
     directories: [],
     currentViewDIrectory: '',
     fileList: {},
-    fileMetaData: []
   }),
   actions: {
     async getAbout() {
       return await axios.request({
         ...defaultConfig,
         method: 'get',
-        url: `api/info`
+        url: `${baseUrl}api/info`
       }).then((response) => {
         this.name = response.data.name;
         this.version = response.data.version;
@@ -47,7 +48,7 @@ export const useApiStore = defineStore('api', {
       return await axios.request({
         ...defaultConfig,
         method: 'get',
-        url: `api/auth`,
+        url: `${baseUrl}api/auth`,
         auth: {
           username: this.username,
           password: this.password
@@ -63,7 +64,7 @@ export const useApiStore = defineStore('api', {
       let axiosConfig = {
         ...defaultConfig,
         method: 'post',
-        url: `api/download`,
+        url: `${baseUrl}api/download`,
         params: {
           url: videoUrl,
           format: formatType,
@@ -93,7 +94,7 @@ export const useApiStore = defineStore('api', {
       let axiosConfig = {
         ...defaultConfig,
         method: 'get',
-        url: `api/files/${directoryName}`,
+        url: `${baseUrl}api/files/${directoryName}`,
         params: {
           nonmusic: nonAudio,
         }
@@ -121,7 +122,7 @@ export const useApiStore = defineStore('api', {
       let axiosConfig = {
         ...defaultConfig,
         method: 'delete',
-        url: `api/files/${this.currentViewDIrectory}`,
+        url: `${baseUrl}api/files/${this.currentViewDIrectory}`,
         params: {
           filename: fileName,
         }
@@ -148,7 +149,7 @@ export const useApiStore = defineStore('api', {
       let axiosConfig = {
         ...defaultConfig,
         method: 'post',
-        url: `api/files/relocate/${this.currentViewDIrectory}`,
+        url: `${baseUrl}api/files/relocate/${this.currentViewDIrectory}`,
         params: {
           filename: fileName,
           directoryname: directoryName
@@ -176,7 +177,7 @@ export const useApiStore = defineStore('api', {
       let axiosConfig = {
         ...defaultConfig,
         method: 'get',
-        url: `api/download/file`,
+        url: `${baseUrl}api/download/file`,
         params: {
           filename: fileName,
           directoryname: directoryName
@@ -212,7 +213,7 @@ export const useApiStore = defineStore('api', {
       let axiosConfig = {
         ...defaultConfig,
         method: 'get',
-        url: `api/meta/search`,
+        url: `${baseUrl}api/meta/search`,
         params: {
           artist: artist,
           track: track,
@@ -240,7 +241,7 @@ export const useApiStore = defineStore('api', {
       let axiosConfig = {
         ...defaultConfig,
         method: 'get',
-        url: `api/meta/file`,
+        url: `${baseUrl}api/meta/file`,
         params: {
           directoryname: this.currentViewDIrectory,
           filename: file,
@@ -282,7 +283,7 @@ export const useApiStore = defineStore('api', {
       let axiosConfig = {
         ...defaultConfig,
         method: 'post',
-        url: `api/meta/file`,
+        url: `${baseUrl}api/meta/file`,
         params: params
       }
 
