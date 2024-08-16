@@ -6,6 +6,7 @@ import IconFolder from '@/components/icons/IconFolder.vue';
 import { useToast } from 'primevue/usetoast';
 import SplitButton from 'primevue/splitbutton';
 import MetaDataModal from '@/components/modals/MetaDataModal.vue'
+import ViewDataModal from '@/components/modals/ViewMetaDataModal.vue'
 
 const toast = useToast();
 const apiStore = useApiStore();
@@ -13,6 +14,7 @@ const route = useRoute();
 const viewAllFiles = ref<boolean>(false);
 const selectedTrack = ref<Object>();
 const showMetaDataModal = ref<boolean>(false);
+const showViewMetaDataModal = ref<boolean>(false);
 
 const actionList = [
   {
@@ -59,6 +61,21 @@ const actionList = [
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         showMetaDataModal.value = !showMetaDataModal.value;
+      } else {
+        toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: "Please choose a track.",
+          life: 3000
+        });
+      }
+    }
+  },
+  {
+    label: 'View meta',
+    command: () => {
+      if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
+        showViewMetaDataModal.value = !showViewMetaDataModal.value;
       } else {
         toast.add({
           severity: 'error',
@@ -134,6 +151,7 @@ onMounted(async (): Promise<void> => {
 
 <template>
   <MetaDataModal :show="showMetaDataModal" :track="selectedTrack ?? {}" @close="showMetaDataModal = false" />
+  <ViewDataModal :show="showViewMetaDataModal" :track="selectedTrack ?? {}" @close="showViewMetaDataModal = false" />
 
   <section class="flex flex-col gap-8 mb-4 top-20 bg-minizo-dark z-10">
     <div class="flex justify-between">
