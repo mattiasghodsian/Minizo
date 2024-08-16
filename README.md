@@ -70,7 +70,7 @@ networks:
 ```
 
 ## Screenshots
-| [![](https://imgur.com/d9uUddi.png)](https://imgur.com/d9uUddi.png) | [![](https://imgur.com/ALrc7Hx.png)](https://imgur.com/ALrc7Hx.png) | [![](https://imgur.com/aHnhYGu.png)](https://imgur.com/aHnhYGu.png) | [![](https://imgur.com/n86Xj44.png)](https://imgur.com/n86Xj44.png) |
+| [![](https://imgur.com/hMW4Ap3.png)](https://imgur.com/hMW4Ap3.png) | [![](https://imgur.com/DhMNcJA.png)](https://imgur.com/DhMNcJA.png) | [![](https://imgur.com/GCyh7dO.png)](https://imgur.com/GCyh7dO.png) | [![](https://imgur.com/qzXYC4L.png)](https://imgur.com/qzXYC4L.png) |
 | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: | :-------------------------------------------------------------------: |
 
 ## CONTRIBUTING
