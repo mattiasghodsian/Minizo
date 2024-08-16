@@ -6,7 +6,7 @@ const env = process.env.ENV || 'dev';
 const frontendRouter = express.Router();
 
 // Serve Vite in development mode
-if (env == 'dev') {
+if (env === 'dev') {
     (async () => {
         const vite = await createServer({
             server: { middlewareMode: 'html' }
