@@ -35,10 +35,9 @@ export const download = (req, res) => {
     format,
     '--audio-quality',
     '0',
-    '--metadata-from-title',
-    '%(artist)s - %(title)s',
     '-o',
-    `${savePath}/%(artist)s - %(title)s.%(ext)s`
+    `${savePath}/%(artist)s - %(title)s.%(ext)s`,
+    '--force-overwrites'
   ];
 
   if (format === "mp3" || format === "mp4") {
