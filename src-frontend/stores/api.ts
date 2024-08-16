@@ -25,7 +25,6 @@ export const useApiStore = defineStore('api', {
     directories: [],
     currentViewDIrectory: '',
     fileList: {},
-    fileMetaData: []
   }),
   actions: {
     async getAbout() {
