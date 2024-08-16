@@ -172,8 +172,8 @@ onMounted(async (): Promise<void> => {
   <ViewDataModal :show="showViewMetaDataModal" :track="selectedTrack ?? {}" @close="showViewMetaDataModal = false" />
   <MoveFileModal :show="showMoveFileModal" :track="selectedTrack ?? {}" @close="closeMoveFileModal" />
 
-  <section class="flex flex-col gap-8 mb-4 top-20 bg-minizo-dark z-10">
-    <div class="flex justify-between">
+  <section class="flex flex-col gap-8 mb-4 mt-[30px] bg-minizo-dark z-10 w-6">
+    <div class="flex md:w-[calc(100%-18.5rem)] top-[61px] z-10 bg-minizo-dark py-2 justify-between fixed">
       <div class="flex flex-row gap-2 items-center">
         <IconFolder class="w-5 h-5 fill-gray-400 group-hover:fill-white" />
         <h1 class="text-xl text-white">{{ route.params.directory }}</h1>
