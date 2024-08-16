@@ -5,8 +5,9 @@ import { useApiStore } from '@/stores/api.ts';
 import IconFolder from '@/components/icons/IconFolder.vue';
 import { useToast } from 'primevue/usetoast';
 import SplitButton from 'primevue/splitbutton';
-import MetaDataModal from '@/components/modals/MetaDataModal.vue'
-import ViewDataModal from '@/components/modals/ViewMetaDataModal.vue'
+import MetaDataModal from '@/components/modals/MetaDataModal.vue';
+import ViewDataModal from '@/components/modals/ViewMetaDataModal.vue';
+import MoveFileModal from '@/components/modals/MoveFileModal.vue';
 
 const toast = useToast();
 const apiStore = useApiStore();
@@ -15,6 +16,7 @@ const viewAllFiles = ref<boolean>(false);
 const selectedTrack = ref<Object>();
 const showMetaDataModal = ref<boolean>(false);
 const showViewMetaDataModal = ref<boolean>(false);
+const showMoveFileModal = ref<boolean>(false);
 
 const actionList = [
   {
@@ -87,10 +89,10 @@ const actionList = [
     }
   },
   {
-    label: 'Move',
+    label: 'Move file',
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
-        
+        showMoveFileModal.value = !showMoveFileModal.value;
       } else {
         toast.add({
           severity: 'error',
@@ -144,6 +146,11 @@ watch(
   }
 );
 
+const closeMoveFileModal = async (): Promise<void> => {
+  showMoveFileModal.value = false;
+  await getFiles();
+}
+
 onMounted(async (): Promise<void> => {
   await getFiles();
 });
@@ -152,6 +159,7 @@ onMounted(async (): Promise<void> => {
 <template>
   <MetaDataModal :show="showMetaDataModal" :track="selectedTrack ?? {}" @close="showMetaDataModal = false" />
   <ViewDataModal :show="showViewMetaDataModal" :track="selectedTrack ?? {}" @close="showViewMetaDataModal = false" />
+  <MoveFileModal :show="showMoveFileModal" :track="selectedTrack ?? {}" @close="closeMoveFileModal" />
 
   <section class="flex flex-col gap-8 mb-4 top-20 bg-minizo-dark z-10">
     <div class="flex justify-between">
