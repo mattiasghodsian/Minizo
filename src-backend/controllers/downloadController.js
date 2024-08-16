@@ -50,11 +50,10 @@ export const download = (req, res) => {
   // add url as last arg.
   ytdlArgs.push(url);
 
-  execa('youtube-dl', ytdlArgs)
+  execa(process.env.YOUTUBE_DL_PATH, ytdlArgs)
     .then(({ stdout }) => {
-
       let fileName = "";
-      const pathRegex = /\[ffmpeg\] Destination: (.+)/;
+      const pathRegex = /\[ExtractAudio] Destination: (.+)/;
       const pathMatch = stdout.match(pathRegex);
       const path = pathMatch ? pathMatch[1] : null;
 
@@ -70,6 +69,7 @@ export const download = (req, res) => {
       });
     })
     .catch((error) => {
+      console.log(stdout)
       handleDownloadError(error, res);
     });
 };
