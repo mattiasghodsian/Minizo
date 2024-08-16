@@ -26,6 +26,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./docker
-          file: ./docker/Dockerfile
+          file: ./docker/DockerfileNightly
           push: true
           tags: rakma/minizo:nightly
