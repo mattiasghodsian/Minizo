@@ -26,9 +26,20 @@ const actionList = [
         await apiStore.deleteFile(
           selectedTrack.value.file,
         ).then(async response => {
+          toast.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: `${selectedTrack.value.file} deleted`,
+            life: 3000
+          });
           await getFiles();
         }).catch(err => {
-          console.log(err.data.message);
+          toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: err.data.message,
+            life: 3000
+          });
         });
       } else {
         toast.add({
