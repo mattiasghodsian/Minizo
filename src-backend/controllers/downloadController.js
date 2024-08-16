@@ -1,8 +1,7 @@
 import * as path from 'path';
 import { execa } from 'execa';
 import * as fs from 'fs';
-import {logger} from '../helpers/loggerHelper.js';
-import { hasEnvArgs, isValidFormat, handleDownloadError, handleMetaError } from '../helpers/bitwiseHelper.js';
+import { isValidFormat, handleDownloadError } from '../helpers/bitwiseHelper.js';
 import { checkDirectoryExists, checkFileExists } from '../helpers/bitwiseHelper.js';
 
 export const download = (req, res) => {
