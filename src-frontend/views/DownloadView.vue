@@ -11,7 +11,13 @@ const videoUrl = ref<string>('');
 const formatType = ref<string>('');
 const metaData = ref<boolean>(true);
 const saveTo = ref<string>('');
-const loading = ref(false);
+const loading = ref<boolean>(false);
+const downloadHistory = ref<[{}]>([]);
+
+const getFormattedTimestamp = () => {
+  const date = new Date();
+  return date.toISOString().slice(0, 16).replace('T', ' ');
+};
 
 const download = async (): Promise<void> => {
   if (!videoUrl.value || videoUrl.value.length == 0) {
@@ -58,11 +64,18 @@ const download = async (): Promise<void> => {
       detail: `${response.name} saved to ${response.path}.`,
       life: 3000 
     });
+    downloadHistory.value.push({
+      url: videoUrl.value,
+      file: response.name,
+      path: response.path,
+      timestamp: getFormattedTimestamp()
+    });
+    videoUrl.value = "";
   }).catch(err => {
     toast.add({
       severity: 'error',
       summary: 'Error',
-      detail: err.data.message,
+      detail: err.message,
       life: 3000 
     });
   }).finally(() => {
@@ -102,8 +115,25 @@ const download = async (): Promise<void> => {
     </div>
   </section>
 
+  <section class="text-xs w-full md:px-10" v-if="downloadHistory.length > 0">
+    <div class="w-full text-center pb-1">
+      <label class="text-white font-bold ">Temporary History (reload to clear)</label>
+    </div>
+    <DataTable :value="downloadHistory.reverse()" dataKey="timestamp" class="rounded max-h-96 overflow-y-auto">
+      <Column field="file" header="Local file"></Column>
+      <Column field="path" header="Path"></Column>
+      <!-- <Column field="url" header="url"></Column> -->
+      <Column header="Url">
+        <template #body="slotProps">
+          <a :href="slotProps.data.url" target="_new">Open</a>
+        </template>
+      </Column>
+      <Column field="timestamp" header="Timestamp"></Column>
+    </DataTable>
+  </section>
+
   <section class="text-xs w-full text-center text-gray-400">
-    <p class="px-8 md:px-20 py-2">
+    <p class="px-8 md:px-20 py-4">
       Downloading copyrighted content without authorization is illegal. This project is for educational purposes only. Ensure you have the right to download and use the content.
     </p>
   </section>
