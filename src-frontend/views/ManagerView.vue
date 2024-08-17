@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useRoute } from 'vue-router';
 import { useApiStore } from '@/stores/api.ts';
 import IconFolder from '@/components/icons/IconFolder.vue';
@@ -183,14 +183,20 @@ const triggerAction = (keyCode: number) => {
   }
 };
 
-onMounted(async (): Promise<void> => {
+const handleKeydown = (e) => {
+  e.preventDefault();
+  if (e.keyCode === 114 || (e.ctrlKey && actionList.some(action => action.keyCode === e.keyCode))) {
+    triggerAction(e.keyCode);
+  }
+};
+
+onMounted(async () => {
   await getFiles();
-  window.addEventListener('keydown', (e) => {
-    e.preventDefault();
-    if (e.keyCode === 114 || (e.ctrlKey && actionList.some(action => action.keyCode === e.keyCode))) {
-      triggerAction(e.keyCode);
-    }
-  });
+  window.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown);
 });
 </script>
 
