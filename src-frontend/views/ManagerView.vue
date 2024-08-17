@@ -186,6 +186,7 @@ const triggerAction = (keyCode: number) => {
 onMounted(async (): Promise<void> => {
   await getFiles();
   window.addEventListener('keydown', (e) => {
+    e.preventDefault();
     if (e.keyCode === 114 || (e.ctrlKey && actionList.some(action => action.keyCode === e.keyCode))) {
       triggerAction(e.keyCode);
     }
