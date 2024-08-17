@@ -71,7 +71,7 @@ const handler = async (): Promise<void> => {
   
       <div class="flex flex-col w-full">
         <label for="password" class="text-white text-xs">Password</label>
-        <Password v-model="password" id="password" :feedback="false" placeholder="Password" toggleMask  />
+        <Password v-model="password" v-on:keyup.enter="handler" id="password" :feedback="false" placeholder="Password" toggleMask  />
       </div>
   
       <div class="flex flex-col w-full">
