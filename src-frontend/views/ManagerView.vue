@@ -5,6 +5,7 @@ import { useApiStore } from '@/stores/api.ts';
 import IconFolder from '@/components/icons/IconFolder.vue';
 import { useToast } from 'primevue/usetoast';
 import SplitButton from 'primevue/splitbutton';
+import Popover from 'primevue/popover';
 import MetaDataModal from '@/components/modals/MetaDataModal.vue';
 import ViewDataModal from '@/components/modals/ViewMetaDataModal.vue';
 import MoveFileModal from '@/components/modals/MoveFileModal.vue';
@@ -17,11 +18,13 @@ const selectedTrack = ref<Object>();
 const showMetaDataModal = ref<boolean>(false);
 const showViewMetaDataModal = ref<boolean>(false);
 const showMoveFileModal = ref<boolean>(false);
+const actionOp = ref();
 const totalFiles = ref<number>(0);
 
 const actionList = [
   {
     label: 'Delete',
+    keyCode: 68, // D
     command: async () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         await apiStore.deleteFile(
@@ -54,6 +57,7 @@ const actionList = [
   },
   {
     label: 'Download',
+    keyCode: 72, // H
     command: async () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         await apiStore.downloadFile(
@@ -72,6 +76,7 @@ const actionList = [
   },
   {
     label: 'Write meta',
+    keyCode: 87, // W
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         showMetaDataModal.value = !showMetaDataModal.value;
@@ -87,6 +92,7 @@ const actionList = [
   },
   {
     label: 'View meta',
+    keyCode: 86, // V
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         showViewMetaDataModal.value = !showViewMetaDataModal.value;
@@ -102,6 +108,7 @@ const actionList = [
   },
   {
     label: 'Move file',
+    keyCode: 77, // M
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         showMoveFileModal.value = !showMoveFileModal.value;
@@ -117,6 +124,7 @@ const actionList = [
   },
   {
     label: 'YouTube',
+    keyCode: 89, // Y
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         const trackName = selectedTrack.value.name.replace(/\.[^/.]+$/, "");
@@ -152,6 +160,10 @@ const getFiles = async (): Promise<void> => {
   });
 }
 
+const toggleActionOp = (event) => {
+  actionOp.value.toggle(event);
+}
+
 watch(
   () => route.params.directory,
    async (newValue, oldValue) => {
@@ -164,8 +176,20 @@ const closeMoveFileModal = async (): Promise<void> => {
   await getFiles();
 }
 
+const triggerAction = (keyCode: number) => {
+  const action = actionList.find(action => action.keyCode === keyCode);
+  if (action && typeof action.command === 'function') {
+    action.command();
+  }
+};
+
 onMounted(async (): Promise<void> => {
   await getFiles();
+  window.addEventListener('keydown', (e) => {
+    if (e.keyCode === 114 || (e.ctrlKey && actionList.some(action => action.keyCode === e.keyCode))) {
+      triggerAction(e.keyCode);
+    }
+  });
 });
 </script>
 
@@ -185,17 +209,52 @@ onMounted(async (): Promise<void> => {
       </div>
       <div class="flex items-center justify-center md:justify-normal gap-2 text-white">
         <div class="flex items-center gap-2">
-          <label class="text-sm">View all files</label>
+          <label class="text-sm hidden md:block">View all files</label>
           <ToggleSwitch v-model="viewAllFiles" @change="getFiles" />
         </div>
         <SplitButton :model="actionList" severity="danger">
-          <span class="flex items-center font-bold">
+          <span class="flex items-center font-bold" @click="toggleActionOp">
             <span>Actions</span>
           </span>
+          <Popover ref="actionOp">
+              <div class="flex flex-col gap-1 max-w-[25rem]">
+            
+                <span class="font-medium block mb-2">Key bindings</span>
+                <div class="grid grid-cols-2 gap-2">
+                  <div class="flex flex-col">
+                    <span>Delete</span>
+                    <InputText value="CTRL+D" disabled />
+                  </div>
+                  <div class="flex flex-col">
+                    <span>Download</span>
+                    <InputText value="CTRL+H" disabled />
+                  </div>
+                  <div class="flex flex-col">
+                    <span>Write meta</span>
+                    <InputText value="CTRL+W" disabled />
+                  </div>
+                  <div class="flex flex-col">
+                    <span>View meta</span>
+                    <InputText value="CTRL+V" disabled />
+                  </div>
+                  <div class="flex flex-col">
+                    <span>Move file</span>
+                    <InputText value="CTRL+H" disabled />
+                  </div>
+                  <div class="flex flex-col">
+                    <span>YouTube</span>
+                    <InputText value="CTRL+Y" disabled />
+                  </div>
+                </div>
+              
+              </div>
+          </Popover>
         </SplitButton>
       </div>
     </div>
   </section>
+
+
 
   <section class="flex flex-col gap-8">
     <DataTable v-model:selection="selectedTrack" :value="apiStore.fileList" selectionMode="single" dataKey="name">
