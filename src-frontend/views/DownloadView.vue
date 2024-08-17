@@ -71,6 +71,7 @@ const download = async (): Promise<void> => {
       timestamp: getFormattedTimestamp()
     });
     videoUrl.value = "";
+    loading.value = false;
   }).catch(err => {
     toast.add({
       severity: 'error',
