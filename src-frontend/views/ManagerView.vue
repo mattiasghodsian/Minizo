@@ -19,6 +19,7 @@ const showMetaDataModal = ref<boolean>(false);
 const showViewMetaDataModal = ref<boolean>(false);
 const showMoveFileModal = ref<boolean>(false);
 const actionOp = ref();
+const totalFiles = ref<number>(0);
 
 const actionList = [
   {
@@ -147,6 +148,7 @@ const getFiles = async (): Promise<void> => {
     route.params.directory,
     viewAllFiles.value
   ).then(response => {
+    totalFiles.value = response.length;
     apiStore.currentViewDIrectory = route.params.directory;
   }).catch(err => {
     toast.add({
@@ -197,10 +199,13 @@ onMounted(async (): Promise<void> => {
   <MoveFileModal :show="showMoveFileModal" :track="selectedTrack ?? {}" @close="closeMoveFileModal" />
 
   <section class="flex flex-col gap-8 mb-4 mt-[30px] bg-minizo-dark z-10 w-6">
-    <div class="flex w-[calc(100%-2.5rem)] md:w-[calc(100%-18.5rem)] top-[61px] z-10 bg-minizo-dark pt-3 pb-2 justify-between fixed">
+    <div class="flex w-[calc(100%-2.5rem)] md:w-[calc(100%-2.5rem)] lg:w-[calc(100%-18.5rem)] top-[61px] z-10 bg-minizo-dark pt-3 pb-2 justify-between fixed">
       <div class="flex flex-row gap-2 items-center">
         <IconFolder class="w-5 h-5 fill-gray-400 group-hover:fill-white" />
-        <h1 class="text-xl text-white">{{ route.params.directory }}</h1>
+        <h1 class="text-xl text-white flex gap-2">
+          {{ route.params.directory }} 
+          <span class="bg-gray-800 text-sm px-2 py-1 rounded-full hidden md:block">{{ totalFiles }}</span>
+        </h1>
       </div>
       <div class="flex items-center justify-center md:justify-normal gap-2 text-white">
         <div class="flex items-center gap-2">

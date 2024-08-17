@@ -4,6 +4,13 @@ import { useApiStore } from '@/stores/api.ts';
 import { useToast } from 'primevue/usetoast';
 import IconDownload from '@/components/icons/IconDownload.vue';
 
+interface DownloadHistoryItem {
+  url: string;
+  file: string;
+  path: string;
+  timestamp: string;
+}
+
 const toast = useToast();
 const apiStore = useApiStore();
 
@@ -12,7 +19,7 @@ const formatType = ref<string>('');
 const metaData = ref<boolean>(true);
 const saveTo = ref<string>('');
 const loading = ref<boolean>(false);
-const downloadHistory = ref<[{}]>([]);
+const downloadHistory = ref<DownloadHistoryItem[]>([]);
 
 const getFormattedTimestamp = () => {
   const date = new Date();
@@ -64,18 +71,19 @@ const download = async (): Promise<void> => {
       detail: `${response.name} saved to ${response.path}.`,
       life: 3000 
     });
-    downloadHistory.value.push({
+    downloadHistory.value.unshift({
       url: videoUrl.value,
       file: response.name,
       path: response.path,
       timestamp: getFormattedTimestamp()
     });
     videoUrl.value = "";
+    loading.value = false;
   }).catch(err => {
     toast.add({
       severity: 'error',
       summary: 'Error',
-      detail: err.message,
+      detail: err,
       life: 3000 
     });
   }).finally(() => {
@@ -119,7 +127,7 @@ const download = async (): Promise<void> => {
     <div class="w-full text-center pb-1">
       <label class="text-white font-bold ">Temporary History (reload to clear)</label>
     </div>
-    <DataTable :value="downloadHistory.reverse()" dataKey="timestamp" class="rounded max-h-96 overflow-y-auto">
+    <DataTable :value="downloadHistory" dataKey="timestamp" class="rounded max-h-96 overflow-y-auto">
       <Column field="file" header="Local file"></Column>
       <Column field="path" header="Path"></Column>
       <!-- <Column field="url" header="url"></Column> -->
