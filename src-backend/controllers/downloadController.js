@@ -69,7 +69,6 @@ export const download = (req, res) => {
       });
     })
     .catch((error) => {
-      console.log(stdout)
       handleDownloadError(error, res);
     });
 };
