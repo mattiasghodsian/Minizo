@@ -175,7 +175,7 @@ onMounted(async (): Promise<void> => {
   <MoveFileModal :show="showMoveFileModal" :track="selectedTrack ?? {}" @close="closeMoveFileModal" />
 
   <section class="flex flex-col gap-8 mb-4 mt-[30px] bg-minizo-dark z-10 w-6">
-    <div class="flex w-[calc(100%-2.5rem)] md:w-[calc(100%-2.5rem)] lg:w-[calc(100%-18.5rem)] top-[61px] z-10 bg-minizo-dark py-2 justify-between fixed">
+    <div class="flex w-[calc(100%-2.5rem)] md:w-[calc(100%-2.5rem)] lg:w-[calc(100%-18.5rem)] top-[61px] z-10 bg-minizo-dark pt-3 pb-2 justify-between fixed">
       <div class="flex flex-row gap-2 items-center">
         <IconFolder class="w-5 h-5 fill-gray-400 group-hover:fill-white" />
         <h1 class="text-xl text-white flex gap-2">
