@@ -21,6 +21,7 @@ const showMoveFileModal = ref<boolean>(false);
 const actionList = [
   {
     label: 'Delete',
+    keyCode: 68, // D
     command: async () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         await apiStore.deleteFile(
@@ -53,6 +54,7 @@ const actionList = [
   },
   {
     label: 'Download',
+    keyCode: 72, // H
     command: async () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         await apiStore.downloadFile(
@@ -71,6 +73,7 @@ const actionList = [
   },
   {
     label: 'Write meta',
+    keyCode: 87, // W
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         showMetaDataModal.value = !showMetaDataModal.value;
@@ -86,6 +89,7 @@ const actionList = [
   },
   {
     label: 'View meta',
+    keyCode: 86, // V
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         showViewMetaDataModal.value = !showViewMetaDataModal.value;
@@ -101,6 +105,7 @@ const actionList = [
   },
   {
     label: 'Move file',
+    keyCode: 77, // M
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         showMoveFileModal.value = !showMoveFileModal.value;
@@ -116,6 +121,7 @@ const actionList = [
   },
   {
     label: 'YouTube',
+    keyCode: 89, // Y
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
         const trackName = selectedTrack.value.name.replace(/\.[^/.]+$/, "");
@@ -162,8 +168,20 @@ const closeMoveFileModal = async (): Promise<void> => {
   await getFiles();
 }
 
+const triggerAction = (keyCode: number) => {
+  const action = actionList.find(action => action.keyCode === keyCode);
+  if (action && typeof action.command === 'function') {
+    action.command();
+  }
+};
+
 onMounted(async (): Promise<void> => {
   await getFiles();
+  window.addEventListener('keydown', (e) => {
+    if (e.keyCode === 114 || (e.ctrlKey && actionList.some(action => action.keyCode === e.keyCode))) {
+      triggerAction(e.keyCode);
+    }
+  });
 });
 </script>
 
