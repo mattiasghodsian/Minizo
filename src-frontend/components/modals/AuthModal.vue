@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, getCurrentInstance, onMounted } from 'vue';
 import { useApiStore } from '@/stores/api.ts';
 import Password from 'primevue/password';
 import IconLogo from '../icons/IconLogo.vue';
@@ -9,6 +9,9 @@ const toast = useToast();
 const apiStore = useApiStore();
 const username = ref<string>();
 const password = ref<string>();
+
+const { appContext } = getCurrentInstance()!;
+const $cookies = appContext.config.globalProperties.$cookies;
 
 const handler = async (): Promise<void> => {
   if (!username.value || username.value.length == 0) {
@@ -31,16 +34,14 @@ const handler = async (): Promise<void> => {
     return;
   }
 
-  apiStore.username = username.value;
-  apiStore.password = password.value;
-
-  await apiStore.testAuth().then(response => {
+  await apiStore.getAuthToken(username.value, password.value).then(res => {
     toast.add({
       severity: 'success',
       summary: 'Authenticated',
       detail: 'Authenticated successfully',
       life: 3000
     });
+    $cookies.set('token', res.token);
   }).catch(err => {
     toast.add({
       severity: 'error',
@@ -51,10 +52,25 @@ const handler = async (): Promise<void> => {
   });
 }
 
+const isAuth = (): boolean => {
+  const backendIsAuth = apiStore.auth && !apiStore.authStatus;
+
+  if (backendIsAuth == true){
+    apiStore.testAuth().then(res => {
+      return false;
+    }).catch(err => {
+      $cookies.remove('token');
+      return true;
+    });
+  }
+
+  return backendIsAuth;
+}
+
 </script>
 
 <template>
-  <Dialog :visible="apiStore.auth && !apiStore.authStatus" modal :closable="false" class="bg-white"
+  <Dialog :visible="isAuth()" modal :closable="false" class="bg-white"
     :showHeader="false" :style="{ width: '20rem' }" pt:root:class="!border-0 pt-4  overflow-hidden !bg-minizo-dark !text-white"
     pt:mask:class="backdrop-blur-sm">
 

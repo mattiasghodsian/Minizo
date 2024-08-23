@@ -2,6 +2,7 @@ import './assets/style.css';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import VueCookies from 'vue-cookies'
 
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/lara';
@@ -22,6 +23,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 
 app.use(createPinia());
+app.use(VueCookies, { expires: '8h'});
 app.use(router);
 app.use(PrimeVue, {
     theme: {

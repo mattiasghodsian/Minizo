@@ -3,7 +3,7 @@ import axios from 'axios';
 
 let defaultConfig = {
   maxBodyLength: Infinity,
-  headers: { 
+  headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
   },
@@ -19,8 +19,6 @@ export const useApiStore = defineStore('api', {
     environment: '',
     musicStorage: '',
     auth: false,
-    username: '',
-    password: '',
     authStatus: false,
     directories: [],
     currentViewDIrectory: '',
@@ -49,12 +47,27 @@ export const useApiStore = defineStore('api', {
         ...defaultConfig,
         method: 'get',
         url: `${baseUrl}api/auth`,
-        auth: {
-          username: this.username,
-          password: this.password
-        }
+        headers: {
+          ...defaultConfig.headers,
+          'Authorization': `Bearer ${this.getCookie('token')}`,
+        },
       }).then((response) => {
         this.authStatus = true;
+        return response.data;
+      }).catch((error) => {
+        throw error.response;
+      });
+    },
+    async getAuthToken(username: string, password: string) {
+      return await axios.request({
+        ...defaultConfig,
+        method: 'post',
+        url: `${baseUrl}api/auth`,
+        params: {
+          username: username,
+          password: password
+        }
+      }).then((response) => {
         return response.data;
       }).catch((error) => {
         throw error.response;
@@ -73,22 +86,22 @@ export const useApiStore = defineStore('api', {
         }
       }
 
-      if (this.auth && this.authStatus){
+      if (this.auth && this.authStatus) {
         axiosConfig = {
           ...axiosConfig,
-          auth: {
-            username: this.username,
-            password: this.password
-          }
+          headers: {
+            ...defaultConfig.headers,
+            'Authorization': `Bearer ${this.getCookie('token')}`,
+          },
         };
       }
 
       return await axios.request(axiosConfig)
-      .then((response) => {
-        return response.data;
-      }).catch((error) => {
-        throw error.response;
-      });
+        .then((response) => {
+          return response.data;
+        }).catch((error) => {
+          throw error.response;
+        });
     },
     async viewDirectory(directoryName: string, nonAudio: boolean) {
       let axiosConfig = {
@@ -100,23 +113,23 @@ export const useApiStore = defineStore('api', {
         }
       }
 
-      if (this.auth && this.authStatus){
+      if (this.auth && this.authStatus) {
         axiosConfig = {
           ...axiosConfig,
-          auth: {
-            username: this.username,
-            password: this.password
-          }
+          headers: {
+            ...defaultConfig.headers,
+            'Authorization': `Bearer ${this.getCookie('token')}`,
+          },
         };
       }
 
       return await axios.request(axiosConfig)
-      .then((response) => {
-        this.fileList = response.data;
-        return response.data;
-      }).catch((error) => {
-        throw error.response;
-      });
+        .then((response) => {
+          this.fileList = response.data;
+          return response.data;
+        }).catch((error) => {
+          throw error.response;
+        });
     },
     async deleteFile(fileName: string) {
       let axiosConfig = {
@@ -128,22 +141,22 @@ export const useApiStore = defineStore('api', {
         }
       }
 
-      if (this.auth && this.authStatus){
+      if (this.auth && this.authStatus) {
         axiosConfig = {
           ...axiosConfig,
-          auth: {
-            username: this.username,
-            password: this.password
-          }
+          headers: {
+            ...defaultConfig.headers,
+            'Authorization': `Bearer ${this.getCookie('token')}`,
+          },
         };
       }
 
       return await axios.request(axiosConfig)
-      .then((response) => {
-        return response.data;
-      }).catch((error) => {
-        throw error.response;
-      });
+        .then((response) => {
+          return response.data;
+        }).catch((error) => {
+          throw error.response;
+        });
     },
     async moveFile(fileName: string, directoryName: string) {
       let axiosConfig = {
@@ -156,22 +169,22 @@ export const useApiStore = defineStore('api', {
         }
       }
 
-      if (this.auth && this.authStatus){
+      if (this.auth && this.authStatus) {
         axiosConfig = {
           ...axiosConfig,
-          auth: {
-            username: this.username,
-            password: this.password
-          }
+          headers: {
+            ...defaultConfig.headers,
+            'Authorization': `Bearer ${this.getCookie('token')}`,
+          },
         };
       }
 
       return await axios.request(axiosConfig)
-      .then((response) => {
-        return response.data;
-      }).catch((error) => {
-        throw error.response;
-      });
+        .then((response) => {
+          return response.data;
+        }).catch((error) => {
+          throw error.response;
+        });
     },
     async downloadFile(fileName: string, directoryName: string) {
       let axiosConfig = {
@@ -184,17 +197,17 @@ export const useApiStore = defineStore('api', {
         },
         responseType: 'blob'
       };
-    
-      if (this.auth && this.authStatus){
+
+      if (this.auth && this.authStatus) {
         axiosConfig = {
           ...axiosConfig,
-          auth: {
-            username: this.username,
-            password: this.password
-          }
+          headers: {
+            ...defaultConfig.headers,
+            'Authorization': `Bearer ${this.getCookie('token')}`,
+          },
         };
       }
-    
+
       try {
         const response = await axios.request(axiosConfig);
         const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -220,24 +233,24 @@ export const useApiStore = defineStore('api', {
         }
       }
 
-      if (this.auth && this.authStatus){
+      if (this.auth && this.authStatus) {
         axiosConfig = {
           ...axiosConfig,
-          auth: {
-            username: this.username,
-            password: this.password
-          }
+          headers: {
+            ...defaultConfig.headers,
+            'Authorization': `Bearer ${this.getCookie('token')}`,
+          },
         };
       }
 
       return await axios.request(axiosConfig)
-      .then((response) => {
-        return response.data;
-      }).catch((error) => {
-        throw error.response;
-      });
+        .then((response) => {
+          return response.data;
+        }).catch((error) => {
+          throw error.response;
+        });
     },
-    async getFileMeta(file: string){
+    async getFileMeta(file: string) {
       let axiosConfig = {
         ...defaultConfig,
         method: 'get',
@@ -248,22 +261,22 @@ export const useApiStore = defineStore('api', {
         }
       }
 
-      if (this.auth && this.authStatus){
+      if (this.auth && this.authStatus) {
         axiosConfig = {
           ...axiosConfig,
-          auth: {
-            username: this.username,
-            password: this.password
-          }
+          headers: {
+            ...defaultConfig.headers,
+            'Authorization': `Bearer ${this.getCookie('token')}`,
+          },
         };
       }
 
       return await axios.request(axiosConfig)
-      .then((response) => {
-        return response.data;
-      }).catch((error) => {
-        throw error.response;
-      });
+        .then((response) => {
+          return response.data;
+        }).catch((error) => {
+          throw error.response;
+        });
     },
     async postFileMeta(fileName: string, releaseId: string, rename: string = "") {
 
@@ -273,7 +286,7 @@ export const useApiStore = defineStore('api', {
         releaseid: releaseId,
       }
 
-      if (rename){
+      if (rename) {
         params = {
           ...params,
           rename: rename
@@ -287,23 +300,28 @@ export const useApiStore = defineStore('api', {
         params: params
       }
 
-      if (this.auth && this.authStatus){
+      if (this.auth && this.authStatus) {
         axiosConfig = {
           ...axiosConfig,
-          auth: {
-            username: this.username,
-            password: this.password
-          }
+          headers: {
+            ...defaultConfig.headers,
+            'Authorization': `Bearer ${this.getCookie('token')}`,
+          },
         };
       }
 
       return await axios.request(axiosConfig)
-      .then((response) => {
-        return response.data;
-      }).catch((error) => {
-        throw error.response;
-      });
+        .then((response) => {
+          return response.data;
+        }).catch((error) => {
+          throw error.response;
+        });
     },
+    getCookie(name: string) {
+      function escape(s) { return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, '\\$1'); }
+      var match = document.cookie.match(RegExp('(?:^|;\\s*)' + escape(name) + '=([^;]*)'));
+      return match ? match[1] : null;
+    }
   },
   getters: {
   },
