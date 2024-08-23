@@ -1,9 +1,12 @@
-name: Mirror to Bitbucket
+name: Sync to Bitbucket
 
 on:
   push:
     branches:
-      - '**'  
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   deploy:
@@ -12,12 +15,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 
 
     - name: Push to Bitbucket
       env:
         BITBUCKET_USERNAME: ${{ secrets.BITBUCKET_USERNAME }}
         BITBUCKET_APP_PASSWORD: ${{ secrets.BITBUCKET_APP_PASSWORD }}
       run: |
-        git remote add bitbucket https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/rakma/Minizo.git
-        git push --mirror bitbucket
+        git remote add bitbucket https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/rakma/minizo.git
+        git push --all bitbucket  # Push all branches
         git push --tags bitbucket  # Push all tags
