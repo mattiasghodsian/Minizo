@@ -68,6 +68,7 @@ export const useApiStore = defineStore('api', {
           password: password
         }
       }).then((response) => {
+        this.authStatus = true;
         return response.data;
       }).catch((error) => {
         throw error.response;

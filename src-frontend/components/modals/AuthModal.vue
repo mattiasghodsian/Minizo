@@ -9,6 +9,7 @@ const toast = useToast();
 const apiStore = useApiStore();
 const username = ref<string>();
 const password = ref<string>();
+const showModal = ref<boolean>(true);
 
 const { appContext } = getCurrentInstance()!;
 const $cookies = appContext.config.globalProperties.$cookies;
@@ -52,25 +53,19 @@ const handler = async (): Promise<void> => {
   });
 }
 
-const isAuth = (): boolean => {
-  const backendIsAuth = apiStore.auth && !apiStore.authStatus;
-
-  if (backendIsAuth == true){
-    apiStore.testAuth().then(res => {
-      return false;
+onMounted(async (): Promise<void> => {
+  if ( apiStore.getCookie('token') ){
+    await apiStore.testAuth().then(res => {
+      console.log(res);
     }).catch(err => {
       $cookies.remove('token');
-      return true;
     });
   }
-
-  return backendIsAuth;
-}
-
+});
 </script>
 
 <template>
-  <Dialog :visible="isAuth()" modal :closable="false" class="bg-white"
+  <Dialog :visible="apiStore.auth && !apiStore.authStatus" modal :closable="false" class="bg-white"
     :showHeader="false" :style="{ width: '20rem' }" pt:root:class="!border-0 pt-4  overflow-hidden !bg-minizo-dark !text-white"
     pt:mask:class="backdrop-blur-sm">
 
