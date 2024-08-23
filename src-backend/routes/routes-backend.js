@@ -1,11 +1,15 @@
 import express from 'express';
 import path from 'path';
 import * as fs from 'fs';
+import { getToken } from '../controllers/authController.js';
 import { viewDirectory, deleteFile, relocateFile } from '../controllers/directoryController.js';
 import { download , downloadFile} from '../controllers/downloadController.js';
 import { search, getRelease, getFileMeta, writeMetaToFile } from '../controllers/metaController.js'
 
 const backendRouter = express.Router();
+
+// Auth
+backendRouter.post('/auth', getToken);
 
 // File & Directory Routes
 backendRouter.get('/files/:directory', viewDirectory);
