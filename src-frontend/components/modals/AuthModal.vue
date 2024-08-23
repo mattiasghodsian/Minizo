@@ -56,7 +56,7 @@ const handler = async (): Promise<void> => {
 onMounted(async (): Promise<void> => {
   if ( apiStore.getCookie('token') ){
     await apiStore.testAuth().then(res => {
-      console.log(res);
+      // success do nothing
     }).catch(err => {
       $cookies.remove('token');
     });
