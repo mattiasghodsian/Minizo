@@ -1,8 +1,7 @@
 import * as path from 'path';
 import { execa } from 'execa';
 import * as fs from 'fs';
-import {logger} from '../helpers/loggerHelper.js';
-import { hasEnvArgs, isValidFormat, handleDownloadError, handleMetaError, handleWriteMetaError, justLogg } from '../helpers/bitwiseHelper.js';
+import { handleWriteMetaError, justLogg } from '../helpers/bitwiseHelper.js';
 import { checkDirectoryExists, checkFileExists } from '../helpers/bitwiseHelper.js';
 import { musicbrainzSearch, musicbrainzRelease } from '../helpers/axiosHelper.js';
 import * as mm from 'music-metadata';
