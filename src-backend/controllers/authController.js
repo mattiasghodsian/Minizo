@@ -21,8 +21,14 @@ export const getToken = (req, res) => {
 
 export const verifyToken = (req, res, next) => {
 
-  const authHeader = req.headers.authorization;
-  const jwtSecret = process.env.JWTSECRET;
+  const usr         = process.env.AUTH_USER;
+  const pass        = process.env.AUTH_PASS;
+  const jwtSecret   = process.env.JWTSECRET;
+  const authHeader  = req.headers.authorization;
+
+  if (!usr || !pass || !jwtSecret) {
+    return next();
+  }
   
   if (req.originalUrl.includes("/api/info") || req.originalUrl.includes("/api/auth")){
     next();
