@@ -261,12 +261,12 @@ onUnmounted(() => {
     </div>
   </section>
 
-
-
   <section class="flex flex-col gap-8">
     <DataTable v-model:selection="selectedTrack" :value="apiStore.fileList" selectionMode="single" dataKey="name">
       <Column selectionMode="single" headerStyle="width: 3rem"></Column>
       <Column field="name" header="Name" footer="Name" sortable></Column>
+      <Column field="bitrate" header="Bitrate (kbps)" footer="Bitrate (kbps)" sortable></Column>
+      <Column field="sampleRate" header="Sample Rate" footer="Sample Rate" sortable></Column>
       <Column field="type" header="Type" footer="Type" sortable></Column>
     </DataTable>
   </section>

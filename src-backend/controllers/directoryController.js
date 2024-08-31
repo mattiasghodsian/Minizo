@@ -1,41 +1,58 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { logger } from '../helpers/loggerHelper.js';
 import { checkDirectoryExists, checkFileExists, handleFileError } from '../helpers/bitwiseHelper.js';
+import * as mm from 'music-metadata';
 
-export const viewDirectory = (req, res) => {
-  const musicExtensions = process.env.MUSIC_EXTENSIONS.split(',');
-  const MUSIC_STORAGE = process.env.MUSIC_STORAGE || null;
-  const directoryPath = path.join(MUSIC_STORAGE, req.params.directory);
+export const viewDirectory = async (req, res) => {
+  try {
+    const musicExtensions = process.env.MUSIC_EXTENSIONS.split(',');
+    const MUSIC_STORAGE = process.env.MUSIC_STORAGE || null;
+    const directoryPath = path.join(MUSIC_STORAGE, req.params.directory);
 
-  checkDirectoryExists(directoryPath, res);
+    checkDirectoryExists(directoryPath, res);
 
-  fs.promises.readdir(directoryPath)
-    .then((files) => {
-      const nonmusic = req.query.nonmusic || 'false';
-      if (nonmusic && nonmusic.toLowerCase() != 'true') {
-        files = files.filter(file => {
-          const extension = path.extname(file).toLowerCase();
-          return musicExtensions.includes(extension);
-        });
-      }
+    let files = await fs.promises.readdir(directoryPath);
 
-      res.send(files.map(function (file) {
-        const lastDotIndex = file.lastIndexOf('.');
-        const name = file.slice(0, lastDotIndex);
-        const type = file.slice(lastDotIndex + 1);
+    if (req.query.nonmusic?.toLowerCase() !== 'true') {
+      files = files.filter(file => musicExtensions.includes(path.extname(file).toLowerCase()));
+    }
+
+    const fileDetails = await Promise.all(
+      files.map(async file => {
+        const filePath = path.join(directoryPath, file);
+        const extension = path.extname(file).toLowerCase();
+        const name = path.basename(file, extension);
+        const type = extension.slice(1);
+
+        let bitrate = null;
+        let sampleRate = null;
+
+        // Extract metadata only for music files
+        if (musicExtensions.includes(extension)) {
+          try {
+            const metadata = await mm.parseFile(filePath);
+            bitrate = Math.round(metadata.format.bitrate / 1000) || null;
+            sampleRate = Math.round(metadata.format.sampleRate) || null;
+          } catch (error) {
+            console.error(`Error reading metadata for file ${file}: ${error.message}`);
+          }
+        }
 
         return {
-          file: file,
-          name: name,
-          type: type
+          file,
+          name,
+          type,
+          bitrate,
+          sampleRate
         };
-      }));
-    })
-    .catch((err) => {
-      handleFileError(err, '', res, 'Error reading directory.');
-    });
-};
+      })
+    );
+
+    res.status(200).send(fileDetails);
+  } catch (error) {
+    handleFileError(error, '', res, 'Error reading directory.');
+  }
+}
 
 export const deleteFile = (req, res) => {
   const MUSIC_STORAGE = process.env.MUSIC_STORAGE || null;
