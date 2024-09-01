@@ -127,9 +127,8 @@ const actionList = [
     keyCode: 89, // Y
     command: () => {
       if (selectedTrack.value && selectedTrack.value.hasOwnProperty('name')) {
-        const trackName = selectedTrack.value.name.replace(/\.[^/.]+$/, "");
-        const query = trackName.replace(/\s+/g, '+');
-        const url = `https://music.youtube.com/search?q=${query}`;
+        const trackName = selectedTrack.value.name.replace(/\./g, "").replace(/\s+/g, '+').replace(/&/g, '%26');
+        const url = `https://music.youtube.com/search?q=${trackName}`;
         window.open(url, '_blank');
       } else {
         toast.add({
