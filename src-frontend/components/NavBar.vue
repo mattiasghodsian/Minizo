@@ -15,7 +15,7 @@ defineProps({
 });
 
 const isCurrentPage = (slug: string): boolean => {
-  return (route.path == slug);
+  return (route.path == slug) || (route.params.directory == slug);
 };
 </script>
 
@@ -33,7 +33,11 @@ const isCurrentPage = (slug: string): boolean => {
             </li>
           </ul>
           <div class="pt-2 space-y-2">
-            <RouterLink v-for="(directory, index) in apiStore.directories" :to="{ name: 'manager', params: { directory: directory} }" :key="index" class="flex items-center p-2 text-base transition duration-75 rounded-lg text-gray-200 hover:bg-gray-700">
+            <RouterLink v-for="(directory, index) in apiStore.directories" 
+              :to="{ name: 'manager', params: { directory: directory} }" 
+              :key="index" 
+              class="flex items-center p-2 text-base transition duration-75 rounded-lg text-gray-200 hover:bg-gray-700"
+              :class="{ 'font-bold bg-gray-700 text-gray-200': isCurrentPage(directory) }">
               <IconFolder class="w-5 h-5 fill-gray-400 group-hover:fill-white"/>
               <span class="ml-3" sidebar-toggle-item="">{{ directory }}</span>
             </RouterLink>
