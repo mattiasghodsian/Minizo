@@ -9,6 +9,7 @@ import Popover from 'primevue/popover';
 import MetaDataModal from '@/components/modals/MetaDataModal.vue';
 import ViewDataModal from '@/components/modals/ViewMetaDataModal.vue';
 import MoveFileModal from '@/components/modals/MoveFileModal.vue';
+import LoadingScreen from '@/components/LoadingScreen.vue';
 
 const toast = useToast();
 const apiStore = useApiStore();
@@ -20,6 +21,7 @@ const showViewMetaDataModal = ref<boolean>(false);
 const showMoveFileModal = ref<boolean>(false);
 const actionOp = ref();
 const totalFiles = ref<number>(0);
+const loading = ref<boolean>(false);
 
 const actionList = [
   {
@@ -143,6 +145,7 @@ const actionList = [
 ];
 
 const getFiles = async (): Promise<void> => {
+  loading.value = true;
   await apiStore.viewDirectory(
     route.params.directory,
     viewAllFiles.value
@@ -157,6 +160,7 @@ const getFiles = async (): Promise<void> => {
       life: 3000
     });
   });
+  loading.value = false;
 }
 
 const toggleActionOp = (event) => {
@@ -200,6 +204,9 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <Teleport to="body">
+    <LoadingScreen v-if="loading" />
+  </Teleport>
   <MetaDataModal :show="showMetaDataModal" :track="selectedTrack ?? {}" @close="showMetaDataModal = false" />
   <ViewDataModal :show="showViewMetaDataModal" :track="selectedTrack ?? {}" @close="showViewMetaDataModal = false" />
   <MoveFileModal :show="showMoveFileModal" :track="selectedTrack ?? {}" @close="closeMoveFileModal" />
