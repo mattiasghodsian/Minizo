@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.source="https://github.com/mattiasghodsian/Minizo
 LABEL org.opencontainers.image.description="Docker image for Minizo"
 LABEL org.opencontainers.image.licenses="GPL-3.0"
 
-ARG YTDLP_VERSION=2024.08.06
+ARG YTDLP_VERSION=2024.12.13
 
 # Update and install needed packages
 RUN apt-get update && \
