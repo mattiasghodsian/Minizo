@@ -47,15 +47,12 @@
 This project began as a solution to access and manage my audio files beyond my local network, but it grew into something else over time. And now, Minizo is open for everyone to enjoy.
 
 # Requirements
-- [Node.js](https://nodejs.org/en)
+- [Laravel](https://laravel.com/)
+- [Inertia.js](https://inertiajs.com/)
+- [Vue.js](https://vuejs.org/)
+- [Tailwind](https://tailwindcss.com/)
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - [ffmpeg](https://ffmpeg.org/)
-- [beets](https://github.com/beetbox/beets)
-
-# How to 
-- Clone down the project `git clone git@github.com:mattiasghodsian/Minizo.git`
-- Install all dependencies `npm install` and create a new .env file `cp .env.example .env` and fill in all fields
-- Run the project with `npm run serve` and visit `http://localhost:3000`
 
 # Docker
 ***Nightly releases** come with the latest source but are unstable and not recommended for production use.*
@@ -67,8 +64,8 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - .env:/srv/.env
-      - /home/user/music:/music:rw
+      - .env:/var/www/html/.env'
+      - '/home/rakma/Music:/var/www/html/storage/app/private/music'
     user: 1000:1000
     restart: always
 
