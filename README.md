@@ -33,7 +33,7 @@
 
 > Downloading copyrighted content without proper authorization is illegal in most countries and not endorsed. This project is intended for educational purposes only. Please ensure you have the right to download and use the content.
 
-**The project is undergoing a full rewrite only library updates or minor fixes will be applyed **
+**The project is undergoing a full rewrite only library updates or minor fixes will be applyed**
 
 # Features
 
