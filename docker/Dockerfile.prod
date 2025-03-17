@@ -61,13 +61,14 @@ RUN groupadd --force -g $WWWGROUP sail \
     && useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
 
 # Copy application files
-COPY . /var/www/html
+COPY /github/workspace/ /var/www/html
 RUN chown -R sail:$WWWGROUP /var/www/html
+RUN cp .env.example .env
 
 # Set up PHP and container configuration
-COPY start-container /usr/local/bin/start-container
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php.ini /etc/php/8.4/cli/conf.d/99-sail.ini
+COPY docker/start-container /usr/local/bin/start-container
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/php.ini /etc/php/8.4/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
 
 # Install composer dependencies and optimize
