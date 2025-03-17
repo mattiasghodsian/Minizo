@@ -167,23 +167,24 @@ const handlePageChange = (page) => {
                         </tr>
                     </tbody>
 
-                    <!-- file action menu -->
-                    <div 
-                        v-show="toggleToolMenu" 
-                        class="fixed z-50 bg-gray-800 border border-gray-700 min-w-32 rounded-lg shadow-md text-gray-400"
-                        :style="{
-                            top: `${menuPosition.y}px`,
-                            left: `${menuPosition.x}px`
-                        }"
-                    >
-                        <ul>
-                            <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="writeMeta">Edit</li>
-                            <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="MoveFile">Move</li>
-                            <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="SearchYT">Search</li>
-                            <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="deleteFile">Delete</li>
-                        </ul>
-                    </div>
                 </table>
+            </div>
+            
+            <!-- file action menu -->
+            <div 
+                v-show="toggleToolMenu" 
+                class="fixed z-50 bg-gray-800 border border-gray-700 min-w-32 rounded-lg shadow-md text-gray-400"
+                :style="{
+                    top: `${menuPosition.y}px`,
+                    left: `${menuPosition.x}px`
+                }"
+            >
+                <ul>
+                    <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="writeMeta">Edit</li>
+                    <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="MoveFile">Move</li>
+                    <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="SearchYT">Search</li>
+                    <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="deleteFile">Delete</li>
+                </ul>
             </div>
 
             <div class="border-t border-gray-700 px-6 py-3">
