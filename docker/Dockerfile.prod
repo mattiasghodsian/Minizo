@@ -66,9 +66,9 @@ RUN chown -R sail:$WWWGROUP /var/www/html
 RUN cp .env.example .env
 
 # Set up PHP and container configuration
-COPY docker/start-container /usr/local/bin/start-container
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY docker/php.ini /etc/php/8.4/cli/conf.d/99-sail.ini
+COPY ./docker/start-container /usr/local/bin/start-container
+COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./docker/php.ini /etc/php/8.4/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
 
 # Install composer dependencies and optimize
