@@ -2,6 +2,10 @@ FROM ubuntu:24.04
 
 LABEL maintainer="Mattias Ghodsian"
 LABEL description="Docker image for Minizo"
+LABEL org.opencontainers.image.url="https://github.com/mattiasghodsian/Minizo"
+LABEL org.opencontainers.image.source="https://github.com/mattiasghodsian/Minizo"
+LABEL org.opencontainers.image.description="Docker image for Minizo"
+LABEL org.opencontainers.image.licenses="GPL-3.0"
 
 ARG WWWGROUP
 ARG NODE_VERSION=22
