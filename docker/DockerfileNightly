@@ -64,8 +64,8 @@ RUN apt-get update && apt-get upgrade -y \
 
 # Clone Minizo and install packages
 RUN git clone https://github.com/mattiasghodsian/Minizo.git .
-RUN composer install
-RUN git checkout v1.0.0 && npm install && cp .env.example .env && npm run build-only
+RUN git checkout develop 
+RUN composer install && npm install && cp .env.example .env && npm run build
 
 # Install yt-dlp
 RUN wget -O /usr/bin/yt-dlp "https://github.com/yt-dlp/yt-dlp/releases/download/${YTDLP_VERSION}/yt-dlp_linux" && \
