@@ -159,7 +159,7 @@ const handlePageChange = (page) => {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-700">
-                        <tr v-for="(file, index) in paginatedFiles" :key="index" class="hover:bg-gray-700" @click.right="showToolMenu($event, file.name)">
+                        <tr v-for="(file, index) in paginatedFiles" :key="index" class="hover:bg-gray-700 hover:text-white" @click.right="showToolMenu($event, file.name)">
                             <td class="px-6 py-4 whitespace-nowrap text-sm max-w-96 truncate">{{ file.name_clean }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">{{ file.format }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">{{ file.size }}</td>

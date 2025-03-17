@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*::-webkit-scrollbar {
+    @apply w-2 h-2;
+}
+
+*::-webkit-scrollbar-track {
+    @apply bg-gray-800 rounded-lg;
+}
+
+*::-webkit-scrollbar-track:hover {
+    @apply bg-gray-800;
+}
+
+*::-webkit-scrollbar-track:active {
+    @apply bg-gray-800;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    @apply bg-minizo-dark;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    @apply bg-minizo-dark;
+}
+
+*::-webkit-scrollbar-thumb:active {
+    @apply bg-minizo-dark;
+}

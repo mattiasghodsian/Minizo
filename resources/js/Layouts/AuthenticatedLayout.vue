@@ -90,12 +90,16 @@ const logout = () => {
                             </NavLink>
                         </li>
                         <li class="border-b border-gray-800 my-2 mx-4"></li>
+                    </ul>
+                    <ul class="flex flex-col gap-3 max-h-52 overflow-y-auto">
                         <li v-for="directory in $page.props.library.directories" :key="directory.id">
                             <NavLink :href="route('library', { directory: directory.name })">
                                 <FolderIcon class="h-6 w-6 fill-gray-400" />
                                 {{ directory.name }}
                             </NavLink>
                         </li>
+                    </ul>
+                    <ul class="flex flex-col gap-3">
                         <li class="border-b border-gray-800 my-2 mx-4"></li>
                         <li>
                             <NavLink :href="route('profile.edit')">
