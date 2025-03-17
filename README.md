@@ -54,25 +54,63 @@ This project began as a solution to access and manage my audio files beyond my l
 ## DOCKER
 ***Nightly releases** come with the latest source but are unstable and not recommended for production use.*
 
-Don't forget to run `artisan migrate` & `artisan db:seed`
+Don't forget to run `php artisan migrate` & `php artisan db:seed` inside the container.
 
 ```yml
-version: "3"
+version: '3'
+
 services:
-  minizo:
-    image: rakma/minizo:latest
+  app:
+    image: 'rakma/minizo:nightly'
+    container_name: minizo
+    restart: unless-stopped
     ports:
-      - 3000:3000
+      - '3010:80'
+    env_file:
+      - .env
+    environment:
+      DB_HOST: mysql
     volumes:
-      - .env:/srv/.env
-      - /home/user/music:/music:rw
-    user: 1000:1000
-    restart: always
+      - minizo_storage:/var/www/html/storage
+      - .env:/var/www/html/.env
+      - /music-collection:/var/www/html/storage/app/private/music:rw
+    depends_on:
+      - mysql
+    networks:
+      - minizo
+
+  mysql:
+    image: mariadb:10.11
+    container_name: minizo_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - minizo_mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    networks:
+      - minizo
 
 networks:
-  default:
-    name: minizo
-    external: true
+  minizo:
+    driver: bridge
+
+volumes:
+  minizo_mariadb:
+    driver: local
+  minizo_storage:
+    driver: local
 ```
 
 ## SCREENSHOTS
