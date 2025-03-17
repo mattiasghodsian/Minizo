@@ -53,6 +53,9 @@ This project began as a solution to access and manage my audio files beyond my l
 
 ## DOCKER
 ***Nightly releases** come with the latest source but are unstable and not recommended for production use.*
+
+Don't forget to run `artisan migrate` & `artisan db:seed`
+
 ```yml
 version: "3"
 services:
@@ -73,8 +76,8 @@ networks:
 ```
 
 ## SCREENSHOTS
-| [![](https://imgur.com/3aVswPa.png)](https://imgur.com/3aVswPa.png) | [![](https://imgur.com/7YsyUZb.png)](https://imgur.com/7YsyUZb.png) | [![](https://imgur.com/1P8DRpg.png)](https://imgur.com/1P8DRpg.png) | [![](https://imgur.com/L0xoRWb.png)](https://imgur.com/L0xoRWb.png) |
-| :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: |
+| [![](https://i.imgur.com/AdYjfaX.png)](https://i.imgur.com/AdYjfaX.png) | [![](https://i.imgur.com/6qe45Th.png)](https://i.imgur.com/6qe45Th.png) | [![](https://i.imgur.com/YgpmizI.png)](https://i.imgur.com/YgpmizI.png)
+| :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | 
 
 ## CONTRIBUTING
 We welcome contributions from the community! Whether you're fixing a bug, adding a new feature, or improving documentation, your help is greatly appreciated.
