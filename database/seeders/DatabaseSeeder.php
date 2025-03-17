@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'minizo',
             'email' => 'minizo@minizo.dev',
+            'pagination_size' => 25,
             'password' => bcrypt('minizo'),
         ]);
     }
