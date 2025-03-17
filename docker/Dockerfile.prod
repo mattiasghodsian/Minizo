@@ -63,7 +63,6 @@ RUN groupadd --force -g $WWWGROUP sail \
 # Copy application files
 COPY . /var/www/html
 RUN chown -R sail:$WWWGROUP /var/www/html
-RUN cp /var/www/html/.env.example /var/www/html/.env
 
 # Set up PHP and container configuration
 COPY start-container /usr/local/bin/start-container
