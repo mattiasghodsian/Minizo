@@ -5,3 +5,4 @@ dist/
 test.js
 vendor/
 public/build
+docker-compose.yml
