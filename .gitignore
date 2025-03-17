@@ -3,3 +3,5 @@ node_modules/
 error.log
 dist/
 test.js
+vendor/
+public/build
