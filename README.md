@@ -2,7 +2,7 @@
   <a href="https://github.com/mattiasghodsian/Minizo/">
     <img alt="Iroh" src="https://imgur.com/25ISXaS.png" height="150">
   </a>
-  <p  align="center">Minizo is a sleek web app built with Node.js, Express.js, and Vue.js. <br> Minizo lets users effortlessly browse and manage their music collection and obtain tracks.</p>
+  <p  align="center">Minizo is a sleek web app lets users effortlessly <br> browse and manage their music collection and obtain tracks.</p>
 </p>
 
 <p align="center">
@@ -35,30 +35,27 @@
 
 # FEATURES
 
-- **Browsing by folder:** Dive into folders to view the files stored within them.
-- **File Management:** Easily delete or relocate files within your collection.
+- **File Management:** A fully working file manager.
 - **Fast search:** YouTube Music fast search.
-- **Grab video:** Capture videos from various sources and effortlessly convert them into audio files.
-- **Authentication:** Enable optional basic authentication for the project.
-- **MusicBrainz:** Retrieve metadata from MusicBrainz (token required).
+- **Download:** Download videos from various sources and effortlessly convert to audio files.
+- **Meta data:** Retrieve metadata from MusicBrainz and write to file.
 - and much more.
 
 ## PROJECT BACKGROUND
 This project began as a solution to access and manage my audio files beyond my local network, but it grew into something else over time. And now, Minizo is open for everyone to enjoy.
 
-## REQUIREMENTS
-- [Node.js](https://nodejs.org/en)
+## BUILT WITH 
+- [Laravel](https://laravel.com/)
+- [Tailwind](https://tailwindcss.com/)
+- [Vue.js](https://vuejs.org/)
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - [ffmpeg](https://ffmpeg.org/)
-- [beets](https://github.com/beetbox/beets)
-
-## HOW TO
-- Clone down the project `git clone git@github.com:mattiasghodsian/Minizo.git`
-- Install all dependencies `npm install` and create a new .env file `cp .env.example .env` and fill in all fields
-- Run the project with `npm run serve` and visit `http://localhost:3000`
 
 ## DOCKER
 ***Nightly releases** come with the latest source but are unstable and not recommended for production use.*
+
+Don't forget to run `artisan migrate` & `artisan db:seed`
+
 ```yml
 version: "3"
 services:
@@ -79,8 +76,8 @@ networks:
 ```
 
 ## SCREENSHOTS
-| [![](https://imgur.com/3aVswPa.png)](https://imgur.com/3aVswPa.png) | [![](https://imgur.com/7YsyUZb.png)](https://imgur.com/7YsyUZb.png) | [![](https://imgur.com/1P8DRpg.png)](https://imgur.com/1P8DRpg.png) | [![](https://imgur.com/L0xoRWb.png)](https://imgur.com/L0xoRWb.png) |
-| :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: |
+| [![](https://i.imgur.com/AdYjfaX.png)](https://i.imgur.com/AdYjfaX.png) | [![](https://i.imgur.com/6qe45Th.png)](https://i.imgur.com/6qe45Th.png) | [![](https://i.imgur.com/YgpmizI.png)](https://i.imgur.com/YgpmizI.png)
+| :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | 
 
 ## CONTRIBUTING
 We welcome contributions from the community! Whether you're fixing a bug, adding a new feature, or improving documentation, your help is greatly appreciated.

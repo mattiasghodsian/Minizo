@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+export WWWGROUP=${WWWGROUP:-$(id -g)}
+export WWWUSER=${WWWUSER:-$(id -u)}
+
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <docker-compose command>"
+    echo "Example: $0 up -d"
+    exit 1
+fi
+
+docker-compose "$@"
