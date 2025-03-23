@@ -30,6 +30,11 @@ class MusicService
                 'full_path' => $disk->path($directory)
             ];
         }
+
+        // Sort alphabetically
+        usort($directories, function($a, $b) {
+            return strcasecmp($a['name'], $b['name']);
+        });
         
         return $directories;
     }
@@ -70,6 +75,11 @@ class MusicService
                 ];
             }
         }
+
+        // Sort alphabetically
+        usort($files, function($a, $b) {
+            return strcasecmp($a['name'], $b['name']);
+        });
 
         return $files;
     }
