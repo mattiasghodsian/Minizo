@@ -79,39 +79,37 @@ class LibraryController extends Controller
         }
     }
 
-
-    public function moveFile(Request $request): RedirectResponse
+    public function move(Request $request): RedirectResponse
     {
-        try {
-            $validated = $request->validate([
-                'currentFile'   => 'required|string',
-                'fromDirectory' => 'required|string',
-                'toDirectory'   => 'required|string',
-            ]);
-
-            // $isMoved = $this->musicService->moveFile(
-            //     $validated['currentFile'],
-            //     $validated['fromDirectory'],
-            //     $validated['toDirectory']
-            // );
-
-        } catch (ValidationException $e) {
-            Log::error($e->getMessage(), ['exception' => $e, 'function' => __FUNCTION__]);
-            return redirect()
-                ->route('library', ['directory' => $request->directory])
-                ->with([
-                    'message'       => sprintf('%s_%s', $e->getMessage(), uniqid()),
-                    'messageType'   => 'error'
-                ]);
+        $request->validate([
+            'currentFile' => 'required|string',
+            'fromDirectory' => 'required|string',
+            'toDirectory' => 'required|string',
+        ]);
     
-        } catch (\Exception $e) {
-            Log::error($e->getMessage(), ['exception' => $e, 'function' => __FUNCTION__]);
-            return redirect()
-                ->route('library', ['directory' => $request->directory])
-                ->with([
-                    'message'       => sprintf('%s_%s', $e->getMessage(), uniqid()),
-                    'messageType'   => 'error'
+        try {
+            $success = $this->musicService->moveFile(
+                $request->currentFile,
+                $request->fromDirectory,
+                $request->toDirectory
+            );
+            
+            if ($success) {
+                return redirect()->back()->with([
+                    'messageType' => sprintf('File successfully moved to %s_%s', $request->toDirectory, uniqid()),
+                    'messageType' => 'success'
                 ]);
+            } else {
+                return redirect()->back()->with([
+                    'message' => sprintf('Failed to move file_%s', uniqid()),
+                    'messageType' => 'error'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'message' => sprintf('%s_%s', $e->getMessage(), uniqid()),
+                'messageType' => 'error'
+            ]);
         }
     }
 

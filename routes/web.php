@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(LibraryController::class)->group(function () {
         Route::get('/lib/{directory}', 'view')->name('library');
         Route::delete('/lib/{directory}', 'destroy')->name('library.destroy');
-        // Route::post('/lib/{directory}', 'download')->name('library.download');
+        Route::post('/library/move', 'move')->name('library.move');
     });
 });
 

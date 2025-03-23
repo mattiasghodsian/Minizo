@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class MusicService
@@ -32,10 +33,10 @@ class MusicService
         }
 
         // Sort alphabetically
-        usort($directories, function($a, $b) {
+        usort($directories, function ($a, $b) {
             return strcasecmp($a['name'], $b['name']);
         });
-        
+
         return $directories;
     }
 
@@ -59,10 +60,10 @@ class MusicService
 
         foreach ($allFiles as $file) {
             $extension = pathinfo($file, PATHINFO_EXTENSION);
-            
+
             if (in_array(strtolower($extension), self::ALLOWED_EXTENSIONS)) {
                 $fileSize = $disk->size($file);
-                $fileName = basename($file);            
+                $fileName = basename($file);
                 $files[] = [
                     'name'          => $fileName,
                     'name_clean'    => pathinfo($fileName, PATHINFO_FILENAME),
@@ -77,41 +78,83 @@ class MusicService
         }
 
         // Sort alphabetically
-        usort($files, function($a, $b) {
+        usort($files, function ($a, $b) {
             return strcasecmp($a['name'], $b['name']);
         });
 
         return $files;
     }
 
+    /**
+     * Delete file from a directory
+     */
     public function deleteFile(string $directory, string $file): bool
     {
         try {
             $disk       = Storage::disk('music');
             $musicPath  = "/$directory";
-            $filePath = "$musicPath/$file";
-    
+            $filePath   = "$musicPath/$file";
+
             if (!$disk->exists($musicPath)) {
                 throw new \Exception("Directory not found: $directory");
             }
-    
+
             if (!$disk->exists($filePath)) {
                 throw new \Exception("File not found: $file");
             }
             $disk->delete($filePath);
-            
+
             return true;
         } catch (\Exception $e) {
             throw new \Exception("Failed to delete file: {$e->getMessage()}");
         }
-        
+
         return false;
     }
 
+    /**
+     * Move a file from one directory to another
+     *
+     * @param string $currentFile
+     * @param string $fromDirectory
+     * @param string $toDirectory
+     * @return bool
+     */
     public function moveFile(string $currentFile, string $fromDirectory, string $toDirectory): bool
     {
-        // Implement the moveFile method
-        return false;
+        try {
+            $disk               = Storage::disk('music');
+            $sourcePath         = "/$fromDirectory/$currentFile";
+            $destinationPath    = "/$toDirectory/$currentFile";
+
+            if (!$disk->exists("/$fromDirectory")) {
+                throw new \Exception("Source directory not found: $fromDirectory");
+            }
+
+            if (!$disk->exists("/$toDirectory")) {
+                throw new \Exception("Destination directory not found: $toDirectory");
+            }
+
+            if (!$disk->exists($sourcePath)) {
+                throw new \Exception("File not found: $currentFile");
+            }
+
+            if ($disk->exists($destinationPath)) {
+                throw new \Exception("A file with the same name already exists in the destination directory");
+            }
+
+            return $disk->move($sourcePath, $destinationPath);
+
+        } catch (\Exception $e) {
+            Log::error("Exception while moving file", [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'file' => $currentFile,
+                'from' => $fromDirectory,
+                'to' => $toDirectory
+            ]);
+            return false;
+        }
 
     }
 }

@@ -15,6 +15,17 @@ fi
 
 chmod -R ugo+rw /.composer
 
+# Ensure music storage directory has proper permissions
+MUSIC_DIR="/var/www/html/storage/app/public/music"
+if [ ! -d "$MUSIC_DIR" ]; then
+    echo "Creating music directory: $MUSIC_DIR"
+    mkdir -p "$MUSIC_DIR"
+fi
+
+echo "Setting proper permissions on music directory"
+chown -R sail:sail "$MUSIC_DIR"
+chmod -R 775 "$MUSIC_DIR"
+
 if [ $# -gt 0 ]; then
     if [ "$SUPERVISOR_PHP_USER" = "root" ]; then
         exec "$@"

@@ -4,6 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, usePoll, usePage } from '@inertiajs/vue3';
 import {useToast} from 'vue-toast-notification';
 import Pagination from '@/Components/Pagination.vue';
+import Modal from '@/Components/Modal.vue';
 
 const props = defineProps({
     files: {
@@ -37,8 +38,15 @@ const form = useForm({
     directory: props.currentDirectory,
 });
 
+const moveForm = useForm({
+    currentFile: null,
+    fromDirectory: props.currentDirectory,
+    toDirectory: '',
+});
+
 const toggleToolMenu = ref(false);
 const menuPosition = ref({ x: 0, y: 0 });
+const showMoveModal = ref(false);
 
 const showToolMenu = (event, file) => {
     event.preventDefault();
@@ -68,12 +76,22 @@ const deleteFile = () => {
  */
 const MoveFile = () => {
     toggleToolMenu.value = !toggleToolMenu.value;
-    // form.post(route('library.download', { directory: props.currentDirectory }), {
-    //     preserveScroll: true,
-    //     onFinish: () => {
-    //         form.reset();
-    //     },
-    // });
+    moveForm.currentFile = form.currentFile;
+    moveForm.fromDirectory = props.currentDirectory;
+    showMoveModal.value = true;
+};
+
+/**
+ * Execute the move operation
+ */
+ const executeMove = () => {
+    moveForm.post(route('library.move'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showMoveModal.value = false;
+            moveForm.reset();
+        },
+    });
 };
 
 /**
@@ -141,6 +159,56 @@ const handlePageChange = (page) => {
     <Head :title="currentDirectory" />
 
     <AuthenticatedLayout>
+
+        <Modal :show="showMoveModal" @close="showMoveModal = false" max-width="md">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    Move File
+                </h2>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    Select a destination directory to move <span class="font-semibold">{{ moveForm.currentFile }}</span>
+                </p>
+
+                <div class="mt-6">
+                    <div class="max-h-60 overflow-y-auto">
+                        <div v-if="$page.props.library.directories">
+                            <div
+                                v-for="directory in $page.props.library.directories"
+                                :key="directory.path"
+                                class="p-2 hover:bg-gray-700 cursor-pointer rounded-md flex items-center"
+                                :class="{ 'bg-gray-700': moveForm.toDirectory === directory.path }"
+                                @click="moveForm.toDirectory = directory.path"
+                            >
+                                <FolderIcon class="w-5 h-5 mr-2 fill-gray-400" />
+                                <span class="text-gray-300">{{ directory.name }}</span>
+                            </div>
+                        </div>
+                        <div v-else class="text-gray-400 py-4 text-center">
+                            No directories available
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button
+                        type="button"
+                        class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 mr-3"
+                        @click="showMoveModal = false"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 focus:bg-indigo-500 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
+                        @click="executeMove"
+                        :disabled="!moveForm.toDirectory || moveForm.processing"
+                        :class="{ 'opacity-50 cursor-not-allowed': !moveForm.toDirectory || moveForm.processing }"
+                    >
+                        Move
+                    </button>
+                </div>
+            </div>
+        </Modal>
+
         <div class="flex items-center gap-3 text-gray-400">
             <FolderIcon class="w-7 h-7 fill-gray-400" />    
             <span class="text-lg">{{ currentDirectory }}</span> 
