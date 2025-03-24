@@ -59,7 +59,7 @@ defineExpose({ close });
 
         <div 
             v-show="isOpen"
-            class="absolute overflow-hidden right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-minizo-dark shadow-lg ring-1 ring-black ring-opacity-5"
+            class="absolute overflow-y-auto max-h-52 right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-minizo-dark shadow-lg ring-1 ring-black ring-opacity-5"
         >
             <div  
                 role="menu" 
