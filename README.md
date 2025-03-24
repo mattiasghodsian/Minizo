@@ -113,6 +113,14 @@ volumes:
     driver: local
 ```
 
+If you encounter permission issues, you can run these commands on your host machine in the music directory:
+```terminal
+sudo chown -R $(whoami):$(whoami) .
+sudo find . -type d -exec chmod 775 {} \;
+sudo find . -type f -exec chmod 664 {} \;
+sudo find . -type d -exec chmod g+s {} \;
+```
+
 ## SCREENSHOTS
 | [![](https://i.imgur.com/AdYjfaX.png)](https://i.imgur.com/AdYjfaX.png) | [![](https://i.imgur.com/6qe45Th.png)](https://i.imgur.com/6qe45Th.png) | [![](https://i.imgur.com/YgpmizI.png)](https://i.imgur.com/YgpmizI.png)
 | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: | 
