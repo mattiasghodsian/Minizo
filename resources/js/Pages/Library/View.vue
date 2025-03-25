@@ -5,6 +5,7 @@ import { Head, useForm, usePoll, usePage } from '@inertiajs/vue3';
 import {useToast} from 'vue-toast-notification';
 import Pagination from '@/Components/Pagination.vue';
 import MoveFile from './Partials/moveFile.vue';
+import SearchYoutube from './Partials/searchYoutube.vue';
 
 const props = defineProps({
     files: {
@@ -41,6 +42,7 @@ const form = useForm({
 const toggleToolMenu = ref(false);
 const menuPosition = ref({ x: 0, y: 0 });
 const showMoveModal = ref(false);
+const searchYoutubeRef = ref(null);
 
 const showToolMenu = (event, file) => {
     event.preventDefault();
@@ -83,13 +85,9 @@ const handleMoveSuccess = () => {
 /**
  * Search YouTube for the current file
  */
-const SearchYT = () => {
+const searchYT = () => {
     toggleToolMenu.value = !toggleToolMenu.value;
-
-    const trackName = form.currentFile.replace(/\.[^/.]+$/, "");
-    const query = trackName.replace(/\s+/g, '+');
-    const url = `https://music.youtube.com/search?q=${query}`;
-    window.open(url, '_blank');
+    searchYoutubeRef.value.executeSearch();
 };
 
 /**
@@ -155,6 +153,12 @@ const handlePageChange = (page) => {
             @success="handleMoveSuccess"
         />
 
+        <!-- Search YouTube Component (no UI, just functionality) -->
+        <SearchYoutube
+            ref="searchYoutubeRef"
+            :filename="form.currentFile"
+        />
+
         <div class="flex items-center gap-3 text-gray-400">
             <FolderIcon class="w-7 h-7 fill-gray-400" />    
             <span class="text-lg">{{ currentDirectory }}</span> 
@@ -196,7 +200,7 @@ const handlePageChange = (page) => {
                 <ul>
                     <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="writeMeta">Edit</li>
                     <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="showMoveFileModal">Move</li>
-                    <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="SearchYT">Search</li>
+                    <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="searchYT">Search</li>
                     <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="deleteFile">Delete</li>
                 </ul>
             </div>
