@@ -96,7 +96,7 @@ class LibraryController extends Controller
             
             if ($success) {
                 return redirect()->back()->with([
-                    'messageType' => sprintf('File successfully moved to %s_%s', $request->toDirectory, uniqid()),
+                    'message' => sprintf('File successfully moved to %s_%s', $request->toDirectory, uniqid()),
                     'messageType' => 'success'
                 ]);
             } else {
