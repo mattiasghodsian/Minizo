@@ -1,4 +1,6 @@
 <script setup>
+import { computed } from 'vue';
+
 const props = defineProps({
     currentPage: {
         type: Number,
@@ -25,6 +27,30 @@ const changePage = (page) => {
         emit('page-changed', page);
     }
 };
+
+const visiblePages = computed(() => {
+    if (props.totalPages <= 5) {
+        return Array.from({ length: props.totalPages }, (_, i) => i + 1);
+    }
+    
+    const pages = [];    
+    pages.push(1);
+
+    if (props.currentPage <= 3) {
+        pages.push(2, 3, 4);
+    } else if (props.currentPage >= props.totalPages - 2) {
+        pages.push(props.totalPages - 3, props.totalPages - 2, props.totalPages - 1);
+    } else {
+        pages.push(props.currentPage - 1, props.currentPage, props.currentPage + 1);
+    }
+    
+    if (!pages.includes(props.totalPages)) {
+        pages.push(props.totalPages);
+    }
+    
+    return pages.sort((a, b) => a - b);
+});
+
 </script>
 
 <template>
@@ -67,17 +93,19 @@ const changePage = (page) => {
                         <span class="sr-only">Previous</span>
                         &larr;
                     </button>
-                    <button
-                        v-for="page in totalPages"
-                        :key="page"
-                        @click="changePage(page)"
-                        :class="[
-                            page === currentPage ? 'bg-gray-700' : 'bg-gray-800 hover:bg-gray-700',
-                            'relative inline-flex items-center px-3.5 py-1 text-sm rounded-full font-medium text-gray-400'
-                        ]"
-                    >
-                        {{ page }}
-                    </button>
+                    
+                    <template v-for="(page, index) in visiblePages" :key="page">
+                        <button
+                            @click="changePage(page)"
+                            :class="[
+                                page === currentPage ? 'bg-gray-700' : 'bg-gray-800 hover:bg-gray-700',
+                                'relative inline-flex items-center px-3.5 py-1 text-sm rounded-full font-medium text-gray-400'
+                            ]"
+                        >
+                            {{ page }}
+                        </button>
+                    </template>
+
                     <button
                         @click="changePage(currentPage + 1)"
                         :disabled="currentPage === totalPages"
