@@ -62,7 +62,6 @@ watch(() => props.sourceDirectory, (newDirectory) => {
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 Select a destination directory to move <span class="font-semibold">{{ form.currentFile }}</span>
             </p>
-
             <div class="mt-6">
                 <div class="max-h-60 overflow-y-auto">
                     <div v-if="directories && directories.length > 0">
