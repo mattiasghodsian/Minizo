@@ -93,7 +93,10 @@ const logout = () => {
                     </ul>
                     <ul class="flex flex-col gap-3 max-h-52 md:max-h-[548px] overflow-y-auto">
                         <li v-for="directory in $page.props.library.directories" :key="directory.id">
-                            <NavLink :href="route('library', { directory: directory.name })">
+                            <NavLink 
+                                :href="route('library', { directory: directory.name })"
+                                :active="route().current('library') && $page.props.currentDirectory === directory.name"
+                            >
                                 {{ directory.name }}
                             </NavLink>
                         </li>
