@@ -27,7 +27,7 @@ defineProps({
             </h2>
         </template>
 
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-6">
             <div class="bg-gray-800 px-4 py-3 items-center relative rounded-lg shadow-md">
                 <h1 class="text-white text-xl absolute uppercase -top-6 bg-gray-800 px-2 rounded-md">Profile</h1>
                 <UpdateProfileInformationForm

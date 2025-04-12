@@ -81,7 +81,7 @@ watch(
 
         <form @submit.prevent="submit" class="bg-gray-800 px-4 py-3 items-center relative rounded-lg shadow-md">
             <h1 class="text-white text-xl absolute uppercase -top-6 bg-gray-800 px-2 rounded-md">Download</h1>
-            <div class="flex gap-3">
+            <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex flex-grow items-center">
                     <TextInput
                         id="url"
@@ -96,7 +96,7 @@ watch(
                     <InputError class="mt-2" :message="form.errors.url" />
                 </div>
                 <div class="flex items-center">
-                    <DropDownBox :value="form.directory" defaultValue="Select Directory" ref="directoryRef">
+                    <DropDownBox :value="form.directory" class="w-full md:w-auto" defaultValue="Select Directory" ref="directoryRef">
                         <span
                             v-for="(directory, index) in $page.props.library.directories"
                             :key="index"
@@ -109,7 +109,7 @@ watch(
                     </DropDownBox>
                 </div>
                 <div class="flex items-center">
-                    <DropDownBox :value="form.format" default-value="Select format" ref="formatRef">
+                    <DropDownBox :value="form.format" class="w-full md:w-auto" default-value="Select format" ref="formatRef">
                         <span
                             v-for="(format, index) in  $page.props.library.formats"
                             :key="index"
@@ -121,7 +121,7 @@ watch(
                         </span>
                     </DropDownBox>
                 </div>
-                <div class="flex items-center">
+                <div class="flex items-center justify-center md:justify-normal">
                     <PrimaryButton :disabled="form.processing" type="submit" class="bg-minizo-dark">Download</PrimaryButton>
                   
                 </div>

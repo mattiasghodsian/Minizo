@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import NavLink from '@/Components/NavLink.vue';
 import { Link, router } from '@inertiajs/vue3';
@@ -10,6 +10,15 @@ import CogIcon from '@/Components/Icons/Cog.vue';
 import LogoutIcon from '@/Components/Icons/Logout.vue';
 
 const showingNavigationDropdown = ref(false);
+
+// Watch for changes to showingNavigationDropdown and toggle body scroll
+watch(showingNavigationDropdown, (value) => {
+    if (value) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+});
 
 const logout = () => {
     router.post(route('logout'));
@@ -52,7 +61,7 @@ const logout = () => {
                         </div>
 
                         <!-- Hamburger -->
-                        <div class="-me-2 flex items-center sm:hidden">
+                        <div class="-me-2 flex items-center md:hidden">
                             <button @click="
                                 showingNavigationDropdown =
                                 !showingNavigationDropdown
@@ -80,7 +89,11 @@ const logout = () => {
 
             <div class="flex flex-row gap-12 w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <!-- Navigation Links -->
-                <nav class="min-w-[200px]">
+                <nav class="min-w-[200px] bg-minizo-dark z-10" 
+                     :class="{ 
+                        'fixed top-16 left-0 right-0 bottom-0 h-[calc(100%-4rem)] w-full max-w-full overflow-auto px-4 sm:px-6 lg:px-8 sm:relative sm:top-0 sm:h-auto sm:px-0': showingNavigationDropdown, 
+                        'hidden sm:block': !showingNavigationDropdown 
+                     }">
                     <ul class="flex flex-col gap-3">
                         <li>
                             <NavLink :href="route('dashboard')" :active="route().current('dashboard')"
@@ -114,6 +127,21 @@ const logout = () => {
                                 <LogoutIcon class="w-6 h-6 fill-gray-400" />
                                 Logout
                             </NavLink>
+                        </li>
+                    </ul>
+                    <ul class="flex flex-col gap-3 md:hidden">
+                        <li class="border-b border-gray-800 my-2 mx-4"></li>
+                        <li class="px-6 py-2">
+                            <a href="https://github.com/mattiasghodsian/Minizo" class="flex items-center gap-4 text-lg group text-gray-400 p hover:text-white" target="_blank">
+                                <GithubIcon class="w-7 h-7 fill-gray-400 group-hover:fill-white" />
+                                Github
+                            </a>
+                        </li>
+                        <li class="px-6 py-2">
+                            <a href="https://hub.docker.com/r/rakma/minizo" class="flex items-center gap-4 text-lg group text-gray-400 p hover:text-white" target="_blank">
+                                <DockerIcon class="w-7 h-7 fill-gray-400 group-hover:fill-white" />
+                                Docker
+                            </a>
                         </li>
                     </ul>
                 </nav>
