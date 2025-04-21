@@ -35,4 +35,7 @@ return [
         ],
     ],
 
+    'musicbrainz' => [
+        'token' => env('MUSICBRAINZ_TOKEN'),
+    ],
 ];
