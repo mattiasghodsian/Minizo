@@ -61,7 +61,10 @@ const getMetadata = () => {
 const updateMetadata = () => {
     form.post(route('library.metadata.update'), {
         onSuccess: (response) => {
-            console.log(response);
+            if (response) {
+                emit('success');
+                emit('close');
+            }
         },
         onError: (error) => {
             console.error(error);
