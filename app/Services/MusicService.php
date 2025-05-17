@@ -203,10 +203,6 @@ class MusicService
                     "https://github.com/mattiasghodsian/Minizo",
                 ));
 
-            // if (!empty($metadata['length'])) {
-            //     $tag->length((int)($metadata['length'] / 1000));
-            // }
-
             // Handle cover art if URL is provided
             if (!empty($metadata['cover_art'])) {
                 try {
@@ -225,7 +221,6 @@ class MusicService
             $tag->save();
 
             return true;
-
         } catch (\Exception $e) {
             Log::error('Failed to write metadata', [
                 'directory' => $directory,
