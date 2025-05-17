@@ -62,7 +62,7 @@ const updateMetadata = () => {
     form.post(route('library.metadata.update'), {
         onSuccess: (response) => {
             if (response) {
-                emit('success');
+                form.reset();
                 emit('close');
             }
         },
