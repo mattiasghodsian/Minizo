@@ -27,6 +27,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/lib/{directory}', 'view')->name('library');
         Route::delete('/lib/{directory}', 'destroy')->name('library.destroy');
         Route::post('/library/move', 'move')->name('library.move');
+
+        Route::prefix('library/metadata')->name('library.metadata.')->group(function () {
+            Route::get('/search', 'searchMetadata')->name('search');
+            Route::post('/get', 'getMetadata')->name('get');
+            Route::post('/update', 'updateMetadata')->name('update');
+        });
     });
 });
 

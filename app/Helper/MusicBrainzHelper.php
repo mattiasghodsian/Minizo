@@ -59,7 +59,20 @@ class MusicBrainzHelper
         try {
             $response = $this->client->get("release/{$releaseId}", [
                 'query' => [
-                    'fmt' => 'json'
+                    'fmt' => 'json',
+                    'inc' => implode('+', [
+                        'artists',
+                        'recordings',
+                        'artist-credits',
+                        'labels',
+                        'genres',
+                        'tags',
+                        'media',
+                        'isrcs',
+                        'aliases',
+                        'annotation',
+                        'url-rels'
+                    ])
                 ]
             ]);
 

@@ -4,19 +4,14 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Kiwilan\Audio\Audio;
 
 class MusicService
 {
-    /**
-     * The restrictions for the file extensions is duo to the fact that
-     * php-audio library cant write all metadata to all file types.
-     */
     public const ALLOWED_EXTENSIONS = ['mp3', 'flac', 'm4a'];
 
     /**
      * Get all directories from the music storage folder
-     *
-     * @return array
      */
     public function getAllDirectories(): array
     {
@@ -42,8 +37,6 @@ class MusicService
 
     /**
      * Get all music files in a directory
-     *
-     * @param string $directory
      * @return array
      */
     public function getFilesInDirectory(string $directory): array
@@ -114,11 +107,6 @@ class MusicService
 
     /**
      * Move a file from one directory to another
-     *
-     * @param string $currentFile
-     * @param string $fromDirectory
-     * @param string $toDirectory
-     * @return bool
      */
     public function moveFile(string $currentFile, string $fromDirectory, string $toDirectory): bool
     {
@@ -156,5 +144,96 @@ class MusicService
             return false;
         }
 
+    }
+
+    /**
+     * Get the full path to a file in the music storage
+     * @throws \Exception
+     */
+    public function getFullPath(string $directory, string $file): string
+    {
+        try {
+            $disk = Storage::disk('music');
+            $path = "/$directory/$file";
+
+            if (!$disk->exists($path)) {
+                throw new \Exception("File not found: $path");
+            }
+
+            return $disk->path($path);
+        } catch (\Exception $e) {
+            Log::error('Failed to get full path', [
+                'directory' => $directory,
+                'file' => $file,
+                'error' => $e->getMessage()
+            ]);
+            throw new \Exception("Failed to get full path: {$e->getMessage()}");
+        }
+    }
+
+    /**
+     * Write metadata to a file
+     */
+    public function writeMetadata(string $directory, string $file, array $metadata, string $extension): bool
+    {
+        try {
+            if (!in_array($extension, self::ALLOWED_EXTENSIONS)) {
+                throw new \Exception("File type not allowed: {$extension}");
+            }
+
+            $fullPath = $this->getFullPath($directory, $file);
+            $audio = Audio::read($fullPath);
+
+            // Start write operation
+            $tag = $audio->write()
+                ->title($metadata['title'] ?? '')
+                ->artist($metadata['artist'] ?? '')
+                ->album($metadata['album'] ?? '')
+                ->genre($metadata['genre'] ?? '')
+                ->year(substr($metadata['year'] ?? '', 0, 4))
+                ->trackNumber(
+                    ($metadata['track_number'] ?? '') . 
+                    '/' . 
+                    ($metadata['total_tracks'] ?? '')
+                )
+                ->albumArtist($metadata['album_artist'] ?? $metadata['artist'] ?? '')
+                ->composer($metadata['composer'] ?? '')
+                ->comment(sprintf(
+                    "Updated via Minizo \n%s",
+                    "https://github.com/mattiasghodsian/Minizo",
+                ));
+
+            // if (!empty($metadata['length'])) {
+            //     $tag->length((int)($metadata['length'] / 1000));
+            // }
+
+            // Handle cover art if URL is provided
+            if (!empty($metadata['cover_art'])) {
+                try {
+                    $coverContent = file_get_contents($metadata['cover_art']);
+                    if ($coverContent !== false) {
+                        $tag->cover($coverContent);
+                    }
+                } catch (\Exception $e) {
+                    Log::warning('Failed to set cover art', [
+                        'error' => $e->getMessage(),
+                        'file' => $file
+                    ]);
+                }
+            }
+
+            $tag->save();
+
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error('Failed to write metadata', [
+                'directory' => $directory,
+                'file' => $file,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return false;
+        }
     }
 }

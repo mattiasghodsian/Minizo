@@ -7,6 +7,7 @@ import Pagination from '@/Components/Pagination.vue';
 import MoveFile from './Partials/moveFile.vue';
 import SearchYoutube from './Partials/searchYoutube.vue';
 import DeleteFile from './Partials/deleteFile.vue';
+import EditFile from './Partials/editFile.vue';
 
 const props = defineProps({
     files: {
@@ -43,6 +44,7 @@ const form = useForm({
 const toggleToolMenu = ref(false);
 const menuPosition = ref({ x: 0, y: 0 });
 const showMoveModal = ref(false);
+const showWriteMetaModal = ref(false);
 const searchYoutubeRef = ref(null);
 const deleteFileRef = ref(null);
 
@@ -94,14 +96,9 @@ const searchYT = () => {
     searchYoutubeRef.value.executeSearch();
 };
 
-const writeMeta = () => {
+const showWriteMeta = () => {
     toggleToolMenu.value = !toggleToolMenu.value;
-    // form.post(route('library.meta', { directory: props.currentDirectory }), {
-    //     preserveScroll: true,
-    //     onFinish: () => {
-    //         form.reset();
-    //     },
-    // });
+    showWriteMetaModal.value = true;
 };
 
 const $toast = useToast();
@@ -186,6 +183,14 @@ const paginatedFiles = computed(() => {
             @success="showMoveModal = false"
         />
 
+        <EditFile
+            :show="showWriteMetaModal"
+            :filename="form.currentFile"
+            :directory="currentDirectory"
+            @close="showWriteMetaModal = false"
+            @success="showWriteMetaModal = false"
+        />
+
         <SearchYoutube
             ref="searchYoutubeRef"
             :filename="form.currentFile"
@@ -264,7 +269,7 @@ const paginatedFiles = computed(() => {
                 }"
             >
                 <ul>
-                    <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="writeMeta">Edit</li>
+                    <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="showWriteMeta">Edit</li>
                     <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="showMoveFileModal">Move</li>
                     <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="searchYT">Search</li>
                     <li class="hover:bg-gray-700 px-5 py-2.5 cursor-pointer" @click="deleteFile">Delete</li>
