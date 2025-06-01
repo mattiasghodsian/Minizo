@@ -22,7 +22,7 @@ class MetaDataService
         'format'        => 'media.0.format',
         'country'       => 'country',
         'link'          => 'relations.*.url.resource',
-        // 'cover_art'     => 'cover-art-archive.front',
+        'cover_art'     => 'cover_art',
         'language'      => 'text-representation.language'
     ];
 

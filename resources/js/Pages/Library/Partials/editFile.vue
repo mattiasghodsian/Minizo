@@ -63,7 +63,7 @@ const updateMetadata = () => {
         onSuccess: (response) => {
             if (response) {
                 form.reset();
-                emit('close');
+                resetForm();
             }
         },
         onError: (error) => {
@@ -191,29 +191,37 @@ watch(() => form.releaseID, (newReleaseID) => {
             </div>
 
             <div class="mt-6 space-y-4" v-show="currentTab === 2">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div v-for="(value, key) in form.metaData" :key="key" class="p-4 bg-gray-800 rounded-lg">
-                        <div class="text-xs text-gray-400 uppercase mb-1">{{ key }}</div>
-                        <div class="text-sm text-white break-words">
-                            <template v-if="typeof value === 'string' && value.startsWith('http')">
-                                <a :href="value" 
-                                   target="_blank" 
-                                   class="text-indigo-400 hover:text-indigo-300">
+
+                <div v-if="!form.metaData || Object.keys(form.metaData).length === 0" 
+                    class="p-4 bg-gray-800 rounded-lg text-center">
+                    <p class="text-gray-400">No metadata available for this release.</p>
+                </div>
+
+                <div v-else class="w-full">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div v-for="(value, key) in form.metaData" :key="key" class="p-4 bg-gray-800 rounded-lg">
+                            <div class="text-xs text-gray-400 uppercase mb-1">{{ key }}</div>
+                            <div class="text-sm text-white break-words">
+                                <template v-if="typeof value === 'string' && value.startsWith('http')">
+                                    <a :href="value" 
+                                    target="_blank" 
+                                    class="text-indigo-400 hover:text-indigo-300">
+                                        {{ value }}
+                                    </a>
+                                </template>
+                                <template v-else>
                                     {{ value }}
-                                </a>
-                            </template>
-                            <template v-else>
-                                {{ value }}
-                            </template>
+                                </template>
+                            </div>
                         </div>
                     </div>
-                </div>
-            
-                <div class="mt-4" v-if="form.metaData?.cover_art">
-                    <img :src="form.metaData.cover_art" 
-                         :alt="form.metaData.title" 
-                         class="max-w-xs rounded-lg shadow-lg"
-                    />
+                
+                    <div class="mt-4" v-if="form.metaData?.cover_art">
+                        <img :src="form.metaData.cover_art" 
+                            :alt="form.metaData.title" 
+                            class="max-w-xs rounded-lg shadow-lg"
+                        />
+                    </div>
                 </div>
             </div>
 

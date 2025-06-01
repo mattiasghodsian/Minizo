@@ -2,13 +2,15 @@
 
 namespace App\Services;
 
+use GuzzleHttp\Client;
+use Kiwilan\Audio\Audio;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Kiwilan\Audio\Audio;
 
 class MusicService
 {
-    public const ALLOWED_EXTENSIONS = ['mp3', 'flac', 'm4a'];
+    public const ALLOWED_EXTENSIONS = \App\Services\DownloadService::ALLOWED_EXTENSIONS;
 
     /**
      * Get all directories from the music storage folder
@@ -132,7 +134,6 @@ class MusicService
             }
 
             return $disk->move($sourcePath, $destinationPath);
-
         } catch (\Exception $e) {
             Log::error("Exception while moving file", [
                 'message' => $e->getMessage(),
@@ -143,7 +144,6 @@ class MusicService
             ]);
             return false;
         }
-
     }
 
     /**
@@ -186,36 +186,25 @@ class MusicService
 
             // Start write operation
             $tag = $audio->write()
-                ->title($metadata['title'] ?? '')
-                ->artist($metadata['artist'] ?? '')
-                ->album($metadata['album'] ?? '')
-                ->genre($metadata['genre'] ?? '')
-                ->year(substr($metadata['year'] ?? '', 0, 4))
-                ->trackNumber(
-                    ($metadata['track_number'] ?? '') . 
-                    '/' . 
-                    ($metadata['total_tracks'] ?? '')
-                )
-                ->albumArtist($metadata['album_artist'] ?? $metadata['artist'] ?? '')
-                ->composer($metadata['composer'] ?? '')
+                ->title(Arr::get($metadata, 'title', ''))
+                ->artist(Arr::get($metadata, 'artist', ''))
+                ->album(Arr::get($metadata, 'album', ''))
+                ->genre(Arr::get($metadata, 'genre', ''))
+                ->year(substr(Arr::get($metadata, 'year', ''), 0, 4))
+                ->discNumber(Arr::get($metadata, 'track_number', ''))
+                ->albumArtist(Arr::get($metadata, 'album_artist', '') ?? Arr::get($metadata, 'artist', ''))
+                ->composer(Arr::get($metadata, 'composer', ''))
+                // ->language(Arr::get($metadata, 'language', ''))
+                // ->tag('key','value') custom tags
                 ->comment(sprintf(
                     "Updated via Minizo \n%s",
                     "https://github.com/mattiasghodsian/Minizo",
                 ));
 
             // Handle cover art if URL is provided
-            if (!empty($metadata['cover_art'])) {
-                try {
-                    $coverContent = file_get_contents($metadata['cover_art']);
-                    if ($coverContent !== false) {
-                        $tag->cover($coverContent);
-                    }
-                } catch (\Exception $e) {
-                    Log::warning('Failed to set cover art', [
-                        'error' => $e->getMessage(),
-                        'file' => $file
-                    ]);
-                }
+            $coverArtUrl = Arr::get($metadata, 'cover_art', '');
+            if (!empty($coverArtUrl)) {
+                $this->addCoverArt($fullPath, $coverArtUrl, $file);
             }
 
             $tag->save();
@@ -227,6 +216,74 @@ class MusicService
                 'file' => $file,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
+            ]);
+            return false;
+        }
+    }
+
+    private function addCoverArt(string $fullPath, string $coverArtUrl, string $file): bool
+    {
+        try {
+            $client = new Client();
+            $response = $client->get($coverArtUrl);
+
+            if ($response->getStatusCode() !== 200) {
+                throw new \Exception("Failed to fetch cover art");
+            }
+
+            $tempCover = tempnam(sys_get_temp_dir(), 'cover');
+            file_put_contents($tempCover, $response->getBody()->getContents());
+
+            $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+            
+            switch ($extension) {
+                case 'mp3':
+                    $command = sprintf(
+                        'eyeD3 --add-image %s:FRONT_COVER %s',
+                        escapeshellarg($tempCover),
+                        escapeshellarg($fullPath)
+                    );
+                    break;
+
+                case 'flac':
+                    $command = sprintf(
+                        'metaflac --import-picture-from=%s %s',
+                        escapeshellarg($tempCover),
+                        escapeshellarg($fullPath)
+                    );
+                    break;
+
+                case 'm4a':
+                    $command = sprintf(
+                        'AtomicParsley %s --artwork %s --overWrite',
+                        escapeshellarg($fullPath),
+                        escapeshellarg($tempCover)
+                    );
+                    break;
+
+                default:
+                    throw new \Exception("Unsupported file format for cover art: $extension");
+            }
+
+            exec($command . ' 2>&1', $output, $returnCode);
+
+            if ($returnCode !== 0) {
+                throw new \Exception("Failed to add cover art: " . implode("\n", $output));
+            }
+
+            unlink($tempCover);
+
+            Log::info('Cover art added successfully', [
+                'file' => $file,
+                'format' => $extension
+            ]);
+
+            return true;
+        } catch (\Exception $e) {
+            Log::warning('Failed to set cover art', [
+                'error' => $e->getMessage(),
+                'file' => $file,
+                'format' => $extension ?? 'unknown'
             ]);
             return false;
         }

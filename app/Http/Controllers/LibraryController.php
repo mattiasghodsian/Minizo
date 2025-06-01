@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Services\MusicService;
 use App\Helper\MusicBrainzHelper;
 use App\Services\MetaDataService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Http\JsonResponse;
 
 class LibraryController extends Controller
 {
@@ -185,10 +186,20 @@ class LibraryController extends Controller
                 'releaseID' => 'required|string',
             ]);
 
-            $metaData = $this->musicBrainz->getRelease($request->input('releaseID'));
+            $releaseId = $request->input('releaseID');
+
+            $metaData = $this->musicBrainz->getRelease($releaseId);
             if (empty($metaData)) {
                 throw new \Exception('Failed to fetch metadata');
             }
+
+            $covertArt = $this->musicBrainz->getCoverArt($releaseId);
+            if (empty($covertArt)) {
+                throw new \Exception('Failed to fetch cover art');
+            }
+
+            $image = Arr::get($covertArt, 'images.0.image', '');
+            Arr::set($metaData, 'cover_art', $image);
 
             $metadataService = new MetaDataService($metaData);
             return response()->json($metadataService->parseData());
