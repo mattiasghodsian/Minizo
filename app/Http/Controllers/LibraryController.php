@@ -194,12 +194,10 @@ class LibraryController extends Controller
             }
 
             $covertArt = $this->musicBrainz->getCoverArt($releaseId);
-            if (empty($covertArt)) {
-                throw new \Exception('Failed to fetch cover art');
+            if (!empty($covertArt)) {
+                $image = Arr::get($covertArt, 'images.0.image', '');
+                Arr::set($metaData, 'cover_art', $image);
             }
-
-            $image = Arr::get($covertArt, 'images.0.image', '');
-            Arr::set($metaData, 'cover_art', $image);
 
             $metadataService = new MetaDataService($metaData);
             return response()->json($metadataService->parseData());
