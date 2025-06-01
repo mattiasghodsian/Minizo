@@ -10,6 +10,7 @@ class MusicBrainzHelper
 {
     private Client $client;
     private string $baseUrl = 'https://musicbrainz.org/ws/2/';
+    private const COVER_ART_URL = 'http://coverartarchive.org/';
 
     public function __construct()
     {
@@ -78,6 +79,25 @@ class MusicBrainzHelper
 
             return json_decode($response->getBody()->getContents(), true);
         } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    /** 
+     * Get cover art for a release
+     * @throws GuzzleException
+     */
+    public function getCoverArt(string $releaseId): array
+    {
+        try {
+            $response = $this->client->get("release/{$releaseId}", [
+                'base_uri' => self::COVER_ART_URL 
+            ]);
+            return json_decode($response->getBody()->getContents(), true);
+        } catch (GuzzleException $e) {
+            if ($e->getCode() === 404) {
+                return [];
+            }
             throw $e;
         }
     }
