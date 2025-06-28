@@ -217,32 +217,72 @@ class MusicService
                 throw new \Exception("File type not allowed: {$extension}");
             }
 
-            $fullPath = $this->getFullPath($directory, $file);
-            $audio = Audio::read($fullPath);
-
-            Log::error($metadata);
+            $fullPath   = $this->getFullPath($directory, $file);
+            $audio      = Audio::read($fullPath);
 
             // Start write operation
             $tag = $audio->write()
                 ->title(Arr::get($metadata, 'title', ''))
                 ->artist(Arr::get($metadata, 'artist', ''))
-                ->album(Arr::get($metadata, 'album', ''))
-                ->genre(Arr::get($metadata, 'genre', ''))
                 ->year(substr(Arr::get($metadata, 'year', ''), 0, 4))
-                ->discNumber(Arr::get($metadata, 'track_number', ''))
-                ->albumArtist(Arr::get($metadata, 'album_artist', '') ?? Arr::get($metadata, 'artist', ''))
-                ->composer(Arr::get($metadata, 'composer', ''))
-                // ->language(Arr::get($metadata, 'language', ''))
-                // ->tag('key','value') custom tags
+                ->album(Arr::get($metadata, 'album', ''))
+                // ->composer(Arr::get($metadata, 'composer', ''))
                 ->comment(sprintf(
-                    "Updated via Minizo \n%s",
+                    "Updated via Minizo %s",
                     "https://github.com/mattiasghodsian/Minizo",
                 ));
 
-            // Handle cover art if URL is provided
             $coverArtUrl = Arr::get($metadata, 'cover_art', '');
-            if (!empty($coverArtUrl)) {
-                $this->addCoverArt($fullPath, $coverArtUrl, $file);
+
+            // Add format-specific tags
+            switch (strtolower($extension)) {
+                case 'mp3':
+                    $tag
+                        ->albumArtist(Arr::get($metadata, 'album_artist', '') ?? Arr::get($metadata, 'artist', ''))
+                        ->genre(Arr::get($metadata, 'genre', ''))
+                        ->language(Arr::get($metadata, 'language', ''))
+                        ->discNumber(Arr::get($metadata, 'track_number', ''));
+
+                    if (!empty($coverArtUrl)) {
+                        $tag->cover(file_get_contents($coverArtUrl));
+                    }
+                    break;
+
+                case 'flac':
+                    $tag
+                        ->tag('ALBUMARTIST', Arr::get($metadata, 'album_artist', ''))
+                        ->tag('COUNTRY', Arr::get($metadata, 'country', ''))
+                        ->tag('GENRE', Arr::get($metadata, 'genre', ''))
+                        ->tag('LABEL', Arr::get($metadata, 'label', ''))
+                        ->tag('LANGUAGE', Arr::get($metadata, 'language', ''))
+                        ->tag('MUSICBRAINZ_TRACKID', Arr::get($metadata, 'track_id', ''))
+                        ->tag('ISRC', Arr::get($metadata, 'isrc', ''))
+                        ->tag('MEDIA', Arr::get($metadata, 'format', ''))
+                        ->tag('BARCODE', Arr::get($metadata, 'barcode', ''));
+
+                    if (!empty($coverArtUrl)) {
+                        $this->addCoverArt($fullPath, $coverArtUrl, $file);
+                    }
+
+                    break;
+
+                case 'm4a':
+                    $tag
+                        ->tag('----:com.apple.iTunes:ALBUMARTIST', Arr::get($metadata, 'album_artist', ''))
+                        ->tag('----:com.apple.iTunes:GENRE', Arr::get($metadata, 'genre', ''))
+                        ->tag('----:com.apple.iTunes:LANGUAGE', Arr::get($metadata, 'language', ''))
+                        ->tag('----:com.apple.iTunes:TRACKNUMBER', Arr::get($metadata, 'track_number', ''))
+                        ->tag('----:com.apple.iTunes:MUSICBRAINZ_TRACKID', Arr::get($metadata, 'track_id', ''))
+                        ->tag('----:com.apple.iTunes:ISRC', Arr::get($metadata, 'isrc', ''))
+                        ->tag('----:com.apple.iTunes:BARCODE', Arr::get($metadata, 'barcode', ''))
+                        ->tag('----:com.apple.iTunes:LABEL', Arr::get($metadata, 'label', ''))
+                        ->tag('----:com.apple.iTunes:COUNTRY', Arr::get($metadata, 'country', ''));
+                    
+                    if (!empty($coverArtUrl)) {
+                        $this->addCoverArt($fullPath, $coverArtUrl, $file);
+                    }
+                    
+                    break;
             }
 
             $tag->save();
@@ -290,15 +330,13 @@ class MusicService
             $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
             
             switch ($extension) {
-                case 'mp3':
-                    $command = sprintf(
-                        'eyeD3 --add-image %s:FRONT_COVER %s',
-                        escapeshellarg($tempCover),
-                        escapeshellarg($fullPath)
-                    );
-                    break;
-
                 case 'flac':
+                    // Remove existing cover art
+                    exec(sprintf(
+                        'metaflac --remove --block-type=PICTURE %s',
+                        escapeshellarg($fullPath)
+                    ));
+                    // Add new cover art
                     $command = sprintf(
                         'metaflac --import-picture-from=%s %s',
                         escapeshellarg($tempCover),
@@ -307,6 +345,12 @@ class MusicService
                     break;
 
                 case 'm4a':
+                    // Remove existing cover art
+                    exec(sprintf(
+                        'AtomicParsley %s --artwork REMOVE_ALL --overWrite',
+                        escapeshellarg($fullPath)
+                    ));
+                    // Add new cover art
                     $command = sprintf(
                         'AtomicParsley %s --artwork %s --overWrite',
                         escapeshellarg($fullPath),
@@ -325,11 +369,6 @@ class MusicService
             }
 
             unlink($tempCover);
-
-            Log::info('Cover art added successfully', [
-                'file' => $file,
-                'format' => $extension
-            ]);
 
             return true;
         } catch (\Exception $e) {

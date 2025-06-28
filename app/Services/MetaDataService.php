@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 class MetaDataService
 {
     public const METADATA_FIELDS = [
+        'release_id'    => 'releaseID',
         'title'         => 'title',
         'artist'        => 'artist-credit.*.name',
         'album'         => 'title',
