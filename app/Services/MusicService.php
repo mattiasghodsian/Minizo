@@ -291,8 +291,8 @@ class MusicService
             if ($rename) {
                 $newFileName = sprintf(
                     "%s - %s.%s",
-                    preg_replace('/[^\p{L}0-9\s]/u', '', Arr::get($metadata, 'artist', 'Unknown Artist')),
-                    preg_replace('/[^\p{L}0-9\s]/u', '', Arr::get($metadata, 'title', 'Unknown Title')),
+                    preg_replace('/[^\p{L}0-9\s&_]/u', '', Arr::get($metadata, 'artist', 'Unknown Artist')),
+                    preg_replace('/[^\p{L}0-9\s&_]/u', '', Arr::get($metadata, 'title', 'Unknown Title')),
                     $extension
                 );
 
