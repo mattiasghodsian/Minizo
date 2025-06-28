@@ -225,6 +225,7 @@ class LibraryController extends Controller
                 'file'      => 'required|string',
                 'directory' => 'required|string',
                 'metaData'  => 'required|array',
+                'rename'    => 'required|boolean',
             ]);
 
             $extension = strtolower(pathinfo($request->input('file'), PATHINFO_EXTENSION));
@@ -238,7 +239,8 @@ class LibraryController extends Controller
                 $request->input('directory'),
                 $request->input('file'),
                 $parsedData,
-                $extension
+                $extension,
+                $request->input('rename', false)
             );
 
             return response()->json($check);

@@ -32,7 +32,8 @@ const form = useAPIForm({
         artist: ''
     },
     releaseID: null,
-    metaData: {}
+    metaData: {},
+    rename: false,
 });
 
 const searchReleases = () => {
@@ -141,7 +142,19 @@ watch(() => form.releaseID, (newReleaseID) => {
                     />
                 </div>
 
-                <div>
+                <div class="flex justify-between items-center mt-4">
+                    <label class="flex items-center cursor-pointer">
+                        <input
+                            type="checkbox"
+                            v-model="form.rename"
+                            class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                        />
+                        <div class="flex items-center gap-2">
+                            <span class="ml-2 text-sm text-gray-300">Rename file</span>
+                            <span class="font-mono text-xs bg-slate-400 rounded px-1 py-0.5">%Artist% - %Track%.%extension%</span>
+                        </div>
+                    </label>
+
                     <button 
                         type="button"
                         class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 focus:bg-indigo-500 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"

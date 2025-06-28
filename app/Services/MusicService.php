@@ -172,9 +172,45 @@ class MusicService
     }
 
     /**
+     * Rename a file in a directory
+     * @throws \Exception
+     */
+    public function renameFile(string $directory, string $oldName, string $newName): bool
+    {
+        try {
+            $disk               = Storage::disk('music');
+            $sourcePath         = "/$directory/$oldName";
+            $destinationPath    = "/$directory/$newName";
+
+            if (!$disk->exists("/$directory")) {
+                throw new \Exception("Directory not found: $directory");
+            }
+
+            if (!$disk->exists($sourcePath)) {
+                throw new \Exception("File not found: $oldName");
+            }
+
+            if ($disk->exists($destinationPath)) {
+                throw new \Exception("A file with the same name already exists: $newName");
+            }
+
+            return $disk->move($sourcePath, $destinationPath);
+        } catch (\Exception $e) {
+            Log::error("Exception while renaming file", [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'old_name' => $oldName,
+                'new_name' => $newName,
+                'directory' => $directory
+            ]);
+            return false;
+        }
+    }
+
+    /**
      * Write metadata to a file
      */
-    public function writeMetadata(string $directory, string $file, array $metadata, string $extension): bool
+    public function writeMetadata(string $directory, string $file, array $metadata, string $extension, bool $rename = false): bool
     {
         try {
             if (!in_array($extension, self::ALLOWED_EXTENSIONS)) {
@@ -208,6 +244,21 @@ class MusicService
             }
 
             $tag->save();
+
+            // rename by artist - title 
+            if ($rename) {
+                $newFileName = sprintf(
+                    "%s - %s.%s",
+                    preg_replace('/[^a-zA-Z0-9\s]/', '', Arr::get($metadata, 'artist', 'Unknown Artist')),
+                    preg_replace('/[^a-zA-Z0-9\s]/', '', Arr::get($metadata, 'title', 'Unknown Title')),
+                    $extension
+                );
+
+                // Only rename if the new name is different
+                if ($file !== $newFileName) {
+                    $this->renameFile($directory, $file, $newFileName);
+                }
+            }
 
             return true;
         } catch (\Exception $e) {
