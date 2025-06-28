@@ -8,14 +8,25 @@ clear
 # export WWWGROUP=${WWWGROUP:-$(id -g)}
 # export WWWUSER=${WWWUSER:-$(id -u)}
 
+AUTO_YES=0
+for arg in "$@"; do
+    if [[ "$arg" == "-y" || "$arg" == "--yes" ]]; then
+        AUTO_YES=1
+    fi
+done
+
 echo -e "${YELLOW}> Building...${NC}"
 
 npm run build
 docker build -t rakma/minizo:nightly -f docker/Dockerfile.prod .
 
 # Push to Docker registry
-read -p $'\033[1;33mDo you want to push to Docker registry? [y/N] \033[0m' -n 1 -r
-echo    # Move to a new line
+if [[ $AUTO_YES -eq 1 ]]; then
+    REPLY="y"
+else
+    read -p $'\033[1;33mDo you want to push to Docker registry? [y/N] \033[0m' -n 1 -r
+    echo    # Move to a new line
+fi
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo -e "${YELLOW}> Pushing image to Docker registry...${NC}"
