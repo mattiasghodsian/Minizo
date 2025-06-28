@@ -220,6 +220,8 @@ class MusicService
             $fullPath = $this->getFullPath($directory, $file);
             $audio = Audio::read($fullPath);
 
+            Log::error($metadata);
+
             // Start write operation
             $tag = $audio->write()
                 ->title(Arr::get($metadata, 'title', ''))
@@ -249,8 +251,8 @@ class MusicService
             if ($rename) {
                 $newFileName = sprintf(
                     "%s - %s.%s",
-                    preg_replace('/[^a-zA-Z0-9\s]/', '', Arr::get($metadata, 'artist', 'Unknown Artist')),
-                    preg_replace('/[^a-zA-Z0-9\s]/', '', Arr::get($metadata, 'title', 'Unknown Title')),
+                    preg_replace('/[^\p{L}0-9\s]/u', '', Arr::get($metadata, 'artist', 'Unknown Artist')),
+                    preg_replace('/[^\p{L}0-9\s]/u', '', Arr::get($metadata, 'title', 'Unknown Title')),
                     $extension
                 );
 
