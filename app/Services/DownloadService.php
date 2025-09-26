@@ -12,7 +12,7 @@ class DownloadService
      * The restrictions for the file extensions is duo to the fact that
      * php-audio library cant write all metadata to all file types.
      */
-    public const ALLOWED_EXTENSIONS = ['mp3', 'flac', 'm4a'];
+    public const ALLOWED_EXTENSIONS =  ['flac']; // ['mp3', 'flac', 'm4a'];
     private YoutubeDl $youtubeDl;
     
     public function __construct()
