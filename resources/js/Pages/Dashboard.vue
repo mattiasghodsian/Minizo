@@ -35,7 +35,7 @@ const formatRef = ref(null);
 const form = useForm({
     url: '',
     directory: '',
-    format: '',
+    format: 'flac',
 });
 
 const SelectionDirectory = (directory) => {
