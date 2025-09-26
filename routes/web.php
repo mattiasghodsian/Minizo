@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LogViewerController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -34,6 +35,8 @@ Route::middleware('auth')->group(function () {
             Route::post('/update', 'updateMetadata')->name('update');
         });
     });
+
+    Route::get('/logs', [LogViewerController::class, 'index'])->name('logs.index');
 });
 
 require __DIR__.'/auth.php';
