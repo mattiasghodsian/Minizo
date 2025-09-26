@@ -35,7 +35,7 @@ const formatRef = ref(null);
 const form = useForm({
     url: '',
     directory: '',
-    format: 'flac',
+    format: 'z',
 });
 
 const SelectionDirectory = (directory) => {
@@ -132,6 +132,6 @@ watch(
             <p>Downloading copyrighted content without authorization is illegal. This project is for educational purposes only. Ensure you have the right to download and use the content.</p>
         </div>
     
-        <QueueTable :rows="queues" v-if="queues.length > 0" />
+        <QueueTable :rows="queues" />
     </AuthenticatedLayout>
 </template>
