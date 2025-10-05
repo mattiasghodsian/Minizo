@@ -22,38 +22,42 @@ class DownloadService
 
     public function getSong(string $format, string $url, string $directory): array
     {
-        $path = "music/$directory";
-        $disk = Storage::disk('local');
-        $downloadPath = $disk->path($path);
-        $result = [];
+        try {
+            $path = "music/$directory";
+            $disk = Storage::disk('local');
+            $downloadPath = $disk->path($path);
+            $result = [];
 
-        if (!$disk->exists($path)) {
-            $disk->makeDirectory($path);
-        }
-
-        $collection = $this->youtubeDl->download(
-            Options::create()
-                ->downloadPath($downloadPath)
-                ->extractAudio(true)
-                ->audioFormat($format)
-                ->audioQuality('0')
-                ->output('%(artists)s - %(title)s.%(ext)s')
-                ->url($url)
-        );
-
-        foreach ($collection->getVideos() as $video) {
-            if ($video->getError() !== null) {
-                $result['error'] = $video->getError();
-            } else {
-                $result = [
-                    'file'      => $video->getFile(),
-                    'title'     => $video->getTitle(),
-                    'directory' => $path,
-                ];
+            if (!$disk->exists($path)) {
+                $disk->makeDirectory($path);
             }
-        }
 
-        return $result;
+            $collection = $this->youtubeDl->download(
+                Options::create()
+                    ->downloadPath($downloadPath)
+                    ->extractAudio(true)
+                    ->audioFormat($format)
+                    ->audioQuality('0')
+                    ->output('%(artists)s - %(title)s.%(ext)s')
+                    ->url($url)
+            );
+
+            foreach ($collection->getVideos() as $video) {
+                if ($video->getError() !== null) {
+                    throw new \Exception($video->getError());
+                } else {
+                    $result = [
+                        'file'      => $video->getFile(),
+                        'title'     => $video->getTitle(),
+                        'directory' => $path,
+                    ];
+                }
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            throw new \Exception("Failed to get song: {$e->getMessage()}");
+        }
     }
 
     
