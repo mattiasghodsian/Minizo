@@ -38,4 +38,8 @@ return [
     'musicbrainz' => [
         'token' => env('MUSICBRAINZ_TOKEN'),
     ],
+    
+    'lastfm' => [
+        'token' => env('LASTFM_TOKEN'),
+    ],
 ];

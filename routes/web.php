@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\LastFmArtist;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FeedController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
@@ -15,7 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/dashboard', [DashboardController::class, 'post'])->name('dashboard');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {    
     // Profile routes
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'edit')->name('profile.edit');
@@ -34,6 +36,15 @@ Route::middleware('auth')->group(function () {
             Route::post('/get', 'getMetadata')->name('get');
             Route::post('/update', 'updateMetadata')->name('update');
         });
+    });
+
+    // Feed routes
+    Route::controller(FeedController::class)->group(function () {
+        Route::get('/feed', 'view')->name('feed');
+        Route::get('/feed/search', 'search')->name('feed.search');
+        Route::post('/feed/add', 'add')->name('feed.add');
+        Route::post('/feed/seen', 'seen')->name('feed.seen');
+        Route::get('/feed/remove/{id}', 'remove')->name('feed.remove');
     });
 
     Route::get('/logs', [LogViewerController::class, 'index'])->name('logs.index');
