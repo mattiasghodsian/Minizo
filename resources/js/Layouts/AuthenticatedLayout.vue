@@ -4,6 +4,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import NavLink from '@/Components/NavLink.vue';
 import { Link, router } from '@inertiajs/vue3';
 import DownloadIcon from '@/Components/Icons/Download.vue';
+import FeedIcon from '@/Components/Icons/Feed.vue';
 import GithubIcon from '@/Components/Icons/Github.vue';
 import DockerIcon from '@/Components/Icons/Docker.vue'; 
 import CogIcon from '@/Components/Icons/Cog.vue';
@@ -100,6 +101,11 @@ const logout = () => {
                             >
                                 <DownloadIcon class="h-6 w-6 fill-gray-400" />
                                 Download
+                            </NavLink>
+                            <NavLink v-if="$page.props.lastfm" :href="route('feed')" :active="route().current('feed')"
+                            >
+                                <FeedIcon class="h-6 w-6 fill-gray-400" />
+                                Feed
                             </NavLink>
                         </li>
                         <li class="border-b border-gray-800 my-2 mx-4"></li>

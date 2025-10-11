@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
                 'directories' => $this->musicService->getAllDirectories(),
                 'formats' => $this->musicService::ALLOWED_EXTENSIONS,
             ],
+            'lastfm' => ( config('services.lastfm.token') !== null ? true : false ),
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),

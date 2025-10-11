@@ -1,10 +1,11 @@
 <script setup>
 import { ref, watch } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm, usePoll,  } from '@inertiajs/vue3';
+import { Head, useForm, usePoll } from '@inertiajs/vue3';
 
 import InputError from '@/Components/InputError.vue';
 import QueueTable from '@/Components/QueueTable.vue';
+import FeedTable from '@/Components/FeedTable.vue';
 import {useToast} from 'vue-toast-notification';
 
 const props = defineProps({
@@ -20,9 +21,13 @@ const props = defineProps({
         type: Array,
         default: [],
     },
+    tracks: {
+        type: Array,
+        default: [],
+    }
 });
 
-usePoll(5000, {
+usePoll(3000, {
     only: ['queues'],
 }, {
     keepAlive: true,
@@ -123,7 +128,6 @@ watch(
                 </div>
                 <div class="flex items-center justify-center md:justify-normal">
                     <PrimaryButton :disabled="form.processing" type="submit" class="bg-minizo-dark">Download</PrimaryButton>
-                  
                 </div>
             </div>
         </form>
@@ -133,5 +137,6 @@ watch(
         </div>
     
         <QueueTable :rows="queues" />
+        <FeedTable :tracks="tracks" />
     </AuthenticatedLayout>
 </template>

@@ -6,11 +6,14 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Jobs\DownloadJob;
 use App\Helper\QueueHelper;
+use App\Models\LastFmTrack;
 use Illuminate\Http\Request;
 use App\Services\MusicService;
 use Illuminate\Validation\Rule;
 use App\Services\DownloadService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
 
@@ -33,10 +36,29 @@ class DashboardController extends Controller
 
     public function get(): Response
     {
+        try {
+            $tracks = DB::select("
+                SELECT *
+                FROM (
+                    SELECT *, ROW_NUMBER() OVER (PARTITION BY artist_id ORDER BY created_at DESC) as row_num
+                    FROM lastfm_tracks
+                    WHERE seen = 0
+                ) ranked
+                WHERE ranked.row_num <= 2
+                ORDER BY ranked.created_at DESC
+            ");
+
+            $tracks = LastFmTrack::hydrate($tracks);
+            $tracks->load('artist');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage(), ['exception' => $e, 'function' => __FUNCTION__]);
+        }
+
         return Inertia::render('Dashboard', [
-            'queues' =>  $this->queueHelper->getList(),
-            'message'           => session('message'),
-            'messageType'       => session('messageType')
+            'queues'        => $this->queueHelper->getList(),
+            'tracks'        => $tracks ?? [],
+            'message'       => session('message'),
+            'messageType'   => session('messageType')
         ]);
     }
 

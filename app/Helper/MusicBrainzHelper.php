@@ -4,7 +4,9 @@ namespace App\Helper;
 
 use RuntimeException;
 use GuzzleHttp\Client;
+use Illuminate\Support\Arr;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\InvalidArgumentException;
 
 class MusicBrainzHelper
 {
@@ -100,5 +102,49 @@ class MusicBrainzHelper
             }
             throw $e;
         }
+    }
+    /**
+     * Get artist details by MBID
+     * @throws GuzzleException
+     */
+    public function getArtistInfo(string $mbid): array 
+    {
+        try {
+            $response = $this->client->get("artist/{$mbid}", [
+                'query' => [
+                    'inc' => 'url-rels',
+                    'fmt' => 'json'
+                ]
+            ]);
+
+            return json_decode($response->getBody()->getContents(), true);
+
+        } catch (GuzzleException $e) {
+            if ($e->getCode() === 404) {
+                return [];
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Get artist links by MBID
+     * @throws GuzzleException
+     */
+    public function getArtistLinks(string $mbid): array 
+    {
+        $data       = $this->getArtistInfo($mbid);
+        $relations  = [];
+
+        if (!empty($data) && Arr::get($data, 'relations', []) !== []) {
+            return array_map(function ($relation) {
+                return [
+                    'type' => Arr::get($relation, 'type', ''),
+                    'url'  => Arr::get($relation, 'url.resource', '')
+                ];
+            }, Arr::get($data, 'relations'));
+        }
+
+        return $relations;
     }
 }
