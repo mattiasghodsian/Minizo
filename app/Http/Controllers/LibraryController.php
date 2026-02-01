@@ -155,6 +155,9 @@ class LibraryController extends Controller
                     'status'        => $release['status'] ?? '',
                     'country'       => $release['country'] ?? '',
                     'score'         => sprintf('%s%%', $release['score'] ?? 0),
+                    'primary_type'  => Arr::get($release, 'release-group.primary-type'),
+                    'secondary_types' => Arr::get($release, 'release-group.secondary-types', []),
+                    'track_count'   => $release['track-count'] ?? 1,
                 ];
             })->values()->all();
 
@@ -184,14 +187,24 @@ class LibraryController extends Controller
         try {
             $request->validate([
                 'releaseID' => 'required|string',
+                'searchTitle' => 'nullable|string',
+                'mediaPosition' => 'nullable|integer',
+                'trackIndex' => 'nullable|integer',
             ]);
 
             $releaseId = $request->input('releaseID');
+            $searchTitle = $request->input('searchTitle', '');
+            $mediaPosition = $request->input('mediaPosition');
+            $trackIndex = $request->input('trackIndex');
 
             $metaData = $this->musicBrainz->getRelease($releaseId);
             if (empty($metaData)) {
                 throw new \Exception('Failed to fetch metadata');
             }
+
+            // Get track listing for multi-track releases
+            $tracks = $this->musicBrainz->extractTrackListing($metaData, $searchTitle);
+            $trackCount = count($tracks);
 
             $covertArt = $this->musicBrainz->getCoverArt($releaseId);
             if (!empty($covertArt)) {
@@ -199,8 +212,23 @@ class LibraryController extends Controller
                 Arr::set($metaData, 'cover_art', $image);
             }
 
-            $metadataService = new MetaDataService($metaData);
+            // Return track listing if multi-track and no track selected yet
+            if ($trackCount > 1 && $mediaPosition === null && $trackIndex === null) {
+                return response()->json([
+                    'requires_track_selection' => true,
+                    'tracks' => $tracks,
+                    'track_count' => $trackCount,
+                ]);
+            }
+
+            // Parse metadata for specific track
+            $metadataService = new MetaDataService(
+                $metaData,
+                $mediaPosition ?? 0,
+                $trackIndex ?? 0
+            );
             return response()->json($metadataService->parseData());
+
        } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation failed',
@@ -212,7 +240,7 @@ class LibraryController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
             return response()->json([
-                'message' => 'Get to update metadata',
+                'message' => 'Failed to get metadata',
                 'error' => $e->getMessage()
             ], 500);
         }

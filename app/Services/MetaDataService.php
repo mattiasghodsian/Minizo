@@ -6,37 +6,50 @@ use Illuminate\Support\Arr;
 
 class MetaDataService
 {
-    public const METADATA_FIELDS = [
-        'release_id'    => 'releaseID',
-        'title'         => 'title',
-        'artist'        => 'artist-credit.*.name',
-        'album'         => 'title',
-        'year'          => 'date',
-        'genre'         => 'genres.*.name',
-        'label'         => 'label-info.*.label.name',
-        'track_number'  => 'media.0.tracks.0.number',
-        'total_tracks'  => 'media.0.track-count',
-        'length'        => 'media.0.tracks.0.recording.length',
-        'isrc'          => 'media.0.tracks.0.recording.isrcs.0',
-        'barcode'       => 'barcode',
-        'status'        => 'status',
-        'format'        => 'media.0.format',
-        'country'       => 'country',
-        'link'          => 'relations.*.url.resource',
-        'cover_art'     => 'cover_art',
-        'language'      => 'text-representation.language'
-    ];
-
     protected array $metadata = [];
-    
-    public function __construct(array $metadata = [])
+    protected int $mediaPosition = 0;
+    protected int $trackIndex = 0;
+
+    public function __construct(array $metadata = [], int $mediaPosition = 0, int $trackIndex = 0)
     {
         $this->metadata = $metadata;
+        $this->mediaPosition = $mediaPosition;
+        $this->trackIndex = $trackIndex;
+    }
+
+    /**
+     * Get metadata fields with configurable track positions
+     */
+    protected function getMetadataFields(): array
+    {
+        // Use recording title as main title when a specific track is selected
+        $titlePath = "media.{$this->mediaPosition}.tracks.{$this->trackIndex}.recording.title";
+
+        return [
+            'release_id'    => 'id',
+            'title'         => $titlePath,
+            'artist'        => 'artist-credit.*.name',
+            'album'         => 'title',
+            'year'          => 'date',
+            'genre'         => 'genres.*.name',
+            'label'         => 'label-info.*.label.name',
+            'track_number'  => "media.{$this->mediaPosition}.tracks.{$this->trackIndex}.number",
+            'total_tracks'  => "media.{$this->mediaPosition}.track-count",
+            'length'        => "media.{$this->mediaPosition}.tracks.{$this->trackIndex}.recording.length",
+            'isrc'          => "media.{$this->mediaPosition}.tracks.{$this->trackIndex}.recording.isrcs.0",
+            'barcode'       => 'barcode',
+            'status'        => 'status',
+            'format'        => "media.{$this->mediaPosition}.format",
+            'country'       => 'country',
+            'link'          => 'relations.*.url.resource',
+            'cover_art'     => 'cover_art',
+            'language'      => 'text-representation.language',
+        ];
     }
 
     public function parseData(): array
     {
-        return collect(self::METADATA_FIELDS)
+        return collect($this->getMetadataFields())
             ->mapWithKeys(function ($paths, $field) {
                 return [$field => $this->extractValue($paths)];
             })
@@ -153,7 +166,8 @@ class MetaDataService
      */
     public function get(string $field): mixed
     {
-        $path = self::METADATA_FIELDS[$field] ?? null;
+        $fields = $this->getMetadataFields();
+        $path = $fields[$field] ?? null;
         if (!$path) {
             return null;
         }

@@ -54,8 +54,6 @@ const submit = () => {
 };
 
 const submitAdd = (index) => {
-    console.log(index);
-    console.log(foundArtists.value[index]);
     Addform.artist = foundArtists.value[index].name;
     Addform.lastfm_url = foundArtists.value[index].url;
     Addform.post(route('feed.add'), {
