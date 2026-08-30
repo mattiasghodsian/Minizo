@@ -29,6 +29,8 @@
         <title>{{ $title ?? config('app.name') }}</title>
 
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
         @vite(['resources/css/app.css'])
     </head>
@@ -40,7 +42,7 @@
         <div class="share-glow pointer-events-none absolute inset-x-0 top-0 h-[420px]" aria-hidden="true"></div>
 
         <header class="border-hairline relative flex items-center gap-3 border-b px-7 py-5">
-            <x-app-logo-icon :size="28" />
+            <x-app-logo-icon :size="38" />
 
             <span class="text-[15px] font-extrabold tracking-[.2px]">{{ config('app.name') }}</span>
 

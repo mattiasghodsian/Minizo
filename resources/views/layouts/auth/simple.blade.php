@@ -16,11 +16,10 @@
 
             <a
                 href="{{ route('home') }}"
-                class="relative flex items-center gap-2.5"
+                class="relative flex flex-col items-center gap-2.5"
                 wire:navigate
             >
-                <x-app-logo-icon :size="34" />
-                <span class="text-xl font-extrabold tracking-[0.2px]">{{ config('app.name', 'Minizo') }}</span>
+                <x-app-logo-icon :size="92" aria-label="{{ config('app.name', 'Minizo') }}" />
             </a>
 
             <div class="relative flex w-full flex-col items-center gap-5">
