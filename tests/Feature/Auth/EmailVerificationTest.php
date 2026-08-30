@@ -1,46 +1,88 @@
 <?php
 
+namespace Tests\Feature\Auth;
+
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
+use Laravel\Fortify\Features;
+use Tests\TestCase;
 
-test('email verification screen can be rendered', function () {
-    $user = User::factory()->unverified()->create();
+class EmailVerificationTest extends TestCase
+{
+    use RefreshDatabase;
 
-    $response = $this->actingAs($user)->get('/verify-email');
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-    $response->assertStatus(200);
-});
+        $this->skipUnlessFortifyHas(Features::emailVerification());
+    }
 
-test('email can be verified', function () {
-    $user = User::factory()->unverified()->create();
+    public function test_email_verification_screen_can_be_rendered(): void
+    {
+        $user = User::factory()->unverified()->create();
 
-    Event::fake();
+        $response = $this->actingAs($user)->get(route('verification.notice'));
 
-    $verificationUrl = URL::temporarySignedRoute(
-        'verification.verify',
-        now()->addMinutes(60),
-        ['id' => $user->id, 'hash' => sha1($user->email)]
-    );
+        $response->assertOk();
+    }
 
-    $response = $this->actingAs($user)->get($verificationUrl);
+    public function test_email_can_be_verified(): void
+    {
+        $user = User::factory()->unverified()->create();
 
-    Event::assertDispatched(Verified::class);
-    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
-    $response->assertRedirect(route('dashboard', absolute: false).'?verified=1');
-});
+        Event::fake();
 
-test('email is not verified with invalid hash', function () {
-    $user = User::factory()->unverified()->create();
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)],
+        );
 
-    $verificationUrl = URL::temporarySignedRoute(
-        'verification.verify',
-        now()->addMinutes(60),
-        ['id' => $user->id, 'hash' => sha1('wrong-email')]
-    );
+        $response = $this->actingAs($user)->get($verificationUrl);
 
-    $this->actingAs($user)->get($verificationUrl);
+        Event::assertDispatched(Verified::class);
 
-    expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
-});
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+        $response->assertRedirect(route('download', absolute: false).'?verified=1');
+    }
+
+    public function test_email_is_not_verified_with_invalid_hash(): void
+    {
+        $user = User::factory()->unverified()->create();
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1('wrong-email')],
+        );
+
+        $this->actingAs($user)->get($verificationUrl);
+
+        $this->assertFalse($user->fresh()->hasVerifiedEmail());
+    }
+
+    public function test_already_verified_user_visiting_verification_link_is_redirected_without_firing_event_again(): void
+    {
+        $user = User::factory()->create([
+            'email_verified_at' => now(),
+        ]);
+
+        Event::fake();
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)],
+        );
+
+        $this->actingAs($user)->get($verificationUrl)
+            ->assertRedirect(route('download', absolute: false).'?verified=1');
+
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+        Event::assertNotDispatched(Verified::class);
+    }
+}

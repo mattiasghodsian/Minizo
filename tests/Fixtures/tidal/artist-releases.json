@@ -1,0 +1,2343 @@
+{
+    "data": [
+        {
+            "id": "539663607",
+            "type": "albums"
+        },
+        {
+            "id": "539656166",
+            "type": "albums"
+        },
+        {
+            "id": "524841973",
+            "type": "albums"
+        },
+        {
+            "id": "524841978",
+            "type": "albums"
+        },
+        {
+            "id": "524815530",
+            "type": "albums"
+        },
+        {
+            "id": "545598782",
+            "type": "albums"
+        },
+        {
+            "id": "515757594",
+            "type": "albums"
+        },
+        {
+            "id": "545562705",
+            "type": "albums"
+        },
+        {
+            "id": "515757561",
+            "type": "albums"
+        },
+        {
+            "id": "514187821",
+            "type": "albums"
+        },
+        {
+            "id": "514682629",
+            "type": "albums"
+        },
+        {
+            "id": "514187858",
+            "type": "albums"
+        },
+        {
+            "id": "507748355",
+            "type": "albums"
+        },
+        {
+            "id": "507748362",
+            "type": "albums"
+        },
+        {
+            "id": "508222182",
+            "type": "albums"
+        },
+        {
+            "id": "507748372",
+            "type": "albums"
+        },
+        {
+            "id": "510836518",
+            "type": "albums"
+        },
+        {
+            "id": "507748402",
+            "type": "albums"
+        },
+        {
+            "id": "502695642",
+            "type": "albums"
+        },
+        {
+            "id": "502695885",
+            "type": "albums"
+        }
+    ],
+    "links": {
+        "self": "/artists/4906194/relationships/albums?include=albums.coverArt&countryCode=US&limit=10",
+        "next": "/artists/4906194/relationships/albums?include=albums.coverArt&countryCode=US&limit=10&page%5Bcursor%5D=3nI1Esi",
+        "meta": {
+            "nextCursor": "3nI1Esi"
+        }
+    },
+    "included": [
+        {
+            "id": "502695642",
+            "type": "albums",
+            "attributes": {
+                "title": "Pinterest ((Portuguese))",
+                "barcodeId": "00199957522212",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT2M15S",
+                "explicit": false,
+                "releaseDate": "2026-03-06",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.27773172351837994,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "HIRES_LOSSLESS",
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/502695642",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "version": "(Portuguese)",
+                "createdAt": "2026-02-27T02:06:50Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hfrOlkURaJ0",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/502695642/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "502695885",
+            "type": "albums",
+            "attributes": {
+                "title": "Pinterest (Portuguese) - A COLORS SHOW",
+                "barcodeId": "00199957522229",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT2M14S",
+                "explicit": false,
+                "releaseDate": "2026-03-06",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.2768206674438914,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "HIRES_LOSSLESS",
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/502695885",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-02-27T02:07:20Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hfrOlkUS8fd",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/502695885/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "507748355",
+            "type": "albums",
+            "attributes": {
+                "title": "Pinterest (Spanish)",
+                "barcodeId": "00199957603805",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT2M15S",
+                "explicit": false,
+                "releaseDate": "2026-03-20",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.34547620074954416,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "HIRES_LOSSLESS",
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/507748355",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-03-17T08:11:43Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hfxqiLxgJXh",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/507748355/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "507748362",
+            "type": "albums",
+            "attributes": {
+                "title": "Pinterest (Spanish)",
+                "barcodeId": "00199957603799",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT2M15S",
+                "explicit": false,
+                "releaseDate": "2026-03-20",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.18037529076023678,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/507748362",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-03-17T08:11:44Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hfxqiLxgJbm",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/507748362/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "507748372",
+            "type": "albums",
+            "attributes": {
+                "title": "Pinterest - A COLORS SHOW",
+                "barcodeId": "00199957603782",
+                "numberOfVolumes": 1,
+                "numberOfItems": 2,
+                "duration": "PT4M28S",
+                "explicit": false,
+                "releaseDate": "2026-03-06",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.18759130468426136,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/507748372",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-03-17T08:11:46Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hfxqiLxgJfu",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/507748372/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "507748402",
+            "type": "albums",
+            "attributes": {
+                "title": "Pinterest - A COLORS SHOW",
+                "barcodeId": "00199957603744",
+                "numberOfVolumes": 1,
+                "numberOfItems": 2,
+                "duration": "PT4M28S",
+                "explicit": false,
+                "releaseDate": "2026-03-06",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.1810414439379414,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "HIRES_LOSSLESS",
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/507748402",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-03-17T08:11:49Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hfxqiLxgaG2",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/507748402/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "508222182",
+            "type": "albums",
+            "attributes": {
+                "title": "Pinterest (Spanish)",
+                "barcodeId": "00199957603836",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT2M15S",
+                "explicit": false,
+                "releaseDate": "2026-03-20",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.12680512706715216,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "DOLBY_ATMOS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/508222182",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-03-18T19:32:33Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hfz74wBONdq",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/508222182/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "510836518",
+            "type": "albums",
+            "attributes": {
+                "title": "Pinterest - A COLORS SHOW",
+                "barcodeId": "00199957752664",
+                "numberOfVolumes": 1,
+                "numberOfItems": 2,
+                "duration": "PT4M28S",
+                "explicit": false,
+                "releaseDate": "2026-03-06",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.04112115477689984,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/510836518",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-03-28T00:47:34Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hl8r3JR743M",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/510836518/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "514187821",
+            "type": "albums",
+            "attributes": {
+                "title": "Choka Choka",
+                "barcodeId": "00199957784528",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT2M12S",
+                "explicit": false,
+                "releaseDate": "2026-04-10",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.4188439627899413,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "HIRES_LOSSLESS",
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/514187821",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-04-08T12:15:06Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hlDyaHsy1Nx",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/514187821/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "514187858",
+            "type": "albums",
+            "attributes": {
+                "title": "Choka Choka",
+                "barcodeId": "00199957784535",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT2M12S",
+                "explicit": false,
+                "releaseDate": "2026-04-10",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.09955700036683564,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/514187858",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-04-08T12:15:07Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hlDyaHsy1aS",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/514187858/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "514682629",
+            "type": "albums",
+            "attributes": {
+                "title": "Choka Choka",
+                "barcodeId": "00199957784559",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT2M12S",
+                "explicit": false,
+                "releaseDate": "2026-04-10",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.1824956707732167,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "DOLBY_ATMOS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/514682629",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-04-09T23:04:25Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hlE094cnBlJ",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/514682629/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "515757561",
+            "type": "albums",
+            "attributes": {
+                "title": "EQUILIBRIVM",
+                "barcodeId": "00199957784757",
+                "numberOfVolumes": 1,
+                "numberOfItems": 15,
+                "duration": "PT43M13S",
+                "explicit": false,
+                "releaseDate": "2026-04-17",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.2519406736042096,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/515757561",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "ALBUM",
+                "albumType": "ALBUM",
+                "createdAt": "2026-04-14T08:15:44Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hlFINjM94OP",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/515757561/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "515757594",
+            "type": "albums",
+            "attributes": {
+                "title": "EQUILIBRIVM",
+                "barcodeId": "00199957784726",
+                "numberOfVolumes": 1,
+                "numberOfItems": 15,
+                "duration": "PT43M13S",
+                "explicit": false,
+                "releaseDate": "2026-04-17",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.5058343086649745,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "HIRES_LOSSLESS",
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/515757594",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "ALBUM",
+                "albumType": "ALBUM",
+                "createdAt": "2026-04-14T08:15:48Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hlFINjM94aq",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/515757594/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "524815530",
+            "type": "albums",
+            "attributes": {
+                "title": "Goals (FIFA World Cup 2026™)",
+                "barcodeId": "00199957995610",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT3M",
+                "explicit": false,
+                "releaseDate": "2026-05-21",
+                "copyright": {
+                    "text": "© 2026 SALXCO Records, Inc."
+                },
+                "popularity": 0.2466299272968569,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "DOLBY_ATMOS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/524815530",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-05-15T00:36:38Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hqY2HbzoYme",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/524815530/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "524841973",
+            "type": "albums",
+            "attributes": {
+                "title": "Goals (FIFA World Cup 2026™)",
+                "barcodeId": "00199957995580",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT3M",
+                "explicit": false,
+                "releaseDate": "2026-05-21",
+                "copyright": {
+                    "text": "© 2026 SALXCO Records, Inc."
+                },
+                "popularity": 0.4496647736162764,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "HIRES_LOSSLESS",
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/524841973",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-05-15T02:21:13Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hqY2HpzHokV",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/524841973/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "524841978",
+            "type": "albums",
+            "attributes": {
+                "title": "Goals (FIFA World Cup 2026™)",
+                "barcodeId": "00199957995603",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT3M",
+                "explicit": false,
+                "releaseDate": "2026-05-21",
+                "copyright": {
+                    "text": "© 2026 SALXCO Records, Inc."
+                },
+                "popularity": 0.3210850574827603,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/524841978",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-05-15T02:21:14Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hqY2HpzHoka",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/524841978/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "539656166",
+            "type": "albums",
+            "attributes": {
+                "title": "LOCA",
+                "barcodeId": "00881061179306",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT3M11S",
+                "explicit": false,
+                "releaseDate": "2026-07-10",
+                "copyright": {
+                    "text": "© 2026 Golden Records, Under Exclusive Distribution To Minos EMI SA / A Universal Music Group Company"
+                },
+                "popularity": 0.335501229025044,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "HIRES_LOSSLESS",
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/539656166",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-07-03T00:21:31Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hvyUpAvWuYA",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/539656166/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "539663607",
+            "type": "albums",
+            "attributes": {
+                "title": "LOCA",
+                "barcodeId": "00881061179283",
+                "numberOfVolumes": 1,
+                "numberOfItems": 1,
+                "duration": "PT3M11S",
+                "explicit": false,
+                "releaseDate": "2026-07-10",
+                "copyright": {
+                    "text": "© 2026 Golden Records, Under Exclusive Distribution To Minos EMI SA / A Universal Music Group Company"
+                },
+                "popularity": 0.335501229025044,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/539663607",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-07-03T00:45:21Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hvyUpFYoL1r",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/539663607/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "545562705",
+            "type": "albums",
+            "attributes": {
+                "title": "EQUILIBRIVM II",
+                "barcodeId": "00881061240334",
+                "numberOfVolumes": 2,
+                "numberOfItems": 32,
+                "duration": "PT1H33M16S",
+                "explicit": false,
+                "releaseDate": "2026-04-17",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.15693529862331881,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/545562705",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "ALBUM",
+                "albumType": "ALBUM",
+                "createdAt": "2026-07-22T23:23:22Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0i1DMK91YUab",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/545562705/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "545598782",
+            "type": "albums",
+            "attributes": {
+                "title": "EQUILIBRIVM II",
+                "barcodeId": "00881061240327",
+                "numberOfVolumes": 2,
+                "numberOfItems": 32,
+                "duration": "PT1H33M16S",
+                "explicit": false,
+                "releaseDate": "2026-04-17",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.45678142975571434,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "HIRES_LOSSLESS",
+                    "LOSSLESS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/545598782",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "ALBUM",
+                "albumType": "ALBUM",
+                "createdAt": "2026-07-23T02:35:10Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0i1DMKNCMbpK",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/545598782/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hfrOlkURaJ0",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/27722476/9cb6/48eb/93a7/7d1bc0f8157f/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/27722476/9cb6/48eb/93a7/7d1bc0f8157f/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/27722476/9cb6/48eb/93a7/7d1bc0f8157f/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/27722476/9cb6/48eb/93a7/7d1bc0f8157f/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/27722476/9cb6/48eb/93a7/7d1bc0f8157f/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/27722476/9cb6/48eb/93a7/7d1bc0f8157f/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/27722476/9cb6/48eb/93a7/7d1bc0f8157f/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#2B5172",
+                    "blurHash": "UHG,*TV[80Xo$yt6Shr?pekC-4WBb_s-xWRk",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hfrOlkUS8fd",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#581111",
+                    "blurHash": "UKF}1l~qR69G00DiR+tSXTbbbEs.o}x]xujF",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hfxqiLxgJXh",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/d881370f/b183/47ce/9922/b2f338e93c7f/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d881370f/b183/47ce/9922/b2f338e93c7f/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d881370f/b183/47ce/9922/b2f338e93c7f/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d881370f/b183/47ce/9922/b2f338e93c7f/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d881370f/b183/47ce/9922/b2f338e93c7f/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d881370f/b183/47ce/9922/b2f338e93c7f/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d881370f/b183/47ce/9922/b2f338e93c7f/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#996632",
+                    "blurHash": "UHH^@uISSwSx1HxvM}rr},s+bWX9AGIVtSIV",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hfxqiLxgJbm",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/972259d2/eddb/46c7/b4da/c68822bc2e57/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/972259d2/eddb/46c7/b4da/c68822bc2e57/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/972259d2/eddb/46c7/b4da/c68822bc2e57/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/972259d2/eddb/46c7/b4da/c68822bc2e57/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/972259d2/eddb/46c7/b4da/c68822bc2e57/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/972259d2/eddb/46c7/b4da/c68822bc2e57/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/972259d2/eddb/46c7/b4da/c68822bc2e57/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#996632",
+                    "blurHash": "UHH^@uISSwSx1HxvM}rr},s+bWX9AGIVtSIV",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hfxqiLxgJfu",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/508e6a4d/08de/48ae/a7e7/20096abe68a2/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/508e6a4d/08de/48ae/a7e7/20096abe68a2/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/508e6a4d/08de/48ae/a7e7/20096abe68a2/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/508e6a4d/08de/48ae/a7e7/20096abe68a2/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/508e6a4d/08de/48ae/a7e7/20096abe68a2/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/508e6a4d/08de/48ae/a7e7/20096abe68a2/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/508e6a4d/08de/48ae/a7e7/20096abe68a2/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#581111",
+                    "blurHash": "UKF}1l~qR69G00DiR+tSXTbbbEs.o}x]xujF",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hfxqiLxgaG2",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/be941a81/c445/457a/ad79/b561664128e9/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/be941a81/c445/457a/ad79/b561664128e9/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/be941a81/c445/457a/ad79/b561664128e9/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/be941a81/c445/457a/ad79/b561664128e9/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/be941a81/c445/457a/ad79/b561664128e9/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/be941a81/c445/457a/ad79/b561664128e9/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/be941a81/c445/457a/ad79/b561664128e9/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#581111",
+                    "blurHash": "UKF}1l~qR69G00DiR+tSXTbbbEs.o}x]xujF",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hfz74wBONdq",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/1f2f969c/7129/46aa/baa3/7583a2960637/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1f2f969c/7129/46aa/baa3/7583a2960637/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1f2f969c/7129/46aa/baa3/7583a2960637/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1f2f969c/7129/46aa/baa3/7583a2960637/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1f2f969c/7129/46aa/baa3/7583a2960637/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1f2f969c/7129/46aa/baa3/7583a2960637/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/1f2f969c/7129/46aa/baa3/7583a2960637/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#996632",
+                    "blurHash": "UHH^@uISSwSx1HxvM}rr},s+bWX9AGIVtSIV",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hl8r3JR743M",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/31598760/d0b8/4fad/9cd6/64b18adb9f0e/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/31598760/d0b8/4fad/9cd6/64b18adb9f0e/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/31598760/d0b8/4fad/9cd6/64b18adb9f0e/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/31598760/d0b8/4fad/9cd6/64b18adb9f0e/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/31598760/d0b8/4fad/9cd6/64b18adb9f0e/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/31598760/d0b8/4fad/9cd6/64b18adb9f0e/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/31598760/d0b8/4fad/9cd6/64b18adb9f0e/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#630F32",
+                    "blurHash": "UJH0o1~q9sIA0J8_RQyDEdoztRWAcC%M%2RP",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hlDyaHsy1Nx",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/c830784c/1600/42a2/8032/c6104bf5b288/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/c830784c/1600/42a2/8032/c6104bf5b288/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/c830784c/1600/42a2/8032/c6104bf5b288/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/c830784c/1600/42a2/8032/c6104bf5b288/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/c830784c/1600/42a2/8032/c6104bf5b288/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/c830784c/1600/42a2/8032/c6104bf5b288/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/c830784c/1600/42a2/8032/c6104bf5b288/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#3A4D56",
+                    "blurHash": "UMI=D1WB~VkWIvaxocfl~3juRjjsRiflofjY",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hlDyaHsy1aS",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/65367e79/1058/4df8/9ba1/5dfad23b8d72/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/65367e79/1058/4df8/9ba1/5dfad23b8d72/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/65367e79/1058/4df8/9ba1/5dfad23b8d72/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/65367e79/1058/4df8/9ba1/5dfad23b8d72/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/65367e79/1058/4df8/9ba1/5dfad23b8d72/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/65367e79/1058/4df8/9ba1/5dfad23b8d72/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/65367e79/1058/4df8/9ba1/5dfad23b8d72/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#3A4D56",
+                    "blurHash": "UMI=D1WB~VkWIvaxocfl~3juRjjsRiflofjY",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hlE094cnBlJ",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/d5d2b356/0ecd/42a8/8437/17c8c134a25f/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d5d2b356/0ecd/42a8/8437/17c8c134a25f/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d5d2b356/0ecd/42a8/8437/17c8c134a25f/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d5d2b356/0ecd/42a8/8437/17c8c134a25f/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d5d2b356/0ecd/42a8/8437/17c8c134a25f/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d5d2b356/0ecd/42a8/8437/17c8c134a25f/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/d5d2b356/0ecd/42a8/8437/17c8c134a25f/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#3A4D56",
+                    "blurHash": "UMI=D1WB~VkWIvaxocfl~3juRjjsRiflofjY",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hlFINjM94OP",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/f3c62f7c/7a8c/406f/859d/07629f7c3bf3/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/f3c62f7c/7a8c/406f/859d/07629f7c3bf3/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/f3c62f7c/7a8c/406f/859d/07629f7c3bf3/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/f3c62f7c/7a8c/406f/859d/07629f7c3bf3/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/f3c62f7c/7a8c/406f/859d/07629f7c3bf3/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/f3c62f7c/7a8c/406f/859d/07629f7c3bf3/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/f3c62f7c/7a8c/406f/859d/07629f7c3bf3/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#41170E",
+                    "blurHash": "UHILGTWW{gXR$*WCNbof[rjZEzjuv$oLgMWC",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hlFINjM94aq",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/6c8df725/062a/48c2/b479/426ad76cd001/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/6c8df725/062a/48c2/b479/426ad76cd001/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/6c8df725/062a/48c2/b479/426ad76cd001/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/6c8df725/062a/48c2/b479/426ad76cd001/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/6c8df725/062a/48c2/b479/426ad76cd001/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/6c8df725/062a/48c2/b479/426ad76cd001/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/6c8df725/062a/48c2/b479/426ad76cd001/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#41170E",
+                    "blurHash": "UHILGTWW{gXR$*WCNbof[rjZEzjuv$oLgMWC",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hqY2HbzoYme",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/ba0cc4be/c743/46dd/8b21/0f0d3eaf5f66/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/ba0cc4be/c743/46dd/8b21/0f0d3eaf5f66/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/ba0cc4be/c743/46dd/8b21/0f0d3eaf5f66/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/ba0cc4be/c743/46dd/8b21/0f0d3eaf5f66/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/ba0cc4be/c743/46dd/8b21/0f0d3eaf5f66/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/ba0cc4be/c743/46dd/8b21/0f0d3eaf5f66/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/ba0cc4be/c743/46dd/8b21/0f0d3eaf5f66/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#59382A",
+                    "blurHash": "U28W{kyE4o571O4n00aJ2^~CVr=x*x4.-AEM",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hqY2HpzHokV",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/4739eb5a/3070/4148/a35c/95c3f04a117c/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/4739eb5a/3070/4148/a35c/95c3f04a117c/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/4739eb5a/3070/4148/a35c/95c3f04a117c/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/4739eb5a/3070/4148/a35c/95c3f04a117c/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/4739eb5a/3070/4148/a35c/95c3f04a117c/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/4739eb5a/3070/4148/a35c/95c3f04a117c/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/4739eb5a/3070/4148/a35c/95c3f04a117c/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#59382A",
+                    "blurHash": "U28W{kyE4o571O4n00aJ2^~CVr=x*x4.-AEM",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hqY2HpzHoka",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/a2b87e0c/4843/4a70/ad7c/39f8368d449d/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a2b87e0c/4843/4a70/ad7c/39f8368d449d/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a2b87e0c/4843/4a70/ad7c/39f8368d449d/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a2b87e0c/4843/4a70/ad7c/39f8368d449d/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a2b87e0c/4843/4a70/ad7c/39f8368d449d/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a2b87e0c/4843/4a70/ad7c/39f8368d449d/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a2b87e0c/4843/4a70/ad7c/39f8368d449d/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#59382A",
+                    "blurHash": "U28W{kyE4o571O4n00aJ2^~CVr=x*x4.-AEM",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hvyUpAvWuYA",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/8d960775/d3dd/4442/b0bf/2a1821b473ac/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/8d960775/d3dd/4442/b0bf/2a1821b473ac/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/8d960775/d3dd/4442/b0bf/2a1821b473ac/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/8d960775/d3dd/4442/b0bf/2a1821b473ac/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/8d960775/d3dd/4442/b0bf/2a1821b473ac/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/8d960775/d3dd/4442/b0bf/2a1821b473ac/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/8d960775/d3dd/4442/b0bf/2a1821b473ac/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#6F6384",
+                    "blurHash": "U2PZou%N00_2M,og_1xt00Rj00IU?tt68{IV",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hvyUpFYoL1r",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/a33d2f1f/ac2e/4505/8d9a/16ab5df164c9/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a33d2f1f/ac2e/4505/8d9a/16ab5df164c9/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a33d2f1f/ac2e/4505/8d9a/16ab5df164c9/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a33d2f1f/ac2e/4505/8d9a/16ab5df164c9/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a33d2f1f/ac2e/4505/8d9a/16ab5df164c9/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a33d2f1f/ac2e/4505/8d9a/16ab5df164c9/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a33d2f1f/ac2e/4505/8d9a/16ab5df164c9/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#6F6384",
+                    "blurHash": "U2PZou%N00_2M,og_1xt00Rj00IU?tt68{IV",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0i1DMK91YUab",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/58e2d64e/beb3/4ebf/9944/2dccf8dad131/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/58e2d64e/beb3/4ebf/9944/2dccf8dad131/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/58e2d64e/beb3/4ebf/9944/2dccf8dad131/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/58e2d64e/beb3/4ebf/9944/2dccf8dad131/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/58e2d64e/beb3/4ebf/9944/2dccf8dad131/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/58e2d64e/beb3/4ebf/9944/2dccf8dad131/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/58e2d64e/beb3/4ebf/9944/2dccf8dad131/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#6B271C",
+                    "blurHash": "UbN9|AWW~qoJ%NayIooft7j[IUaykWfQaKjs",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0i1DMKNCMbpK",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/73d6d3eb/6681/4bd7/bf02/2e3c44d113a9/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/73d6d3eb/6681/4bd7/bf02/2e3c44d113a9/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/73d6d3eb/6681/4bd7/bf02/2e3c44d113a9/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/73d6d3eb/6681/4bd7/bf02/2e3c44d113a9/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/73d6d3eb/6681/4bd7/bf02/2e3c44d113a9/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/73d6d3eb/6681/4bd7/bf02/2e3c44d113a9/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/73d6d3eb/6681/4bd7/bf02/2e3c44d113a9/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#6B271C",
+                    "blurHash": "UbN9|AWW~qoJ%NayIooft7j[IUaykWfQaKjs",
+                    "status": "OK"
+                }
+            }
+        }
+    ]
+}

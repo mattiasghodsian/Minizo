@@ -13,19 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Minizo'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Route access
-    |--------------------------------------------------------------------------
-    |
-    | This values enabled/disabled forgot password and register routes
-    |
-    */
-
-    'register' => env('APP_REGISTER', false),
-    'forgotpass' => env('APP_FORGOTPASS', false),
+    'name' => env('APP_NAME', 'Laravel'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,6 +27,36 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Force HTTPS
+    |--------------------------------------------------------------------------
+    |
+    | Forces every generated URL to use the https scheme. Needed when the app
+    | sits behind a TLS-terminating proxy, which would otherwise make Laravel
+    | generate http:// URLs. Passkeys depend on this: WebAuthn compares the
+    | browser's origin against fortify.passkeys.allowed_origins, which is
+    | derived from APP_URL, and a scheme mismatch fails the ceremony.
+    |
+    */
+
+    'force_https' => env('APP_FORCE_HTTPS', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Public Registration
+    |--------------------------------------------------------------------------
+    |
+    | Whether strangers may create their own accounts. Minizo is normally a
+    | self-hosted, single-household app, so this defaults to closed. When it is
+    | false the registration routes are never registered at all (see the
+    | features array in config/fortify.php), so /register returns a 404 rather
+    | than a hidden-but-reachable form.
+    |
+    */
+
+    'register' => env('APP_REGISTER', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -77,7 +95,7 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'CET'),
+    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
@@ -113,7 +131,7 @@ return [
 
     'previous_keys' => [
         ...array_filter(
-            explode(',', env('APP_PREVIOUS_KEYS', ''))
+            explode(',', (string) env('APP_PREVIOUS_KEYS', '')),
         ),
     ],
 
@@ -126,7 +144,7 @@ return [
     | manage Laravel's "maintenance mode" status. The "cache" driver will
     | allow maintenance mode to be controlled across multiple machines.
     |
-    | Supported drivers: "file", "cache"
+    | Supported drivers: "file", "cache", "array"
     |
     */
 

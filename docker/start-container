@@ -15,23 +15,180 @@ fi
 
 chmod -R ugo+rw /.composer
 
-# Ensure music storage directory has proper permissions
-MUSIC_DIR="/var/www/html/storage/app/public/music"
+# The production image ships without a .env so no configuration is baked in.
+# Bootstrap one on first boot; mount your own .env to override this.
+if [ ! -f /var/www/html/.env ] && [ -f /var/www/html/.env.example ]; then
+    echo "No .env found — creating one from .env.example."
+    echo "Mount your own .env to keep configuration across container recreations."
+    gosu sail cp /var/www/html/.env.example /var/www/html/.env
+
+    # .env.example is the developer template, so it ships APP_ENV=local and
+    # APP_DEBUG=true. Those are wrong for the image that sets MINIZO_OPTIMIZE:
+    # debug mode renders stack traces to strangers, and it makes Livewire serve
+    # its unminified bundle - 556 KB against 239 KB.
+    #
+    # Only the file we just created is touched. A mounted .env is the operator's.
+    if [ "$MINIZO_OPTIMIZE" = "true" ]; then
+        echo "Production image — defaulting APP_ENV=production and APP_DEBUG=false."
+        gosu sail sed -i \
+            -e 's/^APP_ENV=.*/APP_ENV=production/' \
+            -e 's/^APP_DEBUG=.*/APP_DEBUG=false/' \
+            /var/www/html/.env
+    fi
+fi
+
+# Generate an APP_KEY whenever one is missing, so nobody has to run
+# key:generate by hand. This deliberately happens at runtime rather than in the
+# Dockerfile: a key baked at build time would ship an identical encryption key
+# to every Minizo install, letting anyone with the published image decrypt
+# another install's cookies and encrypted columns.
+#
+# The [^[:space:]] test matters on Windows — a CRLF .env leaves "APP_KEY=\r",
+# which a plain ".+" match would wrongly accept as a real key.
+if [ -f /var/www/html/.env ] && ! grep -qE '^APP_KEY=[^[:space:]]' /var/www/html/.env; then
+    echo "No APP_KEY set — generating one."
+    gosu sail php /var/www/html/artisan key:generate --force --no-interaction \
+        || echo "WARNING: could not write APP_KEY to .env (is it writable?)"
+fi
+
+# Music library. Only the mount point itself is touched — a recursive chown
+# over a large library would stall startup.
+MUSIC_DIR="/var/www/html/storage/app/private/music"
 if [ ! -d "$MUSIC_DIR" ]; then
     echo "Creating music directory: $MUSIC_DIR"
     mkdir -p "$MUSIC_DIR"
 fi
+chown sail:sail "$MUSIC_DIR" 2>/dev/null || true
+chmod 775 "$MUSIC_DIR" 2>/dev/null || true
 
-echo "Setting proper permissions on music directory"
-chown -R sail:sail "$MUSIC_DIR"
-chmod -R 775 "$MUSIC_DIR"
+# Dependencies.
+#
+# In development, vendor/ and node_modules/ are container-local named volumes
+# rather than part of the bind-mounted project. That is a performance fix, not
+# tidiness: on a Windows host every file stat crosses the Docker VM boundary at
+# ~1.4ms, and a Laravel request stats 720 files of which 690 live in vendor/.
+# Measured, that is 900ms of the ~930ms a cold request spent before this change.
+# A named volume lives on the VM's own filesystem, where the same stat costs
+# ~0.03ms.
+#
+# The consequence is that a fresh volume starts empty, so it has to be seeded
+# here. Same principle as APP_KEY and migrations above: the user should never
+# have to run a setup step by hand.
+bootstrap_dependencies() {
+    # A named volume's mount point is created by Docker owned by root, because the
+    # image ships nothing at that path for it to seed from. Without this chown the
+    # very first `composer install` fails with "vendor/<package> does not exist and
+    # could not be created" — the directory is there, sail simply cannot write to it.
+    #
+    # Non-recursive on purpose: once populated, vendor/ is ~15,000 files and a
+    # recursive chown on every boot would add seconds to startup for no benefit.
+    for dir in /var/www/html/vendor /var/www/html/node_modules; do
+        if [ -d "$dir" ]; then
+            chown sail:sail "$dir" 2>/dev/null || true
+        fi
+    done
+
+    if [ ! -f /var/www/html/vendor/autoload.php ]; then
+        echo "vendor/ is empty — installing PHP dependencies (first boot only)..."
+        if ! gosu sail composer install --no-interaction --prefer-dist; then
+            echo "ERROR: composer install failed. The application cannot start without vendor/."
+            exit 1
+        fi
+    fi
+
+    # Vite needs these to build assets. Non-fatal: the app serves fine from an
+    # existing public/build, and a failed npm install must not stop the container.
+    if [ -d /var/www/html/node_modules ] && [ ! -d /var/www/html/node_modules/vite ]; then
+        echo "node_modules/ is empty — installing JS dependencies (first boot only)..."
+        gosu sail npm install --no-audit --no-fund \
+            || echo "WARNING: npm install failed. Run it by hand before building assets."
+    fi
+}
+
+# Bring the schema up to date before anything serves traffic, so nobody has to
+# run migrate by hand. Only invoked when starting supervisor — one-off commands
+# (docker compose run ... artisan tinker) must not pay the database wait.
+bootstrap_database() {
+    if [ "$MINIZO_SKIP_DB_BOOTSTRAP" = "true" ]; then
+        echo "MINIZO_SKIP_DB_BOOTSTRAP=true — skipping migrations."
+        return 0
+    fi
+
+    echo "Waiting for the database to accept connections..."
+    db_ready=0
+    for _ in $(seq 1 60); do
+        if gosu sail php /var/www/html/artisan db:show > /dev/null 2>&1; then
+            db_ready=1
+            break
+        fi
+        sleep 2
+    done
+
+    if [ "$db_ready" != "1" ]; then
+        echo "ERROR: database unreachable after 120s."
+        echo "Check DB_HOST, DB_DATABASE, DB_USERNAME and DB_PASSWORD in .env."
+        echo "Note DB_HOST must be the compose service name (mariadb), not 127.0.0.1."
+        exit 1
+    fi
+
+    # migrate:status exits non-zero when the migrations table is absent, which
+    # distinguishes a brand new database from one that is already set up.
+    fresh_database=0
+    gosu sail php /var/www/html/artisan migrate:status > /dev/null 2>&1 || fresh_database=1
+
+    echo "Running migrations..."
+    if ! gosu sail php /var/www/html/artisan migrate --force --no-interaction; then
+        echo "ERROR: migrations failed. Refusing to start on a partially migrated schema."
+        exit 1
+    fi
+
+    # Seeding runs only on a brand new database, and only where it is enabled.
+    #
+    # The production image deliberately leaves MINIZO_AUTO_SEED unset:
+    # DatabaseSeeder creates minizo@minizo.com with the password "minizo", so
+    # auto-seeding would give every fresh install a login anyone can read off
+    # the repository. It would also fail there regardless, because the seeder
+    # goes through UserFactory, which needs fakerphp/faker — a dev dependency
+    # absent from a --no-dev install.
+    if [ "$MINIZO_AUTO_SEED" = "true" ] && [ "$fresh_database" = "1" ]; then
+        echo "New database detected — seeding..."
+        gosu sail php /var/www/html/artisan db:seed --force --no-interaction \
+            || echo "WARNING: seeding failed. The app will still start."
+    fi
+}
+
+# Config, route, view and event caches.
+#
+# Runs after the database is up, because config:cache evaluates every config file
+# and some read env that only exists once .env is in place. Enabled by the
+# production image only: in development these caches would serve stale config and
+# stale views for every edit.
+#
+# Each one is non-fatal. A failed cache warm makes the app slower, not broken, and
+# refusing to boot over it would be a worse trade.
+bootstrap_optimize() {
+    if [ "$MINIZO_OPTIMIZE" != "true" ]; then
+        return 0
+    fi
+
+    echo "Warming config, route, view and event caches..."
+
+    for target in config route view event; do
+        gosu sail php /var/www/html/artisan "${target}:cache" --no-interaction \
+            || echo "WARNING: ${target}:cache failed. The app will still start, more slowly."
+    done
+}
 
 if [ $# -gt 0 ]; then
     if [ "$SUPERVISOR_PHP_USER" = "root" ]; then
         exec "$@"
     else
-        exec gosu $WWWUSER "$@"
+        exec gosu ${WWWUSER:-sail} "$@"
     fi
 else
+    # Dependencies before the database: artisan cannot run at all without vendor/.
+    bootstrap_dependencies
+    bootstrap_database
+    bootstrap_optimize
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 fi

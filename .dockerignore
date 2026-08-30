@@ -1,3 +1,61 @@
+# Version control & repo tooling
+.git
+.github
+.githooks
+.gitignore
+.gitattributes
+.editorconfig
+.npmrc
+
+# Local environment — never bake secrets into an image
 .env
+.env.*
+!.env.example
+
+# Dependencies are installed inside the image
+node_modules
+vendor
+
+# Frontend build output is generated inside the image
+public/build
+public/hot
+public/storage
+public/fonts-manifest.dev.json
+
+# Runtime state
+storage/logs
+storage/framework/cache/data
+storage/framework/sessions
+storage/framework/testing
+storage/framework/views
+storage/pail
+storage/*.key
+bootstrap/cache
+database/*.sqlite
+database/*.sqlite-journal
+
+# Tests & static analysis (not shipped)
+tests
+phpunit.xml
+phpstan.neon
+pint.json
+.phpunit.cache
+.phpunit.result.cache
+
+# Not part of the deployed app
+minizo
+design_handoff_minizo
+docker-compose.yml
+docker-compose-dev.yml
+build
 README.md
-test.js
+LICENSE
+rename_livewire_files.php
+
+# Editors
+.idea
+.vscode
+.zed
+.fleet
+.nova
+.phpactor.json

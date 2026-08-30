@@ -54,7 +54,8 @@ This project began as a solution to access and manage my audio files beyond my l
 ## DOCKER
 ***Nightly releases** come with the latest source but are unstable and not recommended for production use.*
 
-Don't forget to run `php artisan migrate` & `php artisan db:seed` inside the container.
+The container generates its own `APP_KEY`, runs migrations and seeds a fresh database on
+first boot, so there is nothing to run by hand.
 
 ```yml
 version: '3'

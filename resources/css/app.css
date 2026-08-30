@@ -1,32 +1,702 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-*::-webkit-scrollbar {
-    @apply w-2 h-2;
+/*
+ * Flux's stylesheet MUST be imported before our @theme blocks below.
+ *
+ * flux.css declares --color-accent, --color-accent-content and
+ * --color-accent-foreground in BOTH an @theme block and a
+ * `@layer theme { .dark { ... } }` block. Ours have to come after so they win.
+ * See the "Flux accent bridge" note further down — the dark half of that is easy
+ * to get wrong.
+ */
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * ============================================================================
+ * Minizo design tokens
+ * ============================================================================
+ *
+ * Source of truth: design_handoff_minizo/ (README.md + "Minizo Redesign.dc.html").
+ * Every dark value below is taken from that prototype verbatim.
+ *
+ * HOW THIS FILE IS ORGANISED
+ *
+ *   1. @theme             — non-themed scalars (type, radii, sizes) + the LIGHT
+ *                           colour palette.
+ *   2. @layer theme .dark — the DARK colour palette, same token names.
+ *
+ * Because both themes use the same names, our markup NEVER needs a `dark:`
+ * variant for colour. `bg-surface` flips by itself. If you find yourself writing
+ * `dark:bg-something` in a Minizo template, a token is missing.
+ *
+ * !! `.dark` must only ever be set on <html>. Every themed token is declared on
+ *    `:root` (via @theme) and re-declared on `.dark`; putting `.dark` on a nested
+ *    element would appear to work, but the moment a token is declared in only one
+ *    of the two places you get silent inheritance bugs. @fluxAppearance manages
+ *    the class on <html> — leave it alone.
+ *
+ * WHERE LIGHT COMES FROM
+ *
+ * The handoff is dark-only. Light is derived mechanically, never eyeballed, so it
+ * can be re-derived if the dark palette ever changes:
+ *
+ *   1. Surfaces. Dark elevates TOWARD light (#0a0d15 -> #10141f -> #161b29).
+ *      Light elevates TOWARD white with the canvas most tinted
+ *      (#f1f4f9 -> #ffffff), and the shadow does the lifting. Hue stays ~225deg.
+ *      `sunken` (inputs) is always one step recessive from the surface above it.
+ *   2. Ink. The four dark steps are the slate ramp read from the light end; light
+ *      ink is the same ramp read from the dark end. Preserve contrast RATIO, not
+ *      lightness.
+ *   3. Lines. Only the ink swaps (#94a3b8 -> #0f172a). Every alpha stays
+ *      IDENTICAL, so hairlines carry the same visual weight in both themes.
+ *   4. Semantics. Hue fixed; lightness stepped until it clears 4.5:1 on the light
+ *      surface (#4ade80 -> #16a34a, #c9a95e -> #a16207, #f87171 -> #dc2626).
+ *   5. Accent. Hue fixed (~250deg). The fill darkens until white text passes AA
+ *      (#8b8cf9 -> #5b5bd6, on-accent ink #0a0d15 -> #ffffff). The text/link
+ *      accent is a separate token and darkens further (#9aa3f8 -> #4f46e5).
+ *   6. Shadows. Same geometry; ink rgba(0,0,0,.5-.6) -> rgba(15,23,42,.16-.22).
+ *   7. Tiles. hue() is theme-invariant; only the saturation/lightness pair flips.
+ */
+
+@theme {
+    /* ---------------------------------------------------------------- type */
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+    /*
+     * The prototype uses 14 sizes including half-pixels (10.5, 11.5, 12.5, 13.5).
+     * Those read as prototype noise rather than intent, so they are snapped to 10
+     * steps. Comments give the prototype px value each step represents.
+     */
+    --text-3xs: 0.625rem;       /* 10   mono format badges, field labels */
+    --text-3xs--line-height: 1.3;
+    --text-2xs: 0.6875rem;      /* 11   mono values, table meta */
+    --text-2xs--line-height: 1.35;
+    --text-xs: 0.75rem;         /* 12   labels, column headers, subtitles */
+    --text-xs--line-height: 1.4;
+    --text-sm: 0.8125rem;       /* 13   body and table text */
+    --text-sm--line-height: 1.45;
+    --text-base: 0.875rem;      /* 14   root size, card titles */
+    --text-base--line-height: 1.5;
+    --text-md: 0.9375rem;       /* 15   artist names, share wordmark */
+    --text-md--line-height: 1.4;
+    --text-lg: 1rem;            /* 16   page and modal titles */
+    --text-lg--line-height: 1.35;
+    --text-xl: 1.0625rem;       /* 17   folder name, sidebar brand */
+    --text-xl--line-height: 1.3;
+    --text-4xl: 1.8125rem;      /* 29   public share item name */
+    --text-4xl--line-height: 1.15;
+    --text-6xl: 2.875rem;       /* 46   large generated-tile initial */
+    --text-6xl--line-height: 1;
+
+    /* ------------------------------------------------------------ geometry */
+    --radius-xs: 5px;    /* small mono badges */
+    --radius-sm: 6px;    /* badges, small buttons */
+    --radius-md: 7px;    /* file-row tiles, menu items */
+    --radius-lg: 9px;    /* buttons, inputs, selects, nav items */
+    --radius-xl: 12px;   /* dropdown panels, callouts */
+    --radius-2xl: 14px;  /* content cards */
+    --radius-3xl: 16px;  /* modals, share cover */
+
+    --container-content: 65rem;         /* 1040px centred content column */
+    --spacing-sidebar: 15.5rem;         /* 248px */
+    --spacing-sidebar-collapsed: 4rem;  /*  64px */
+
+    /*
+     * No spacing tokens are needed. Tailwind v4's dynamic scale already covers
+     * the design's 4/6/8/10/12/14/18/22/24/28px ladder:
+     *   1 . 1.5 . 2 . 2.5 . 3 . 3.5 . 4.5 . 5.5 . 6 . 7
+     * And note: the design's "root 14px" is delivered by `body { text-base }`
+     * below, NOT by html { font-size: 14px } — that would desync every rem
+     * utility from the px values in the handoff.
+     */
+
+    /* -------------------------------------------------- surfaces  (LIGHT) */
+    --color-canvas: #f1f4f9;
+    --color-sidebar: #e9edf5;
+    --color-surface: #ffffff;
+    --color-surface-raised: #ffffff;
+    --color-sunken: #f5f7fb;
+    --color-public: #f7f9fd;
+
+    /* ------------------------------------------------------- ink  (LIGHT) */
+    --color-ink: #0f1729;
+    --color-ink-secondary: #334155;
+    --color-ink-muted: #64748b;
+    --color-ink-faint: #94a3b8;
+
+    /* ----------------------------------------------------- lines  (LIGHT) */
+    /*
+     * The design draws every border, divider and hover from ONE colour at 12
+     * different alphas. In dark that colour is slate-400 (#94a3b8).
+     *
+     * `--color-line` is the base, for ad-hoc use through Tailwind's alpha
+     * modifier: border-line/14, hover:bg-line/7, divide-line/6.
+     * The roles below have names because they recur 3+ times; anything rarer
+     * should use /NN rather than earning a token.
+     */
+    --color-line: #0f172a;
+    --color-hairline: rgba(15, 23, 42, 0.09);         /* section dividers, shell edges */
+    --color-border: rgba(15, 23, 42, 0.12);           /* cards, tables */
+    --color-border-strong: rgba(15, 23, 42, 0.18);    /* outline buttons, dropdowns */
+    --color-field-border: rgba(15, 23, 42, 0.16);     /* inputs, selects */
+    --color-focus-line: rgba(15, 23, 42, 0.4);        /* focused field border */
+    --color-row-hover: rgba(15, 23, 42, 0.04);        /* table and nav rows */
+    --color-row-hover-strong: rgba(15, 23, 42, 0.07); /* menu items */
+    --color-overlay: rgba(15, 23, 42, 0.38);          /* modal backdrop */
+
+    /* ----------------------------------------------------- brand  (LIGHT) */
+    --color-brand: #5b5bd6;                          /* fills: buttons, active nav */
+    --color-brand-ink: #ffffff;                      /* text ON a brand fill */
+    --color-brand-soft: rgba(91, 91, 214, 0.12);     /* active nav bg, badge fills */
+    --color-brand-text: #4f46e5;                     /* links, accent text */
+    --color-brand-text-hover: #4338ca;
+
+    /* ------------------------------------------------- semantics  (LIGHT) */
+    --color-success: #16a34a;
+    --color-success-soft: rgba(22, 163, 74, 0.1);
+    --color-warning: #a16207;
+    --color-warning-soft: rgba(161, 98, 7, 0.1);
+    --color-danger: #dc2626;
+    --color-danger-soft: rgba(220, 38, 38, 0.08);
+    --color-danger-line: rgba(220, 38, 38, 0.35);
+
+    /*
+     * Three reds, not one. The design genuinely distinguishes:
+     *   danger        — outline buttons, error text, danger borders
+     *   destructive   — the solid "Delete Permanently" button (white text)
+     *   delete-folder — the solid "Delete folder" button (near-black text in dark)
+     * Do not collapse these.
+     */
+    --color-destructive: #dc2626;
+    --color-destructive-ink: #ffffff;
+    --color-delete-folder: #dc2626;
+    --color-delete-folder-ink: #ffffff;
+
+    /* ---------------------------------------------------- controls (LIGHT) */
+    --color-toggle-off: rgba(15, 23, 42, 0.25);
+    --color-progress-track: rgba(15, 23, 42, 0.1);
+    --color-progress-queued: rgba(15, 23, 42, 0.3);
+
+    /* --------------------------------------------------------------------
+     * Flux accent bridge
+     *
+     * flux:button, flux:link and flux:sidebar.item read these three names
+     * directly (link.blade.php uses text-[var(--color-accent-content)]), so they
+     * are how the whole Flux component set inherits our brand colour.
+     *
+     * They are aliases on purpose: everything Minizo-side reads --color-brand*,
+     * so a future per-user or per-instance accent needs exactly one injection
+     * point and zero markup changes.
+     *
+     * !! These three MUST be repeated in the .dark block below. flux.css sets
+     *    them inside its own `.dark` rule, which outranks this @theme (:root)
+     *    declaration — omit them there and dark mode reverts to Flux's white.
+     * -------------------------------------------------------------------- */
+    --color-accent: var(--color-brand);
+    --color-accent-content: var(--color-brand-text);
+    --color-accent-foreground: var(--color-brand-ink);
+
+    /* ---------------------------------------------------- shadows  (LIGHT) */
+    --shadow-dropdown: 0 14px 34px rgba(15, 23, 42, 0.16);
+    --shadow-modal: 0 30px 80px rgba(15, 23, 42, 0.22);
+    --shadow-cover: 0 22px 50px rgba(15, 23, 42, 0.2);
+
+    /* ------------------------------------------------------ tiles  (LIGHT) */
+    /* Consumed by .tile / .tile-cover below. Only the S/L pairs differ per theme. */
+    --tile-sat-a: 55%;
+    --tile-light-a: 62%;
+    --tile-sat-b: 60%;
+    --tile-light-b: 44%;
+    --tile-cover-sat-a: 62%;
+    --tile-cover-light-a: 58%;
+    --tile-cover-sat-b: 58%;
+    --tile-cover-light-b: 40%;
+
+    /* --------------------------------------------------------------------
+     * zinc, re-pointed at the design ramp
+     *
+     * Flux free hardcodes zinc-200/300/500/700/800 across dozens of its stubs.
+     * Rather than fight each one, we re-point the ramp so untouched Flux
+     * components land close to the design for free — flux:modal's
+     * dark:bg-zinc-800 becomes our surface, flux:table.cell's dark:text-zinc-300
+     * becomes our secondary ink.
+     *
+     * This ramp is theme-INVARIANT: Flux's own dark: variants pick different
+     * rungs, which is what makes both themes work from one ramp.
+     *
+     * !! Never write bg-zinc-* or text-zinc-* in Minizo markup. Use the semantic
+     *    tokens. This ramp exists only to steer vendor internals.
+     * -------------------------------------------------------------------- */
+    --color-zinc-50: #f8fafc;
+    --color-zinc-100: #eef1f7;
+    --color-zinc-200: #e2e8f2;
+    --color-zinc-300: #c3cad9;
+    --color-zinc-400: #94a3b8;
+    --color-zinc-500: #8a93a6;
+    --color-zinc-600: #2a3040;
+    --color-zinc-700: #161b29;
+    --color-zinc-800: #10141f;
+    --color-zinc-900: #0a0d15;
+    --color-zinc-950: #080b12;
 }
 
-*::-webkit-scrollbar-track {
-    @apply bg-gray-800 rounded-lg;
+@layer theme {
+    .dark {
+        /* ---------------------------------------------- surfaces  (DARK) */
+        --color-canvas: #0a0d15;
+        --color-sidebar: #0c101a;
+        --color-surface: #10141f;
+        --color-surface-raised: #161b29;
+        --color-sunken: #0a0d15;
+        --color-public: #080b12;
+
+        /* --------------------------------------------------- ink  (DARK) */
+        --color-ink: #e7ebf4;
+        --color-ink-secondary: #c3cad9;
+        --color-ink-muted: #8a93a6;
+        --color-ink-faint: #5b6478;
+
+        /* ------------------------------------------------- lines  (DARK) */
+        /* Same alphas as light — only the ink changes. */
+        --color-line: #94a3b8;
+        --color-hairline: rgba(148, 163, 184, 0.09);
+        --color-border: rgba(148, 163, 184, 0.12);
+        --color-border-strong: rgba(148, 163, 184, 0.18);
+        --color-field-border: rgba(148, 163, 184, 0.16);
+        --color-focus-line: rgba(148, 163, 184, 0.4);
+        --color-row-hover: rgba(148, 163, 184, 0.04);
+        --color-row-hover-strong: rgba(148, 163, 184, 0.07);
+        --color-overlay: rgba(4, 6, 12, 0.72);
+
+        /* ------------------------------------------------- brand  (DARK) */
+        --color-brand: #8b8cf9;
+        --color-brand-ink: #0a0d15;
+        --color-brand-soft: rgba(139, 140, 249, 0.15);
+        --color-brand-text: #9aa3f8;
+        --color-brand-text-hover: #c3c8fb;
+
+        /* --------------------------------------------- semantics  (DARK) */
+        --color-success: #4ade80;
+        --color-success-soft: rgba(74, 222, 128, 0.08);
+        --color-warning: #c9a95e;
+        --color-warning-soft: rgba(201, 169, 94, 0.1);
+        --color-danger: #f87171;
+        --color-danger-soft: rgba(248, 113, 113, 0.08);
+        --color-danger-line: rgba(248, 113, 113, 0.4);
+
+        --color-destructive: #e5484d;
+        --color-destructive-ink: #ffffff;
+        --color-delete-folder: #f87171;
+        --color-delete-folder-ink: #180a0a;
+
+        /* ------------------------------------------------ controls (DARK) */
+        --color-toggle-off: rgba(148, 163, 184, 0.25);
+        --color-progress-track: rgba(148, 163, 184, 0.12);
+        --color-progress-queued: rgba(148, 163, 184, 0.3);
+
+        /*
+         * Flux accent bridge, repeated. This is NOT redundant: flux.css declares
+         * these inside its own `.dark` rule, which beats our @theme. Delete these
+         * three lines and every Flux button and link goes white in dark mode.
+         */
+        --color-accent: var(--color-brand);
+        --color-accent-content: var(--color-brand-text);
+        --color-accent-foreground: var(--color-brand-ink);
+
+        /* ------------------------------------------------ shadows  (DARK) */
+        --shadow-dropdown: 0 14px 34px rgba(0, 0, 0, 0.55);
+        --shadow-modal: 0 30px 80px rgba(0, 0, 0, 0.6);
+        --shadow-cover: 0 22px 50px rgba(0, 0, 0, 0.5);
+
+        /* -------------------------------------------------- tiles  (DARK) */
+        --tile-sat-a: 42%;
+        --tile-light-a: 34%;
+        --tile-sat-b: 50%;
+        --tile-light-b: 16%;
+        --tile-cover-sat-a: 62%;
+        --tile-cover-light-a: 34%;
+        --tile-cover-sat-b: 58%;
+        --tile-cover-light-b: 16%;
+    }
 }
 
-*::-webkit-scrollbar-track:hover {
-    @apply bg-gray-800;
+/*
+ * ============================================================================
+ * Base
+ * ============================================================================
+ */
+
+@layer base {
+    html {
+        /* Tells the UA to style scrollbars and form controls for the active theme. */
+        color-scheme: light;
+    }
+
+    html.dark {
+        color-scheme: dark;
+    }
+
+    body {
+        @apply bg-canvas text-ink font-sans text-base antialiased;
+    }
+
+    /* Default border colour for the reset, so a bare `border` reads correctly. */
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-border);
+    }
+
+    /*
+     * Scrollbars: 10px with a 3px canvas-coloured border, which is what gives the
+     * thumb its inset look in the prototype.
+     */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: color-mix(in oklab, var(--color-line) 18%, transparent);
+        border: 3px solid var(--color-canvas);
+        border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: color-mix(in oklab, var(--color-line) 28%, transparent);
+    }
+
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: color-mix(in oklab, var(--color-line) 18%, transparent) transparent;
+    }
 }
 
-*::-webkit-scrollbar-track:active {
-    @apply bg-gray-800;
+/*
+ * ============================================================================
+ * Flux overrides
+ * ============================================================================
+ */
+
+/* Keep the starter kit's field layout tweaks, retuned to the design's label size. */
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
 }
 
-*::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    @apply bg-minizo-dark;
+[data-flux-label] {
+    @apply !mb-0 !leading-tight text-xs font-bold;
 }
 
-*::-webkit-scrollbar-thumb:hover {
-    @apply bg-minizo-dark;
+/*
+ * Every text-ish control in one rule.
+ *
+ * This is the highest-leverage block in the file: flux:input, flux:select,
+ * flux:textarea AND the individual cells of flux:otp all carry
+ * [data-flux-control], so they pick up the design's field treatment with no
+ * per-page work at all. It replaces the starter kit's ring-2/ring-offset focus
+ * style, which looks nothing like the handoff — the design moves the BORDER
+ * colour on focus and draws no ring.
+ */
+input:where([data-flux-control]),
+textarea:where([data-flux-control]),
+select:where([data-flux-control]) {
+    @apply bg-sunken text-ink rounded-lg text-sm;
+
+    border: 1px solid var(--color-field-border);
 }
 
-*::-webkit-scrollbar-thumb:active {
-    @apply bg-minizo-dark;
+input:where([data-flux-control])::placeholder,
+textarea:where([data-flux-control])::placeholder {
+    color: var(--color-ink-faint);
+}
+
+input:focus:where([data-flux-control]),
+textarea:focus:where([data-flux-control]),
+select:focus:where([data-flux-control]) {
+    @apply outline-hidden;
+
+    border-color: var(--color-focus-line);
+}
+
+/* The design's modal scrim; Flux ships a much lighter rgba(0,0,0,.10). */
+[data-flux-modal] > dialog::backdrop {
+    background-color: var(--color-overlay);
+}
+
+/*
+ * Dark-mode neutralisation.
+ *
+ * Flux free hardcodes dark:text-white/70, dark:bg-white/10 and
+ * dark:border-white/10 in its stubs. Those read as neutral grey where the whole
+ * design is blue-tinted slate, so stock components look subtly wrong next to our
+ * own. Retargeting --color-zinc-* fixes the light side but cannot touch these.
+ *
+ * Keep this list SHORT and audited. Every entry is a fight with a vendor stub, so
+ * prefer replacing a component with an x-ui.* equivalent over adding a rule here.
+ */
+.dark [data-flux-text] {
+    color: var(--color-ink-muted);
+}
+
+.dark [data-flux-heading] {
+    color: var(--color-ink);
+}
+
+.dark [data-flux-subheading] {
+    color: var(--color-ink-muted);
+}
+
+.dark [data-flux-card] {
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+}
+
+.dark [data-flux-menu] {
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-border-strong);
+}
+
+.dark [data-flux-cell] {
+    border-color: var(--color-hairline);
+}
+
+/*
+ * Validation errors, in both themes rather than just dark.
+ *
+ * flux:error hardcodes text-red-500 / dark:text-red-400, which is close to but not
+ * the design's danger red — and errors surface on every auth page and every modal,
+ * so an almost-right red is visible everywhere. One rule keeps them on the token.
+ */
+[data-flux-error] {
+    color: var(--color-danger);
+}
+
+/*
+ * The switch's checked state, in plain CSS.
+ *
+ * resources/views/flux/switch.blade.php sets the geometry, the solid off-track and the
+ * permanently white knob as utilities, and those work. The CHECKED state does not:
+ * `data-checked:bg-brand` and `group-data-checked:translate-x-[18px]` are generated —
+ * they are in the compiled stylesheet, they match the element, and they carry higher
+ * specificity than the off-state utilities — and yet the computed background stayed on
+ * the off colour, with or without an important modifier. Something in the utility
+ * ordering or layering is beating them and it is not worth more hours to find.
+ *
+ * Two declarations here settle it unambiguously. The design's spec is 36×21 with a 15px
+ * knob, so the travel is 36 - 15 - 3 - 3 = 15px from a 3px resting offset, i.e. 18px.
+ */
+/*
+ * The switch's checked state.
+ *
+ * flux/switch.blade.php sets the geometry, the solid off-track and the permanently white
+ * knob as utilities. The checked state is set here instead, because no form of
+ * `data-checked:bg-*` on the element took effect — see the note in that file.
+ *
+ * !important because even this rule, unlayered and at (0,2,0) against `.bg-toggle-off`
+ * in @layer utilities at (0,1,0), did not win on its own. Travel is 18px: a 36px track
+ * with a 15px knob and a 3px resting inset.
+ */
+[data-flux-switch][data-checked] {
+    background-color: var(--color-brand) !important;
+}
+
+[data-flux-switch][data-checked] > span {
+    translate: 18px !important;
+}
+
+/*
+ * ============================================================================
+ * Generated artwork
+ * ============================================================================
+ *
+ * Minizo ships no image assets. Every avatar and cover is a gradient derived from
+ * a string, so a folder or artist always looks the same without anyone uploading
+ * anything.
+ *
+ * The hue is computed in PHP (App\Support\GeneratedArt::hue) and passed in as
+ * --tile-h; the gradient lives here so the light/dark lightness swap is just a
+ * token flip. See resources/views/components/ui/tile.blade.php.
+ */
+
+.tile {
+    background-image: linear-gradient(
+        135deg,
+        hsl(var(--tile-h) var(--tile-sat-a) var(--tile-light-a)),
+        hsl(var(--tile-h) var(--tile-sat-b) var(--tile-light-b))
+    );
+}
+
+.tile-cover {
+    background-image: linear-gradient(
+        150deg,
+        hsl(var(--tile-h) var(--tile-cover-sat-a) var(--tile-cover-light-a)),
+        hsl(var(--tile-h) var(--tile-cover-sat-b) var(--tile-cover-light-b))
+    );
+}
+
+/*
+ * Cover art bled into the left edge of a row (x-ui.row-artwork).
+ *
+ * The mask fades the artwork out horizontally so text can sit on top of it. Masking rather
+ * than overlaying a gradient in the row's colour is deliberate: an overlay has to know the
+ * colour behind it, and a row has four (rest and hover, in each theme). Fading to
+ * transparent instead composites against whatever is actually there, so the hover state and
+ * the light/dark flip both come out right with no further rules.
+ *
+ * The stops are eased rather than linear. A straight ramp puts its steepest change in the
+ * middle, which shows up as a visible edge running down the row; three stops move most of
+ * the falloff into the first half and let the tail approach zero gently.
+ *
+ * STRENGTH LIVES IN `opacity`, NOT IN THE MASK. The mask is written at the hover strength
+ * and held back at rest by an opacity below 1. That split is what makes the hover reveal
+ * animate at all: gradients do not interpolate, so transitioning between two mask-images
+ * would snap, while opacity is one of the two properties a compositor can animate for free.
+ */
+.row-artwork {
+    --row-artwork-fade: linear-gradient(
+        to right,
+        rgb(0 0 0 / 0.78) 0%,
+        rgb(0 0 0 / 0.42) 42%,
+        rgb(0 0 0 / 0.11) 74%,
+        transparent 100%
+    );
+
+    /* .6 x the mask above lands on the resting strength the design was tuned at. */
+    opacity: 0.6;
+    transition: opacity 200ms ease-out;
+
+    /* Safari only dropped the prefix in 15.4, and this is the whole effect — worth the
+       two lines rather than losing the fade to a hard-edged rectangle. */
+    -webkit-mask-image: var(--row-artwork-fade);
+    mask-image: var(--row-artwork-fade);
+}
+
+/*
+ * Hovering a row brings its artwork up.
+ *
+ * Written as a parent-hover rather than `.row-artwork:hover`, because the artwork is
+ * pointer-events-none — it must never eat a click meant for the row or its menu — so it can
+ * never be hovered itself. `:hover > .row-artwork` matches whatever the artwork's row or
+ * card happens to be, which keeps this working for both the Files table and the Feed cards
+ * without either having to opt in.
+ */
+:hover > .row-artwork {
+    opacity: 1;
+}
+
+/*
+ * Light mode needs less.
+ *
+ * The same alpha over a near-white surface is a much larger contrast step than it is over
+ * #10141f, so the artwork stops being a background and starts competing with the filename.
+ */
+:root:not(.dark) .row-artwork {
+    --row-artwork-fade: linear-gradient(
+        to right,
+        rgb(0 0 0 / 0.5) 0%,
+        rgb(0 0 0 / 0.27) 42%,
+        rgb(0 0 0 / 0.07) 74%,
+        transparent 100%
+    );
+}
+
+/*
+ * ============================================================================
+ * Motion
+ * ============================================================================
+ * The design has no entrance animations. These are the only two moving parts:
+ * an active download bar, and the sidebar's width.
+ */
+
+@keyframes barpulse {
+    0%,
+    100% {
+        opacity: 0.85;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.animate-barpulse {
+    animation: barpulse 1.4s ease-in-out infinite;
+}
+
+/* The public share page's radial accent glow behind the header. */
+.share-glow {
+    background-image: radial-gradient(
+        900px 320px at 50% -80px,
+        var(--color-brand-soft),
+        transparent 70%
+    );
+}
+
+/*
+ * Keyboard focus.
+ *
+ * :focus-visible, not :focus — the browser only matches it for keyboard and
+ * programmatic focus, so a clicked button does not light up while a tabbed one
+ * does. That distinction is the whole reason this can be a blanket rule.
+ *
+ * It exists because the field rule above covers [data-flux-control] and nothing
+ * else, which left every custom interactive — the filter pills, the table rows,
+ * the row menus, the sidebar's "+", the Feed's result cards — on the browser
+ * default outline. On these near-black surfaces that outline is close to
+ * invisible, which means the whole app was effectively unnavigable by keyboard.
+ *
+ * outline rather than a ring/box-shadow: outline follows border-radius in every
+ * current browser, is not clipped by overflow: hidden (the data-table rows and
+ * the tile's cover both clip), and costs no layout.
+ */
+:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+}
+
+/*
+ * Inputs opt out: the field rule already signals focus by moving the border
+ * colour, which is what the design draws, and stacking an outline on top of it
+ * reads as an error state.
+ */
+input:focus-visible:where([data-flux-control]),
+textarea:focus-visible:where([data-flux-control]),
+select:focus-visible:where([data-flux-control]) {
+    outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /*
+     * Near-zero rather than `none`. A transition that is removed outright never
+     * fires transitionend, and Alpine's x-transition — which Flux's modals and
+     * dropdowns are built on — waits for that event before removing an element.
+     * Setting `none` there leaves closed modals in the DOM.
+     */
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* The queue's pulsing progress bar is decorative and conveys nothing the
+       percentage does not, so it stops rather than flickering at 0.01ms. */
+    .animate-barpulse {
+        animation: none !important;
+    }
 }

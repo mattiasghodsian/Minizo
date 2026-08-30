@@ -1,4 +1,155 @@
-FROM ubuntu:24.04
+# syntax=docker/dockerfile:1
+
+# ---------------------------------------------------------------------------
+# Stage 1: base — PHP runtime + media tooling, shared by the build and the
+# final image so both run against an identical environment.
+# ---------------------------------------------------------------------------
+FROM ubuntu:24.04 AS base
+
+ARG WWWGROUP=1000
+ARG YTDLP_VERSION=2026.07.04
+
+WORKDIR /var/www/html
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=CET
+ENV LANG=C.UTF-8
+# --no-reload is required for PHP_CLI_SERVER_WORKERS to take effect; without it
+# artisan serve runs a single-threaded server. Application files never change in
+# the image, so there is nothing to reload for.
+#
+# NOTE: configure this container with a mounted .env, not with `docker run -e`.
+# artisan serve filters the environment it hands to the PHP dev server down to
+# ServeCommand::$passthroughVariables, so -e APP_KEY / -e DB_* silently never
+# reach web requests — while the queue and schedule workers, which run artisan
+# directly, would see them. That split is worse than not setting them at all.
+ENV SUPERVISOR_PHP_COMMAND="/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan serve --host=0.0.0.0 --port=80 --no-reload"
+ENV SUPERVISOR_PHP_USER="sail"
+
+# The variable the --no-reload flag above exists to enable. ServeCommand defaults
+# it to 1, so without this the server handles one request at a time - which shows
+# up worst on the Files screen, where a page lazy-loads up to 50 cover images and
+# each one is its own authenticated request.
+ENV PHP_CLI_SERVER_WORKERS=8
+
+# Warm the config, route, view and event caches before supervisor starts. Left
+# unset in the dev image, where they would fight the file watcher.
+ENV MINIZO_OPTIMIZE="true"
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# System packages. The media tooling (ffmpeg, flac, atomicparsley, python3 for
+# eyeD3) is what Minizo uses to tag and transcode audio.
+RUN apt-get update && apt-get upgrade -y \
+    && mkdir -p /etc/apt/keyrings \
+    && apt-get install -y \
+        gnupg \
+        gosu \
+        curl \
+        wget \
+        ca-certificates \
+        zip \
+        unzip \
+        git \
+        nano \
+        supervisor \
+        sqlite3 \
+        libcap2-bin \
+        libpng-dev \
+        dnsutils \
+        librsvg2-bin \
+        ffmpeg \
+        flac \
+        atomicparsley \
+        python3 \
+        python3-pip \
+    && curl -sS 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xb8dc7e53946656efbce4c1dd71daeaab4ad4cab6' | gpg --dearmor | tee /etc/apt/keyrings/ppa_ondrej_php.gpg > /dev/null \
+    && echo "deb [signed-by=/etc/apt/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu noble main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
+    && apt-get update \
+    && apt-get install -y \
+        libgd3 \
+        php8.4-cli \
+        php8.4-bcmath \
+        php8.4-curl \
+        php8.4-gd \
+        php8.4-igbinary \
+        php8.4-imagick \
+        php8.4-intl \
+        php8.4-mbstring \
+        php8.4-msgpack \
+        php8.4-mysql \
+        php8.4-opcache \
+        php8.4-readline \
+        php8.4-redis \
+        php8.4-sqlite3 \
+        php8.4-xml \
+        php8.4-zip \
+    && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# eyeD3 for ID3 tagging
+RUN ln -sf /usr/bin/python3 /usr/bin/python \
+    && ln -sf /usr/bin/pip3 /usr/bin/pip \
+    && pip install --break-system-packages eyeD3
+
+RUN wget -O /usr/bin/yt-dlp "https://github.com/yt-dlp/yt-dlp/releases/download/${YTDLP_VERSION}/yt-dlp_linux" \
+    && chmod a+rx /usr/bin/yt-dlp
+
+RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.4
+
+# Ubuntu 24.04 ships a stock "ubuntu" user on uid/gid 1000. It has to go first,
+# otherwise groupadd --force silently cancels -g and sail lands in that group.
+RUN userdel -r ubuntu \
+    && groupadd --force -g $WWWGROUP sail \
+    && useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
+
+COPY docker/php.ini /etc/php/8.4/cli/conf.d/99-sail.ini
+
+# ---------------------------------------------------------------------------
+# Stage 2: build — install Composer + npm dependencies and compile the Vite
+# bundle. Node lives only here, so it never reaches the final image.
+# ---------------------------------------------------------------------------
+FROM base AS build
+
+ARG NODE_VERSION=24
+
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
+    && apt-get update \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY . /var/www/html
+
+# resources/css/app.css imports and @sources files out of vendor/livewire/flux,
+# so Composer has to run before the Tailwind/Vite build.
+#
+# A throwaway .env keeps composer's post-autoload-dump scripts happy; it is
+# removed again so no configuration is baked into the image.
+#
+# The directories are created first: .dockerignore strips them from the build
+# context, and composer's package:discover needs bootstrap/cache to exist.
+RUN mkdir -p \
+        bootstrap/cache \
+        storage/framework/cache/data \
+        storage/framework/sessions \
+        storage/framework/testing \
+        storage/framework/views \
+        storage/logs \
+        storage/app/private/music \
+    && cp .env.example .env \
+    && composer install --no-dev --optimize-autoloader --no-interaction --no-progress \
+    && npm ci \
+    && npm run build \
+    && rm -rf node_modules .env
+
+# ---------------------------------------------------------------------------
+# Stage 3: final image
+# ---------------------------------------------------------------------------
+FROM base AS app
 
 LABEL maintainer="Mattias Ghodsian"
 LABEL description="Production Docker image for Minizo"
@@ -8,83 +159,24 @@ LABEL org.opencontainers.image.description="Production Docker image for Minizo"
 LABEL org.opencontainers.image.licenses="GPL-3.0"
 
 ARG WWWGROUP=1000
-ARG NODE_VERSION=22
-ARG YTDLP_VERSION=2026.07.04
 
-WORKDIR /var/www/html
+COPY --from=build --chown=sail:$WWWGROUP /var/www/html /var/www/html
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=CET
-ENV SUPERVISOR_PHP_COMMAND="/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan serve --host=0.0.0.0 --port=80"
-ENV SUPERVISOR_PHP_USER="sail"
+# WORKDIR created /var/www/html as root before the COPY, and --chown only covers
+# the copied contents. start-container writes .env here on first boot as sail.
+RUN chown sail:$WWWGROUP /var/www/html
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# opcache. The package is installed in the base stage; this is what switches it on
+# for the CLI SAPI that artisan serve runs under. See the file for why.
+COPY docker/opcache.ini /etc/php/8.4/cli/conf.d/99-opcache.ini
 
-# Install system dependencies
-RUN apt-get update && apt-get upgrade -y \
-    && mkdir -p /etc/apt/keyrings \
-    && apt-get install -y gnupg gosu curl ffmpeg wget ca-certificates zip nano unzip git supervisor sqlite3 libcap2-bin libpng-dev python3 python3-pip dnsutils librsvg2-bin fswatch flac atomicparsley acl \
-    && curl -sS 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xb8dc7e53946656efbce4c1dd71daeaab4ad4cab6' | gpg --dearmor | tee /etc/apt/keyrings/ppa_ondrej_php.gpg > /dev/null \
-    && echo "deb [signed-by=/etc/apt/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu noble main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
-    && apt-get update \
-    && apt-get install -y php8.4-cli php8.4-dev \
-       php8.4-pgsql php8.4-sqlite3 php8.4-gd \
-       php8.4-curl php8.4-mongodb \
-       php8.4-imap php8.4-mysql php8.4-mbstring \
-       php8.4-xml php8.4-zip php8.4-bcmath php8.4-soap \
-       php8.4-intl php8.4-readline \
-       php8.4-ldap \
-       php8.4-msgpack php8.4-igbinary php8.4-redis \
-    && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
-    && apt-get -y autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && setfacl -m u:www-data:rx $(which metaflac) \
-    && chmod 755 /usr/bin/metaflac
-
-# Python and eyeD3
-RUN ln -sf /usr/bin/python3 /usr/bin/python \
-    && ln -sf /usr/bin/pip3 /usr/bin/pip \
-    && pip install --break-system-packages eyeD3
-
-# Install Node.js for frontend builds
-RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
-    && apt-get update \
-    && apt-get install -y nodejs \
-    && npm install -g npm \
-    && apt-get -y autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Install yt-dlp
-RUN wget -O /usr/bin/yt-dlp "https://github.com/yt-dlp/yt-dlp/releases/download/${YTDLP_VERSION}/yt-dlp_linux" && \
-    chmod a+rx /usr/bin/yt-dlp
-
-RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.4
-
-# Create user and copy application files
-RUN groupadd --force -g $WWWGROUP sail \
-    && useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
-
-# Copy application files
-COPY . /var/www/html
-RUN chown -R sail:$WWWGROUP /var/www/html
-RUN cp .env.example .env
-
-# Set up PHP and container configuration
 COPY docker/start-container /usr/local/bin/start-container
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY docker/php.ini /etc/php/8.4/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
 
-# Install composer dependencies and optimize
-USER sail
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-RUN npm install --loglevel=verbose && npm run build
+EXPOSE 80/tcp
 
-USER root
-
-EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -fsS http://127.0.0.1/up > /dev/null || exit 1
 
 ENTRYPOINT ["start-container"]
