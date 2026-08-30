@@ -284,7 +284,7 @@ return [
     */
 
     'pages' => [
-        'download' => ['Download', 'Grab tracks from YouTube Music'],
+        'download' => ['Download', 'Grab tracks from the web'],
         'files' => ['{directory}', 'Library folder'],
         'feed' => ['Feed', 'Artists you follow'],
         'shares' => ['Share links', 'Every public link created from this library'],
