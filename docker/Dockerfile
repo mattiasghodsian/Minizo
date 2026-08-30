@@ -10,7 +10,7 @@ LABEL org.opencontainers.image.licenses="GPL-3.0"
 ARG WWWGROUP
 ARG NODE_VERSION=24
 ARG MYSQL_CLIENT="mariadb-client"
-ARG YTDLP_VERSION=2026.07.04
+ARG YTDLP_VERSION=2026.08.19
 
 WORKDIR /var/www/html
 
