@@ -1,0 +1,20 @@
+<svg viewBox="0 0 182 182" xmlns="http://www.w3.org/2000/svg">
+    <!--
+        The same ringed M as x-app-logo-icon, drawn pure white.
+
+        On a dark plate rather than transparent: a white-on-nothing favicon
+        disappears into a light browser tab. #0a0d15 is the app's dark canvas,
+        so the tab icon reads as the product in either tab bar.
+
+        The mark is inset to 140 of the 182 box so the ring does not run into
+        the rounded corners.
+    -->
+    <rect width="182" height="182" rx="40" fill="#0a0d15"/>
+    <g transform="translate(21 21) scale(0.769)" fill="none" stroke="#ffffff">
+        <circle cx="91" cy="91" r="87" stroke-width="8"/>
+        <path
+            d="M42.9725 138V39.952H43.1005L95.4525 114.192L87.5165 112.4L139.741 39.952H139.997V138H121.437V81.808L122.589 91.408L90.7165 136.72H90.4605L57.6925 91.408L60.8925 82.576V138H42.9725Z"
+            fill="#ffffff" stroke="none"/>
+        <line x1="43" y1="135.5" x2="140" y2="135.5" stroke-width="5"/>
+    </g>
+</svg>

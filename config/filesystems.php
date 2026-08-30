@@ -30,9 +30,24 @@ return [
 
     'disks' => [
 
+        /*
+         * The music library. In Docker this path is a bind mount of the host's
+         * collection (see docker-compose-dev.yml), so it is host-owned: the
+         * container cannot meaningfully chown it, and on a Windows host it is
+         * case-insensitive while the container's filesystem is not.
+         *
+         * The library is exactly one level deep — music/<folder>/<file>. Read it
+         * with directories('/') and never allAllDirectories()/allFiles().
+         *
+         * `throw` is on: a missing or unreadable library is a real fault we want
+         * surfaced, not silently rendered as an empty collection.
+         */
         'music' => [
             'driver' => 'local',
             'root' => storage_path('app/private/music'),
+            'serve' => false,
+            'throw' => true,
+            'report' => false,
         ],
 
         'local' => [
@@ -46,7 +61,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => rtrim((string) env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

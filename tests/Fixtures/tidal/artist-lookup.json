@@ -1,0 +1,123 @@
+{
+    "data": {
+        "id": "4906194",
+        "type": "artists",
+        "attributes": {
+            "name": "Anitta",
+            "popularity": 0.8071068038059022,
+            "externalLinks": [
+                {
+                    "href": "https://facebook.com/anittaoficial",
+                    "meta": {
+                        "type": "FACEBOOK"
+                    }
+                },
+                {
+                    "href": "https://instagram.com/anitta",
+                    "meta": {
+                        "type": "INSTAGRAM"
+                    }
+                },
+                {
+                    "href": "https://anitta.com.br/",
+                    "meta": {
+                        "type": "OFFICIAL_HOMEPAGE"
+                    }
+                },
+                {
+                    "href": "https://tiktok.com/@anitta",
+                    "meta": {
+                        "type": "TIKTOK"
+                    }
+                },
+                {
+                    "href": "https://twitter.com/anitta",
+                    "meta": {
+                        "type": "TWITTER"
+                    }
+                },
+                {
+                    "href": "https://tidal.com/browse/artist/4906194",
+                    "meta": {
+                        "type": "TIDAL_SHARING"
+                    }
+                }
+            ],
+            "ownerType": "USER"
+        },
+        "relationships": {
+            "profileArt": {
+                "data": [
+                    {
+                        "id": "a12cf152-d60a-4196-972d-890a00a32147",
+                        "type": "artworks"
+                    }
+                ],
+                "links": {
+                    "self": "/artists/4906194/relationships/profileArt?countryCode=US"
+                }
+            }
+        }
+    },
+    "links": {
+        "self": "/artists/4906194?include=profileArt&countryCode=US"
+    },
+    "included": [
+        {
+            "id": "a12cf152-d60a-4196-972d-890a00a32147",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/a03916c6/9195/44bf/bee0/19f079473276/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a03916c6/9195/44bf/bee0/19f079473276/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a03916c6/9195/44bf/bee0/19f079473276/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a03916c6/9195/44bf/bee0/19f079473276/1280x720.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 720
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a03916c6/9195/44bf/bee0/19f079473276/640x360.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 360
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/a03916c6/9195/44bf/bee0/19f079473276/320x180.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 180
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#461A0F",
+                    "blurHash": "UIH]2ibu:lrsN]R+tQxZ{~X7I;WC[toeR+Rk",
+                    "status": "OK"
+                }
+            }
+        }
+    ]
+}

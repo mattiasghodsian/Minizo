@@ -17,7 +17,7 @@ done
 
 echo -e "${YELLOW}> Building...${NC}"
 
-npm run build
+# Assets are compiled inside the image's build stage — no host npm run needed.
 docker build -t rakma/minizo:nightly -f docker/Dockerfile.prod .
 
 # Push to Docker registry
