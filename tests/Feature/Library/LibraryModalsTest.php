@@ -149,6 +149,43 @@ class LibraryModalsTest extends TestCase
         Storage::disk('music')->assertMissing('Spanish/song.flac');
     }
 
+    public function test_the_move_button_follows_the_dropdown_on_the_client(): void
+    {
+        $this->library();
+
+        $html = Livewire::actingAs(User::factory()->admin()->create())
+            ->test('pages::files', ['directory' => 'Spanish'])
+            ->call('openMove', 'song.flac')
+            ->html();
+
+        /*
+         * An assertion about markup, because no ->set() test can reach this: setting the
+         * property server-side drives the component down a path the browser never takes.
+         *
+         * A Blade :disabled is evaluated once, during render, when $moveTo is still ''. The
+         * select's plain wire:model syncs the choice into $wire and sends nothing, so this
+         * markup is never re-rendered - and the button stayed disabled no matter what was
+         * chosen. The binding has to be client-side.
+         */
+        $this->assertStringContainsString('x-bind:disabled="! $wire.moveTo"', $html);
+        $this->assertStringNotContainsString('disabled="disabled"', $html);
+    }
+
+    public function test_moving_with_no_destination_chosen_is_refused(): void
+    {
+        $this->library();
+
+        // The button is a convenience; this is the check. Both ends of the modal have to
+        // refuse a blank destination, since one is markup and can be bypassed.
+        Livewire::actingAs(User::factory()->admin()->create())
+            ->test('pages::files', ['directory' => 'Spanish'])
+            ->call('openMove', 'song.flac')
+            ->call('move')
+            ->assertHasErrors('moveTo');
+
+        Storage::disk('music')->assertExists('Spanish/song.flac');
+    }
+
     public function test_moving_without_the_move_permission_is_refused(): void
     {
         $this->library();

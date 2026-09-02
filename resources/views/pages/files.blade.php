@@ -604,10 +604,17 @@ new class extends Component
                     <flux:button variant="ghost" type="button">{{ __('Cancel') }}</flux:button>
                 </flux:modal.close>
 
+                {{-- x-bind, never :disabled. A Blade `:disabled` is evaluated once, while
+                                         the server renders - and $moveTo is '' at that moment, because
+                                         openMove() just reset it. A plain wire:model syncs the choice into
+                                         $wire on the client and sends no request, so nothing re-renders
+                                         this markup and the attribute would never come off: the button
+                                         stayed disabled however many folders were picked. $wire.moveTo is
+                                         reactive, so this follows the dropdown with no round-trip. --}}
                 <flux:button
                     variant="primary"
                     type="submit"
-                    :disabled="blank($moveTo)"
+                    x-bind:disabled="! $wire.moveTo"
                     class="disabled:pointer-events-none disabled:opacity-40"
                 >{{ __('Move track') }}</flux:button>
             </x-ui.modal-footer>
