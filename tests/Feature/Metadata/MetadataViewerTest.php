@@ -74,6 +74,45 @@ class MetadataViewerTest extends TestCase
         return new LibraryFile(new LibraryFolder('Spanish'), $filename);
     }
 
+    /**
+     * A FLAC carrying an embedded picture, built with ffmpeg rather than metaflac so the
+     * artwork path is covered on a machine that has no flac tools.
+     */
+    private function flacWithArtwork(string $filename): LibraryFile
+    {
+        $ffmpeg = (new ExecutableFinder)->find('ffmpeg');
+
+        if ($ffmpeg === null) {
+            $this->markTestSkipped('ffmpeg is needed to generate a real FLAC.');
+        }
+
+        $source = $this->flac('source-'.$filename);
+        $image = $this->root.'/cover.png';
+        $path = $this->root.'/Spanish/'.$filename;
+
+        (new Process([
+            $ffmpeg, '-y', '-loglevel', 'error', '-f', 'lavfi',
+            '-i', 'color=c=red:s=16x16:d=1', '-frames:v', '1', $image,
+        ], timeout: 60))->run();
+
+        $process = new Process([
+            $ffmpeg, '-y', '-loglevel', 'error',
+            '-i', $this->root.'/'.$source->path(), '-i', $image,
+            '-map', '0:a', '-map', '1:v', '-c', 'copy', '-disposition:v', 'attached_pic', $path,
+        ], timeout: 60);
+
+        $process->run();
+
+        if (! $process->isSuccessful()) {
+            $this->markTestSkipped('ffmpeg could not embed artwork: '.$process->getErrorOutput());
+        }
+
+        // The source would otherwise show up in the listing as a third row.
+        @unlink($this->root.'/'.$source->path());
+
+        return new LibraryFile(new LibraryFolder('Spanish'), $filename);
+    }
+
     private function tag(LibraryFile $file): void
     {
         app(FlacTagWriter::class)->write($this->root.'/'.$file->path(), TrackMetadata::fromArray([
@@ -249,11 +288,12 @@ class MetadataViewerTest extends TestCase
             ->assertNotFound();
     }
 
-    public function test_the_listing_offers_a_cover_url_for_every_taggable_row(): void
+    public function test_the_listing_offers_a_cover_url_only_for_a_row_that_has_artwork(): void
     {
-        // The listing does no disk work: it emits a cover URL for every FLAC without knowing
-        // which have artwork. This asserts the URLs are there and compiled.
-        $this->flac('one.flac');
+        // Which rows have a picture comes out of the block-chain walk the listing already does
+        // for their tags, so it costs no disk work of its own - and a file with no artwork is
+        // never asked for a cover, where it used to be asked and answer 404.
+        $this->flacWithArtwork('one.flac');
         $this->flac('two.flac');
 
         $html = Livewire::actingAs(User::factory()->admin()->create())
@@ -261,7 +301,7 @@ class MetadataViewerTest extends TestCase
             ->html();
 
         $this->assertStringContainsString('files/Spanish/cover/one.flac', $html);
-        $this->assertStringContainsString('files/Spanish/cover/two.flac', $html);
+        $this->assertStringNotContainsString('files/Spanish/cover/two.flac', $html);
         $this->assertStringNotContainsString('@js(', $html);
 
         // And the row action is wired with real arguments.

@@ -110,6 +110,31 @@ class FlacCommentReaderTest extends TestCase
         }
     }
 
+    /** Embed a picture, the way the metadata editor's writer does. */
+    private function picture(LibraryFile $file): void
+    {
+        $image = $this->root.'/cover.png';
+
+        // The smallest valid PNG. metaflac sniffs the file for its MIME type and dimensions,
+        // so it has to be a real image rather than a byte-string.
+        file_put_contents($image, (string) base64_decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+            true,
+        ));
+
+        $process = new Process([
+            $this->binary('metaflac'),
+            '--import-picture-from='.$image,
+            $this->root.'/'.$file->path(),
+        ], timeout: 60);
+
+        $process->run();
+
+        if (! $process->isSuccessful()) {
+            $this->markTestSkipped('metaflac could not embed a picture: '.$process->getErrorOutput());
+        }
+    }
+
     private function reader(): FlacCommentReader
     {
         return app(FlacCommentReader::class);
@@ -275,6 +300,65 @@ class FlacCommentReaderTest extends TestCase
 
         // value() narrows to the first, for fields where only one makes sense.
         $this->assertSame('Pop', $this->reader()->value($file, 'GENRE'));
+    }
+
+    // ------------------------------------------------------------------- artwork
+
+    #[Test]
+    public function it_reports_which_files_carry_embedded_artwork(): void
+    {
+        $bare = $this->flac('bare.flac');
+        $illustrated = $this->flac('illustrated.flac');
+        $this->picture($illustrated);
+
+        $missing = new LibraryFile(new LibraryFolder('Spanish'), 'gone.flac');
+
+        $pictures = $this->reader()->picturesFor([$bare, $illustrated, $missing]);
+
+        // This is what lets the Files screen ask for a cover only where there is one to serve,
+        // instead of emitting a URL per row and taking a 404 for most of them.
+        $this->assertFalse($pictures['bare.flac']);
+        $this->assertTrue($pictures['illustrated.flac']);
+
+        // A file with no fingerprint never reaches the parser, so it is absent rather than false.
+        $this->assertArrayNotHasKey('gone.flac', $pictures);
+    }
+
+    #[Test]
+    public function artwork_and_comments_come_out_of_one_pass(): void
+    {
+        $file = $this->flac();
+        $this->tag($file, ['GENRE' => 'Reggaeton']);
+        $this->picture($file);
+
+        // metaflac appends PICTURE after VORBIS_COMMENT, so a reader that stopped at the
+        // comment block - as this one used to - reports no artwork for a file that has it.
+        $this->assertTrue($this->reader()->hasPicture($file));
+
+        // And the walk past the comment block must not cost the comments themselves.
+        $this->assertSame('Reggaeton', $this->reader()->value($file, 'GENRE'));
+    }
+
+    #[Test]
+    public function a_picture_before_the_comment_block_is_read_correctly(): void
+    {
+        // Block order is not fixed by the spec and metaflac cannot be made to write this one,
+        // so the file is built by hand: STREAMINFO, PICTURE, then the comments last.
+        $block = fn (int $type, string $payload, bool $last): string => chr($last ? $type | 0x80 : $type)
+            .substr(pack('N', strlen($payload)), 1)
+            .$payload;
+
+        $comment = 'GENRE=Latin';
+
+        file_put_contents($this->root.'/Spanish/reversed.flac', 'fLaC'
+            .$block(0, str_repeat("\0", 34), false)
+            .$block(6, str_repeat("\0", 8), false)
+            .$block(4, pack('V', 0).pack('V', 1).pack('V', strlen($comment)).$comment, true));
+
+        $file = new LibraryFile(new LibraryFolder('Spanish'), 'reversed.flac');
+
+        $this->assertTrue($this->reader()->hasPicture($file));
+        $this->assertSame('Latin', $this->reader()->value($file, 'GENRE'));
     }
 
     // ------------------------------------------------------------------- caching

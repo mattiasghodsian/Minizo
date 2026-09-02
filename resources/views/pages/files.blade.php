@@ -96,6 +96,20 @@ new class extends Component
         return $this->tags[$file->filename] ?? new FileTags;
     }
 
+    /**
+     * Which rows on this page have embedded artwork, keyed by filename.
+     *
+     * The same block-chain walk the tags above already pay for, so it costs seeks rather
+     * than a second read of every file.
+     *
+     * @return array<string, bool>
+     */
+    #[Computed]
+    public function covers(): array
+    {
+        return app(FlacCommentReader::class)->picturesFor($this->files->items());
+    }
+
     /** Sorting by the active column flips direction; a new column starts ascending. */
     public function sortBy(string $column): void
     {
@@ -221,9 +235,9 @@ new class extends Component
     #[On('library-updated')]
     public function refreshListing(): void
     {
-        // genres too: a tag write is exactly the thing that changes it, and a memo held over
-        // would show the old value on the row that was just edited.
-        unset($this->files, $this->totalFiles, $this->tags);
+        // genres and artwork too: a tag write is exactly the thing that changes them, and a
+        // memo held over would show the old value on the row that was just edited.
+        unset($this->files, $this->totalFiles, $this->tags, $this->covers);
     }
 
     /** Re-resolve a filename against the folder's real contents. */
@@ -242,8 +256,8 @@ new class extends Component
 
         Flux::modals()->close();
 
-        // The listing changed, so drop the memo behind the computed property.
-        unset($this->files, $this->totalFiles);
+        // The listing changed, so drop the memos behind the computed properties.
+        unset($this->files, $this->totalFiles, $this->tags, $this->covers);
 
         if ($message !== null) {
             Flux::toast(variant: 'success', text: $message);
@@ -401,17 +415,21 @@ new class extends Component
 
             @forelse ($this->files as $file)
                 <x-ui.data-table.row :last="$loop->last">
-                    {{-- The cover URL is passed unconditionally. Nothing here knows
-                                            whether the file has artwork, and finding out would mean
-                                            parsing a 30-40 MB FLAC per row before the page could be sent.
-                                            The endpoint 404s, the <img> removes itself, and the generated
-                                            gradient stays.
-                    
+                    {{-- The cover URL is emitted only for a file that really has artwork.
+                                            $this->covers answers that from the metadata block chain, which
+                                            the tag read above already walks, so it costs no extra pass over
+                                            the file - and a folder of untagged tracks stops firing one cover
+                                            request per row just to collect a 404 for each.
+
+                                            Still speculative rather than certain: the picture can go away
+                                            between this render and the fetch, so the <img> keeps its onerror
+                                            and the gradient behind it stays.
+
                                             No rounding of its own: the table wrapper clips, so the last
                                             row's artwork follows the card's radius. --}}
                     <x-ui.row-artwork
                         :name="$file->basename()"
-                        :cover="$file->isTaggable() ? route('files.cover', [$this->folder->name, $file->filename]) : null"
+                        :cover="($this->covers[$file->filename] ?? false) ? route('files.cover', [$this->folder->name, $file->filename]) : null"
                         class="max-lg:w-24"
                     />
 

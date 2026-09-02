@@ -14,11 +14,13 @@ class FlacCommentReader
 
     private const BLOCK_VORBIS_COMMENT = 4;
 
+    private const BLOCK_PICTURE = 6;
+
     /** Refuses to read a comment block larger than this. */
     private const MAX_COMMENT_BYTES = 1_048_576;
 
     /** The shape of what gets cached. Bump it whenever that shape changes. */
-    private const CACHE_VERSION = 2;
+    private const CACHE_VERSION = 3;
 
     /** Reads Vorbis comments straight out of a FLAC, without getID3. */
     public function __construct(
@@ -48,7 +50,7 @@ class FlacCommentReader
      */
     public function all(LibraryFile $file): array
     {
-        return $this->allFor([$file])[$file->filename] ?? [];
+        return $this->commentsFor([$file])[$file->filename] ?? [];
     }
 
     /**
@@ -63,8 +65,35 @@ class FlacCommentReader
 
         return array_map(
             fn (array $comments): ?string => $comments[$key][0] ?? null,
+            $this->commentsFor($files),
+        );
+    }
+
+    /**
+     * Whether each of many files carries an embedded picture, keyed by filename.
+     *
+     * Read off the metadata block chain, not the picture itself: the walk this class already
+     * does for the comments passes every block header, so noticing a PICTURE block costs a
+     * seek. It exists so a listing can decide whether to ask for artwork at all - a page of
+     * untagged tracks used to fire one cover request per row and take a 404 for every one.
+     *
+     * A file that is not FLAC, or cannot be read, is absent from the result rather than false.
+     *
+     * @param  iterable<LibraryFile>  $files
+     * @return array<string, bool> filename => has an embedded picture
+     */
+    public function picturesFor(iterable $files): array
+    {
+        return array_map(
+            fn (array $row): bool => $row['picture'],
             $this->allFor($files),
         );
+    }
+
+    /** Whether one file carries an embedded picture. */
+    public function hasPicture(LibraryFile $file): bool
+    {
+        return $this->picturesFor([$file])[$file->filename] ?? false;
     }
 
     /**
@@ -88,13 +117,29 @@ class FlacCommentReader
 
                 return $row;
             },
+            $this->commentsFor($files),
+        );
+    }
+
+    /**
+     * The comment half of the parsed result, for the callers that only want tags.
+     *
+     * @param  iterable<LibraryFile>  $files
+     * @return array<string, array<string, array<int, string>>>
+     */
+    private function commentsFor(iterable $files): array
+    {
+        return array_map(
+            fn (array $row): array => $row['comments'],
             $this->allFor($files),
         );
     }
 
     /**
+     * Everything one pass over the file learns: its comments, and whether it has a picture.
+     *
      * @param  iterable<LibraryFile>  $files
-     * @return array<string, array<string, array<int, string>>>
+     * @return array<string, array{comments: array<string, array<int, string>>, picture: bool}>
      */
     private function allFor(iterable $files): array
     {
@@ -130,13 +175,13 @@ class FlacCommentReader
         $misses = [];
 
         foreach ($keys as $filename => $cacheKey) {
-            if (is_array($cached[$cacheKey] ?? null)) {
-                $results[$filename] = $cached[$cacheKey];
+            $row = $this->cached($cached[$cacheKey] ?? null);
 
-                continue;
+            if ($row === null) {
+                $row = $misses[$cacheKey] = $this->parse($this->path($candidates[$filename]));
             }
 
-            $results[$filename] = $misses[$cacheKey] = $this->parse($this->path($candidates[$filename]));
+            $results[$filename] = $row;
         }
 
         if ($misses !== []) {
@@ -150,28 +195,69 @@ class FlacCommentReader
     }
 
     /**
-     * @return array<string, array<int, string>>
+     * A cache entry, once it has been checked to hold what this class writes.
+     *
+     * Anything else - a miss, or an entry from a shape this class no longer writes - comes
+     * back as null and is re-read from the file. The version in the key makes the second case
+     * unlikely rather than impossible: a cache shared with an older build still answers.
+     *
+     * @return array{comments: array<string, array<int, string>>, picture: bool}|null
+     */
+    private function cached(mixed $entry): ?array
+    {
+        if (! is_array($entry) || ! is_array($entry['comments'] ?? null) || ! is_bool($entry['picture'] ?? null)) {
+            return null;
+        }
+
+        $comments = [];
+
+        foreach ($entry['comments'] as $key => $values) {
+            if (! is_string($key) || ! is_array($values)) {
+                return null;
+            }
+
+            $strings = array_values(array_filter($values, is_string(...)));
+
+            // Every value this class writes is a string, so anything else means the entry did
+            // not come from here and is not worth trusting the rest of.
+            if (count($strings) !== count($values)) {
+                return null;
+            }
+
+            $comments[$key] = $strings;
+        }
+
+        return ['comments' => $comments, 'picture' => $entry['picture']];
+    }
+
+    /**
+     * @return array{comments: array<string, array<int, string>>, picture: bool}
      */
     private function parse(string $path): array
     {
+        $empty = ['comments' => [], 'picture' => false];
+
         $handle = @fopen($path, 'rb');
 
         if ($handle === false) {
-            return [];
+            return $empty;
         }
+
+        $comments = [];
+        $picture = false;
 
         try {
             if (fread($handle, 4) !== self::MAGIC) {
                 // Not a FLAC, whatever the extension says. Same posture as AudioTagReader:
                 // an unreadable file is an empty result, never an exception.
-                return [];
+                return $empty;
             }
 
             while (true) {
                 $header = fread($handle, 4);
 
                 if ($header === false || strlen($header) < 4) {
-                    return [];
+                    break;
                 }
 
                 $flags = ord($header[0]);
@@ -179,34 +265,48 @@ class FlacCommentReader
                 $type = $flags & 0x7F;
                 $length = (ord($header[1]) << 16) | (ord($header[2]) << 8) | ord($header[3]);
 
-                if ($type === self::BLOCK_VORBIS_COMMENT) {
+                if ($type === self::BLOCK_PICTURE) {
+                    $picture = true;
+                }
+
+                if ($type === self::BLOCK_VORBIS_COMMENT && $comments === []) {
                     // Zero-length is a malformed block - the header alone cannot hold even
                     // the vendor string - and an oversized one is refused rather than
                     // allocated. Both are read off the file, so neither is hypothetical.
                     if ($length < 1 || $length > self::MAX_COMMENT_BYTES) {
-                        return [];
+                        break;
                     }
 
-                    return $this->comments((string) fread($handle, $length));
+                    $comments = $this->comments((string) fread($handle, $length));
+
+                    if ($isLast) {
+                        break;
+                    }
+
+                    continue;
                 }
 
                 if ($isLast) {
-                    // Reached the audio frames without finding a comment block: a valid FLAC
-                    // that was simply never tagged.
-                    return [];
+                    // Reached the audio frames. Any block that was going to be here has been
+                    // seen: a file with neither a comment nor a picture is a valid FLAC that
+                    // was simply never tagged.
+                    break;
                 }
 
                 // Skip the block's payload rather than read it. This is the whole speed
-                // story - a PICTURE block can be hundreds of kilobytes and is stepped over.
+                // story - a PICTURE block can be hundreds of kilobytes, and knowing it is
+                // there means reading its header, never its bytes.
                 if (fseek($handle, $length, SEEK_CUR) !== 0) {
-                    return [];
+                    break;
                 }
             }
         } catch (Throwable) {
-            return [];
+            return $empty;
         } finally {
             fclose($handle);
         }
+
+        return ['comments' => $comments, 'picture' => $picture];
     }
 
     /**

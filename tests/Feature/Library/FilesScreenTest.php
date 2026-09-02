@@ -20,10 +20,11 @@ class FilesScreenTest extends TestCase
         $disk->makeDirectory('Folk');
 
         // Mixed sizes and extensions: sorting and the taggable/listable split both need
-        // something to bite on.
-        $disk->put('Spanish/beta.flac', str_repeat('x', 3_000_000));
+        // something to bite on. beta carries an embedded picture and gamma does not, which
+        // is what the row artwork now discriminates on.
+        $disk->put('Spanish/beta.flac', $this->flac(3_000_000, picture: true));
         $disk->put('Spanish/alpha.mp3', str_repeat('x', 1_000_000));
-        $disk->put('Spanish/gamma.flac', str_repeat('x', 2_000_000));
+        $disk->put('Spanish/gamma.flac', $this->flac(2_000_000, picture: false));
 
         // Not audio - must never appear.
         $disk->put('Spanish/cover.jpg', 'x');
@@ -34,6 +35,31 @@ class FilesScreenTest extends TestCase
     private function admin(): User
     {
         return User::factory()->admin()->create();
+    }
+
+    /**
+     * A FLAC skeleton: the magic, a STREAMINFO block, an empty comment block, optionally a
+     * PICTURE block, then filler standing in for the audio frames.
+     *
+     * Hand-built rather than encoded, because the reader behind the row artwork walks
+     * metadata block HEADERS and never decodes audio - so a real 30 MB encode would prove
+     * nothing this does not, and would need ffmpeg on the machine running the suite.
+     */
+    private function flac(int $bytes, bool $picture): string
+    {
+        // A block header is one flag/type byte and a 24-bit big-endian length.
+        $block = fn (int $type, string $payload, bool $last): string => chr($last ? $type | 0x80 : $type)
+            .substr(pack('N', strlen($payload)), 1)
+            .$payload;
+
+        $file = 'fLaC'
+            .$block(0, str_repeat("\0", 34), false)
+            // No vendor string and no comments: a tagless file, which is what the Genre and
+            // MusicBrainz columns expect from this fixture.
+            .$block(4, pack('V', 0).pack('V', 0), ! $picture)
+            .($picture ? $block(6, str_repeat("\0", 8), true) : '');
+
+        return str_pad($file, $bytes, "\0");
     }
 
     public function test_it_lists_the_audio_files_in_a_folder(): void
@@ -229,6 +255,28 @@ class FilesScreenTest extends TestCase
         );
     }
 
+    public function test_a_file_with_no_embedded_picture_is_never_asked_for_a_cover(): void
+    {
+        $this->library();
+
+        $html = Livewire::actingAs($this->admin())
+            ->test('pages::files', ['directory' => 'Spanish'])
+            ->html();
+
+        /*
+         * gamma is a valid FLAC with no PICTURE block. The listing knows that from the same
+         * block-chain walk it does for the tags, so it emits no URL at all - a folder of
+         * untagged tracks used to fire one request per row and take a 404 for every one.
+         */
+        $this->assertStringNotContainsString(
+            route('files.cover', ['Spanish', 'gamma.flac']),
+            $html,
+        );
+
+        // The row still gets its artwork element, and so its generated gradient.
+        $this->assertSame(3, substr_count($html, 'row-artwork'));
+    }
+
     public function test_the_artwork_image_is_lazy_and_removes_itself_on_a_404(): void
     {
         $this->library();
@@ -239,8 +287,9 @@ class FilesScreenTest extends TestCase
 
         // Both attributes matter. A CSS background-image would fetch every row's cover as soon
         // as the page rendered, each parsing a 30-40 MB FLAC, so the artwork is a real <img>
-        // that can be lazy. onerror covers a file with no embedded art: the endpoint 404s, the
-        // element removes itself, and the gradient behind it remains.
+        // that can be lazy. onerror stays even though the URL is only emitted for a file that
+        // has a picture: the picture can be removed between this render and the fetch, and the
+        // gradient behind it has to survive that.
         $this->assertStringContainsString('loading="lazy"', $html);
         $this->assertStringContainsString('onerror="this.remove()"', $html);
     }
@@ -323,8 +372,8 @@ class FilesScreenTest extends TestCase
     {
         $this->library();
 
-        // Storage::fake writes byte-strings, so none of these are real FLACs and none has a
-        // comment block. The column must degrade to a dash rather than erroring.
+        // The fixture's FLACs carry an empty comment block and the mp3 none at all, so no row
+        // has a genre to show. The column must degrade to a dash rather than erroring.
         Livewire::actingAs($this->admin())
             ->test('pages::files', ['directory' => 'Spanish'])
             ->assertOk()
@@ -348,7 +397,7 @@ class FilesScreenTest extends TestCase
          */
         $this->assertStringContainsString('Whether the file carries MusicBrainz ids', $html);
 
-        // Every fixture is an untagged byte-string, so every row shows the absent mark.
+        // No fixture file carries ids, so every row shows the absent mark.
         $this->assertSame(3, substr_count($html, 'No MusicBrainz metadata</span>'));
         $this->assertStringContainsString('✗', $html);
         $this->assertStringNotContainsString('✓', $html);
