@@ -40,6 +40,10 @@ class FeedServiceTest extends TestCase
         Cache::flush();
         RateLimiter::clear('tidal-search:1');
 
+        // A request matching no stub used to leave the suite for the real API, where it
+        // 401'd and was swallowed. Fail loudly instead.
+        Http::preventStrayRequests();
+
         $this->feed = app(FeedService::class);
     }
 
@@ -223,6 +227,7 @@ class FeedServiceTest extends TestCase
             'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
             // Authored rather than captured: the real fixture happens to contain only recent
             // releases, and a window this test is about needs something on each side of it.
+            // Listed before the artist lookup below: 'artists/*' matches across slashes.
             'openapi.tidal.com/v2/artists/*/relationships/albums*' => Http::response(['data' => [
                 ['type' => 'albums', 'id' => '1', 'attributes' => [
                     'title' => 'This Year', 'type' => 'ALBUM', 'releaseDate' => now()->subMonth()->toDateString(),
@@ -231,6 +236,9 @@ class FeedServiceTest extends TestCase
                     'title' => 'Ancient History', 'type' => 'ALBUM', 'releaseDate' => now()->subYears(7)->toDateString(),
                 ]],
             ]]),
+            // importReleases() refreshes the artist first; without this the lookup matches
+            // no stub and used to leave the suite for the real API.
+            'openapi.tidal.com/v2/artists/*' => Http::response($this->tidalFixture('artist-lookup')),
         ]);
 
         $artist = Artist::factory()->create(['provider_id' => '4906194']);
@@ -252,6 +260,7 @@ class FeedServiceTest extends TestCase
             'openapi.tidal.com/v2/artists/*/relationships/albums*' => Http::response(['data' => [
                 ['type' => 'albums', 'id' => '1', 'attributes' => ['title' => 'Untitled Pre-release', 'type' => 'SINGLE']],
             ]]),
+            'openapi.tidal.com/v2/artists/*' => Http::response($this->tidalFixture('artist-lookup')),
         ]);
 
         $artist = Artist::factory()->create(['provider_id' => '4906194']);

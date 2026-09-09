@@ -101,7 +101,7 @@ new class extends Component
         try {
             $artists = $feed->search(auth()->user(), $this->query);
         } catch (TidalException $e) {
-            $this->addError('query', $e->getMessage());
+            $this->addError('query', $this->messageFor($e));
 
             return;
         }
@@ -110,6 +110,20 @@ new class extends Component
         $this->searched = true;
 
         unset($this->resultArtists);
+    }
+
+    /**
+     * A Tidal failure as this viewer should see it.
+     *
+     * Everyone gets the friendly line. An admin also gets the status, because they are the
+     * only ones who can act on "HTTP 401 from the catalogue".
+     */
+    private function messageFor(TidalException $e): string
+    {
+        $reveal = auth()->user()?->can('see-integration-diagnostics') === true
+            || config('app.debug') === true;
+
+        return $reveal ? $e->detailedMessage() : $e->getMessage();
     }
 
     public function clearSearch(): void
@@ -156,7 +170,7 @@ new class extends Component
         try {
             $artist = $feed->followById(auth()->user(), $providerId);
         } catch (TidalException $e) {
-            Flux::toast(variant: 'danger', text: $e->getMessage());
+            Flux::toast(variant: 'danger', text: $this->messageFor($e));
 
             return;
         }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Sleep;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\ReadsFixtures;
@@ -30,6 +31,9 @@ class FeedScreenTest extends TestCase
         ]);
 
         Cache::flush();
+
+        // A 503 is retried, so keep the backoff out of the suite's wall clock.
+        Sleep::fake();
     }
 
     private function fakeTidal(): void
@@ -212,6 +216,51 @@ class FeedScreenTest extends TestCase
             ->call('search')
             ->assertHasErrors('query')
             ->assertSet('searched', false);
+    }
+
+    #[Test]
+    public function an_admin_sees_the_http_status_in_the_search_error(): void
+    {
+        // Explicit: phpunit.xml sets no APP_DEBUG, so a local .env with APP_DEBUG=true would
+        // make the negative test below pass for the wrong reason.
+        config(['app.debug' => false]);
+
+        Http::fake([
+            'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
+            'openapi.tidal.com/*' => Http::response(['errors' => [['detail' => 'Invalid resource ID']]], 400),
+        ]);
+
+        $component = Livewire::actingAs(User::factory()->admin()->create())
+            ->test('pages::feed')
+            ->set('query', 'Anitta')
+            ->call('search')
+            ->assertHasErrors('query');
+
+        // An admin is the only person who can act on this, and it is what turns a support
+        // thread into a one-line fix.
+        $this->assertStringContainsString('400', $component->errors()->first('query'));
+    }
+
+    #[Test]
+    public function an_ordinary_user_sees_only_the_friendly_message(): void
+    {
+        config(['app.debug' => false]);
+
+        Http::fake([
+            'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
+            'openapi.tidal.com/*' => Http::response(['errors' => [['detail' => 'Invalid resource ID']]], 400),
+        ]);
+
+        $component = Livewire::actingAs(User::factory()->create())
+            ->test('pages::feed')
+            ->set('query', 'Anitta')
+            ->call('search')
+            ->assertHasErrors('query');
+
+        $error = $component->errors()->first('query');
+
+        $this->assertStringNotContainsString('400', $error);
+        $this->assertStringNotContainsString('Invalid resource ID', $error);
     }
 
     #[Test]

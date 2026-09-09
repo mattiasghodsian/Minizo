@@ -1,179 +1,111 @@
 {
-    "data": {
-        "id": "ANITTA",
-        "type": "searchResults",
-        "attributes": {
-            "trackingId": "62b3cf9c-db94-4dc1-8f5b-e23b6cde7849"
-        },
-        "relationships": {
-            "artists": {
-                "data": [
-                    {
-                        "id": "4906194",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "7572265",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "4712282",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "8797333",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "4046749",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "15942054",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "10209047",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "10235926",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "7604995",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "8660391",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "5237820",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "9012786",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "13591",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "8419680",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "3857275",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "7262",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "4072746",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "3638283",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "4795535",
-                        "type": "artists"
-                    },
-                    {
-                        "id": "4051640",
-                        "type": "artists"
-                    }
-                ],
-                "links": {
-                    "self": "/searchResults/ANITTA/relationships/artists?countryCode=US",
-                    "next": "/searchResults/ANITTA/relationships/artists?countryCode=US&page%5Bcursor%5D=3nI1Esi",
-                    "meta": {
-                        "nextCursor": "3nI1Esi"
+    "data": [
+        {
+            "id": "Ih4ZRCaOQcKk0gmvc2DZgjD5rfAH4Yz",
+            "type": "searchResults",
+            "attributes": {
+                "query": "ANITTA",
+                "trackingId": "bc15f563-ff0f-454c-b85e-10860130abe4"
+            },
+            "relationships": {
+                "artists": {
+                    "data": [
+                        {
+                            "id": "4906194",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "4712282",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "7572265",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "5434211",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "8797333",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "4046749",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "7604995",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "8419680",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "5133871",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "5794957",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "9012786",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "13591",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "3857275",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "7262",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "4795535",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "4072746",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "3638283",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "4051640",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "4706754",
+                            "type": "artists"
+                        },
+                        {
+                            "id": "49494260",
+                            "type": "artists"
+                        }
+                    ],
+                    "links": {
+                        "self": "/searchResults/Ih4ZRCaOQcKk0gmvc2DZgjD5rfAH4Yz/relationships/artists?countryCode=US",
+                        "next": "/searchResults/Ih4ZRCaOQcKk0gmvc2DZgjD5rfAH4Yz/relationships/artists?countryCode=US&page%5Bcursor%5D=3nI1Esi",
+                        "meta": {
+                            "nextCursor": "3nI1Esi"
+                        }
                     }
                 }
             }
         }
-    },
+    ],
     "links": {
-        "self": "/searchResults/ANITTA?include=artists.profileArt&countryCode=US"
+        "self": "/searchResults?filter%5Bquery%5D=ANITTA&include=artists.profileArt&countryCode=US"
     },
     "included": [
-        {
-            "id": "10209047",
-            "type": "artists",
-            "attributes": {
-                "name": "Rebecca",
-                "popularity": 0.5747243165969849,
-                "externalLinks": [
-                    {
-                        "href": "https://www.facebook.com/soueurebeccaa",
-                        "meta": {
-                            "type": "FACEBOOK"
-                        }
-                    },
-                    {
-                        "href": "https://twitter.com/Mcrebeccaofc",
-                        "meta": {
-                            "type": "TWITTER"
-                        }
-                    },
-                    {
-                        "href": "https://tidal.com/browse/artist/10209047",
-                        "meta": {
-                            "type": "TIDAL_SHARING"
-                        }
-                    }
-                ]
-            },
-            "relationships": {
-                "profileArt": {
-                    "data": [
-                        {
-                            "id": "iX4YeXf08BZEsJxt2pB1",
-                            "type": "artworks"
-                        }
-                    ],
-                    "links": {
-                        "self": "/artists/10209047/relationships/profileArt?countryCode=US"
-                    }
-                }
-            }
-        },
-        {
-            "id": "10235926",
-            "type": "artists",
-            "attributes": {
-                "name": "MC Kevin o Chris",
-                "popularity": 0.7208555936813354,
-                "externalLinks": [
-                    {
-                        "href": "https://tidal.com/browse/artist/10235926",
-                        "meta": {
-                            "type": "TIDAL_SHARING"
-                        }
-                    }
-                ],
-                "ownerType": "USER"
-            },
-            "relationships": {
-                "profileArt": {
-                    "data": [
-                        {
-                            "id": "iX4YeXf08BZEsKBsXRzC",
-                            "type": "artworks"
-                        }
-                    ],
-                    "links": {
-                        "self": "/artists/10235926/relationships/profileArt?countryCode=US"
-                    }
-                }
-            }
-        },
         {
             "id": "13591",
             "type": "artists",
@@ -200,36 +132,6 @@
                     ],
                     "links": {
                         "self": "/artists/13591/relationships/profileArt?countryCode=US"
-                    }
-                }
-            }
-        },
-        {
-            "id": "15942054",
-            "type": "artists",
-            "attributes": {
-                "name": "POCAH",
-                "popularity": 0.6152928471565247,
-                "externalLinks": [
-                    {
-                        "href": "https://tidal.com/browse/artist/15942054",
-                        "meta": {
-                            "type": "TIDAL_SHARING"
-                        }
-                    }
-                ],
-                "ownerType": "LABEL"
-            },
-            "relationships": {
-                "profileArt": {
-                    "data": [
-                        {
-                            "id": "iX4YeXf08BZLM9OMk3zo",
-                            "type": "artworks"
-                        }
-                    ],
-                    "links": {
-                        "self": "/artists/15942054/relationships/profileArt?countryCode=US"
                     }
                 }
             }
@@ -299,7 +201,7 @@
             "type": "artists",
             "attributes": {
                 "name": "LUDMILLA",
-                "popularity": 0.7419112324714661,
+                "popularity": 0.7091993853335093,
                 "externalLinks": [
                     {
                         "href": "https://tidal.com/browse/artist/4046749",
@@ -385,11 +287,41 @@
             }
         },
         {
+            "id": "4706754",
+            "type": "artists",
+            "attributes": {
+                "name": "Anita Lane",
+                "popularity": 0.5097333465987306,
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/artist/4706754",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "ownerType": "LABEL"
+            },
+            "relationships": {
+                "profileArt": {
+                    "data": [
+                        {
+                            "id": "AmhFAmq4OGQU1OZ4YYW",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/artists/4706754/relationships/profileArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
             "id": "4712282",
             "type": "artists",
             "attributes": {
                 "name": "LeXa",
-                "popularity": 0.6215264797210693,
+                "popularity": 0.5662312309736224,
                 "externalLinks": [
                     {
                         "href": "https://tidal.com/browse/artist/4712282",
@@ -505,31 +437,120 @@
             }
         },
         {
-            "id": "5237820",
+            "id": "49494260",
             "type": "artists",
             "attributes": {
-                "name": "KAROL G",
-                "popularity": 0.870629889483934,
+                "name": "Anita B Queen",
+                "popularity": 0.4877107786824103,
                 "externalLinks": [
                     {
-                        "href": "https://tidal.com/browse/artist/5237820",
+                        "href": "https://tidal.com/browse/artist/49494260",
                         "meta": {
                             "type": "TIDAL_SHARING"
                         }
                     }
-                ],
-                "ownerType": "MIXED"
+                ]
             },
             "relationships": {
                 "profileArt": {
                     "data": [
                         {
-                            "id": "AmhFAmq4OGRkOMM4R16",
+                            "id": "2xpmpI1s9E0MD7Gd7h5Mtb",
                             "type": "artworks"
                         }
                     ],
                     "links": {
-                        "self": "/artists/5237820/relationships/profileArt?countryCode=US"
+                        "self": "/artists/49494260/relationships/profileArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "5133871",
+            "type": "artists",
+            "attributes": {
+                "name": "Mc Kevinho",
+                "popularity": 0.6115907477962798,
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/artist/5133871",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "ownerType": "LABEL"
+            },
+            "relationships": {
+                "profileArt": {
+                    "data": [
+                        {
+                            "id": "AmhFAmq4OGRk507E7SD",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/artists/5133871/relationships/profileArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "5434211",
+            "type": "artists",
+            "attributes": {
+                "name": "DENNIS",
+                "popularity": 0.6379476463430745,
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/artist/5434211",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "ownerType": "LABEL"
+            },
+            "relationships": {
+                "profileArt": {
+                    "data": [
+                        {
+                            "id": "AmhFAmq4OGRl14dF4j3",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/artists/5434211/relationships/profileArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
+            "id": "5794957",
+            "type": "artists",
+            "attributes": {
+                "name": "Mc Pedrinho",
+                "popularity": 0.6028152446491016,
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/artist/5794957",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "ownerType": "LABEL"
+            },
+            "relationships": {
+                "profileArt": {
+                    "data": [
+                        {
+                            "id": "AmhFAmq4OGRlxbGAgwp",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/artists/5794957/relationships/profileArt?countryCode=US"
                     }
                 }
             }
@@ -599,7 +620,7 @@
             "type": "artists",
             "attributes": {
                 "name": "Gloria Groove",
-                "popularity": 0.6790377497673035,
+                "popularity": 0.6373451468948971,
                 "externalLinks": [
                     {
                         "href": "https://tidal.com/browse/artist/7604995",
@@ -629,7 +650,7 @@
             "type": "artists",
             "attributes": {
                 "name": "Pabllo Vittar",
-                "popularity": 0.7690445780754089,
+                "popularity": 0.7377899931678538,
                 "externalLinks": [
                     {
                         "href": "https://tidal.com/browse/artist/8419680",
@@ -650,36 +671,6 @@
                     ],
                     "links": {
                         "self": "/artists/8419680/relationships/profileArt?countryCode=US"
-                    }
-                }
-            }
-        },
-        {
-            "id": "8660391",
-            "type": "artists",
-            "attributes": {
-                "name": "ZAAC",
-                "popularity": 0.624783110170251,
-                "externalLinks": [
-                    {
-                        "href": "https://tidal.com/browse/artist/8660391",
-                        "meta": {
-                            "type": "TIDAL_SHARING"
-                        }
-                    }
-                ],
-                "ownerType": "LABEL"
-            },
-            "relationships": {
-                "profileArt": {
-                    "data": [
-                        {
-                            "id": "AmhFAmq4OGVdQaZQVBh",
-                            "type": "artworks"
-                        }
-                    ],
-                    "links": {
-                        "self": "/artists/8660391/relationships/profileArt?countryCode=US"
                     }
                 }
             }
@@ -737,7 +728,7 @@
             "type": "artists",
             "attributes": {
                 "name": "Anitta",
-                "popularity": 0.45293134450912476,
+                "popularity": 0.48299077823563374,
                 "externalLinks": [
                     {
                         "href": "https://tidal.com/browse/artist/9012786",
@@ -759,6 +750,69 @@
                     "links": {
                         "self": "/artists/9012786/relationships/profileArt?countryCode=US"
                     }
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0MD7Gd7h5Mtb",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/daf2d2e0/d538/4804/8857/815fe1668880/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/daf2d2e0/d538/4804/8857/815fe1668880/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/daf2d2e0/d538/4804/8857/815fe1668880/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/daf2d2e0/d538/4804/8857/815fe1668880/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/daf2d2e0/d538/4804/8857/815fe1668880/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/daf2d2e0/d538/4804/8857/815fe1668880/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/daf2d2e0/d538/4804/8857/815fe1668880/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#70312F",
+                    "blurHash": "U4ELQ$x;J~x]%g00IVIU0000_4xvS#x]_3jD",
+                    "status": "OK"
                 }
             }
         },
@@ -931,6 +985,48 @@
             }
         },
         {
+            "id": "AmhFAmq4OGQU1OZ4YYW",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/171e5636/6364/4a57/a46a/ba2e3efbbba9/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/171e5636/6364/4a57/a46a/ba2e3efbbba9/480x480.jpg",
+                        "meta": {
+                            "width": 480,
+                            "height": 480
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/171e5636/6364/4a57/a46a/ba2e3efbbba9/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/171e5636/6364/4a57/a46a/ba2e3efbbba9/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#2A2A29",
+                    "blurHash": "UFFY+6~q4n_39Gj[%Mxuj[-;-:ayM{M|Rjay",
+                    "status": "OK"
+                }
+            }
+        },
+        {
             "id": "AmhFAmq4OGQU1TBAqck",
             "type": "artworks",
             "attributes": {
@@ -973,34 +1069,34 @@
             }
         },
         {
-            "id": "AmhFAmq4OGRkOMM4R16",
+            "id": "AmhFAmq4OGRk507E7SD",
             "type": "artworks",
             "attributes": {
                 "mediaType": "IMAGE",
                 "files": [
                     {
-                        "href": "https://resources.tidal.com/images/4d2379d4/41fe/4dec/afd1/251be06caece/750x750.jpg",
+                        "href": "https://resources.tidal.com/images/9f266062/66f6/4ac9/90e6/08920b0d443e/750x750.jpg",
                         "meta": {
                             "width": 750,
                             "height": 750
                         }
                     },
                     {
-                        "href": "https://resources.tidal.com/images/4d2379d4/41fe/4dec/afd1/251be06caece/480x480.jpg",
+                        "href": "https://resources.tidal.com/images/9f266062/66f6/4ac9/90e6/08920b0d443e/480x480.jpg",
                         "meta": {
                             "width": 480,
                             "height": 480
                         }
                     },
                     {
-                        "href": "https://resources.tidal.com/images/4d2379d4/41fe/4dec/afd1/251be06caece/320x320.jpg",
+                        "href": "https://resources.tidal.com/images/9f266062/66f6/4ac9/90e6/08920b0d443e/320x320.jpg",
                         "meta": {
                             "width": 320,
                             "height": 320
                         }
                     },
                     {
-                        "href": "https://resources.tidal.com/images/4d2379d4/41fe/4dec/afd1/251be06caece/160x160.jpg",
+                        "href": "https://resources.tidal.com/images/9f266062/66f6/4ac9/90e6/08920b0d443e/160x160.jpg",
                         "meta": {
                             "width": 160,
                             "height": 160
@@ -1008,8 +1104,92 @@
                     }
                 ],
                 "visualMetadata": {
-                    "selectedPaletteColor": "#72432B",
-                    "blurHash": "U6CYj$+a03AD0gEQ+^={9F~q]$E1a1rq-pSi",
+                    "selectedPaletteColor": "#846D52",
+                    "blurHash": "U7BWJE_10}u3E#R%D%Na00o|~AwI%f%f_M-.",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "AmhFAmq4OGRl14dF4j3",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/6ee4b823/310c/44a6/bdc3/e2e3adff0ac0/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/6ee4b823/310c/44a6/bdc3/e2e3adff0ac0/480x480.jpg",
+                        "meta": {
+                            "width": 480,
+                            "height": 480
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/6ee4b823/310c/44a6/bdc3/e2e3adff0ac0/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/6ee4b823/310c/44a6/bdc3/e2e3adff0ac0/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#67524B",
+                    "blurHash": "UoN^YrtR~qV@~qt7D%MxkCV@RPt8NGaeoLxu",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "AmhFAmq4OGRlxbGAgwp",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/814670fc/efc1/4f37/bcca/a352806b45b7/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/814670fc/efc1/4f37/bcca/a352806b45b7/480x480.jpg",
+                        "meta": {
+                            "width": 480,
+                            "height": 480
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/814670fc/efc1/4f37/bcca/a352806b45b7/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/814670fc/efc1/4f37/bcca/a352806b45b7/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#250C13",
+                    "blurHash": "UAFX3s3X~D|_00:*HrIoyXxH.8GG[[AXIn;f",
                     "status": "OK"
                 }
             }
@@ -1105,28 +1285,28 @@
                 "mediaType": "IMAGE",
                 "files": [
                     {
-                        "href": "https://resources.tidal.com/images/fd681e95/0cbf/445c/ad3b/1c14b760ae8e/750x750.jpg",
+                        "href": "https://resources.tidal.com/images/dcf4ad2b/72f6/4c3f/b25b/88e036f9a1bc/750x750.jpg",
                         "meta": {
                             "width": 750,
                             "height": 750
                         }
                     },
                     {
-                        "href": "https://resources.tidal.com/images/fd681e95/0cbf/445c/ad3b/1c14b760ae8e/480x480.jpg",
+                        "href": "https://resources.tidal.com/images/dcf4ad2b/72f6/4c3f/b25b/88e036f9a1bc/480x480.jpg",
                         "meta": {
                             "width": 480,
                             "height": 480
                         }
                     },
                     {
-                        "href": "https://resources.tidal.com/images/fd681e95/0cbf/445c/ad3b/1c14b760ae8e/320x320.jpg",
+                        "href": "https://resources.tidal.com/images/dcf4ad2b/72f6/4c3f/b25b/88e036f9a1bc/320x320.jpg",
                         "meta": {
                             "width": 320,
                             "height": 320
                         }
                     },
                     {
-                        "href": "https://resources.tidal.com/images/fd681e95/0cbf/445c/ad3b/1c14b760ae8e/160x160.jpg",
+                        "href": "https://resources.tidal.com/images/dcf4ad2b/72f6/4c3f/b25b/88e036f9a1bc/160x160.jpg",
                         "meta": {
                             "width": 160,
                             "height": 160
@@ -1134,50 +1314,8 @@
                     }
                 ],
                 "visualMetadata": {
-                    "selectedPaletteColor": "#132238",
-                    "blurHash": "UCECIUIo00Io0|t74-%24Tn%~CNF0JNb~qof",
-                    "status": "OK"
-                }
-            }
-        },
-        {
-            "id": "AmhFAmq4OGVdQaZQVBh",
-            "type": "artworks",
-            "attributes": {
-                "mediaType": "IMAGE",
-                "files": [
-                    {
-                        "href": "https://resources.tidal.com/images/1b651856/d99c/4b61/a72d/73514dd32065/750x750.jpg",
-                        "meta": {
-                            "width": 750,
-                            "height": 750
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/1b651856/d99c/4b61/a72d/73514dd32065/480x480.jpg",
-                        "meta": {
-                            "width": 480,
-                            "height": 480
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/1b651856/d99c/4b61/a72d/73514dd32065/320x320.jpg",
-                        "meta": {
-                            "width": 320,
-                            "height": 320
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/1b651856/d99c/4b61/a72d/73514dd32065/160x160.jpg",
-                        "meta": {
-                            "width": 160,
-                            "height": 160
-                        }
-                    }
-                ],
-                "visualMetadata": {
-                    "selectedPaletteColor": "#56727C",
-                    "blurHash": "UABz^KRNH=%2*wXArqVrUbXAx]Ne5x?DyFSO",
+                    "selectedPaletteColor": "#461B17",
+                    "blurHash": "UFHJ5X}Z03xuE%J7jExF0y9[adI:EM-B^Pso",
                     "status": "OK"
                 }
             }
@@ -1549,132 +1687,6 @@
                 "visualMetadata": {
                     "selectedPaletteColor": "#4C766E",
                     "blurHash": "UID*^P~o.7%LLLGtTJ-AxuOYNHE2s:$%rra0",
-                    "status": "OK"
-                }
-            }
-        },
-        {
-            "id": "iX4YeXf08BZEsJxt2pB1",
-            "type": "artworks",
-            "attributes": {
-                "mediaType": "IMAGE",
-                "files": [
-                    {
-                        "href": "https://resources.tidal.com/images/893c9a72/6231/4d6a/8080/eb0663f90c2e/750x750.jpg",
-                        "meta": {
-                            "width": 750,
-                            "height": 750
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/893c9a72/6231/4d6a/8080/eb0663f90c2e/480x480.jpg",
-                        "meta": {
-                            "width": 480,
-                            "height": 480
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/893c9a72/6231/4d6a/8080/eb0663f90c2e/320x320.jpg",
-                        "meta": {
-                            "width": 320,
-                            "height": 320
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/893c9a72/6231/4d6a/8080/eb0663f90c2e/160x160.jpg",
-                        "meta": {
-                            "width": 160,
-                            "height": 160
-                        }
-                    }
-                ],
-                "visualMetadata": {
-                    "selectedPaletteColor": "#583266",
-                    "blurHash": "UeJF?2R*$;$+$-s;s:WUIqs:NENGavR*a{s,",
-                    "status": "OK"
-                }
-            }
-        },
-        {
-            "id": "iX4YeXf08BZEsKBsXRzC",
-            "type": "artworks",
-            "attributes": {
-                "mediaType": "IMAGE",
-                "files": [
-                    {
-                        "href": "https://resources.tidal.com/images/599a2b23/246d/4828/91f6/1a4ab7d88a2e/750x750.jpg",
-                        "meta": {
-                            "width": 750,
-                            "height": 750
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/599a2b23/246d/4828/91f6/1a4ab7d88a2e/480x480.jpg",
-                        "meta": {
-                            "width": 480,
-                            "height": 480
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/599a2b23/246d/4828/91f6/1a4ab7d88a2e/320x320.jpg",
-                        "meta": {
-                            "width": 320,
-                            "height": 320
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/599a2b23/246d/4828/91f6/1a4ab7d88a2e/160x160.jpg",
-                        "meta": {
-                            "width": 160,
-                            "height": 160
-                        }
-                    }
-                ],
-                "visualMetadata": {
-                    "selectedPaletteColor": "#7B3327",
-                    "blurHash": "U7C~D200-pyF9XBC0JxGMH_4}t=a0yE0gPe9",
-                    "status": "OK"
-                }
-            }
-        },
-        {
-            "id": "iX4YeXf08BZLM9OMk3zo",
-            "type": "artworks",
-            "attributes": {
-                "mediaType": "IMAGE",
-                "files": [
-                    {
-                        "href": "https://resources.tidal.com/images/19313da0/89a2/4cff/b799/898390711b0f/750x750.jpg",
-                        "meta": {
-                            "width": 750,
-                            "height": 750
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/19313da0/89a2/4cff/b799/898390711b0f/480x480.jpg",
-                        "meta": {
-                            "width": 480,
-                            "height": 480
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/19313da0/89a2/4cff/b799/898390711b0f/320x320.jpg",
-                        "meta": {
-                            "width": 320,
-                            "height": 320
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/19313da0/89a2/4cff/b799/898390711b0f/160x160.jpg",
-                        "meta": {
-                            "width": 160,
-                            "height": 160
-                        }
-                    }
-                ],
-                "visualMetadata": {
-                    "selectedPaletteColor": "#7B4E38",
-                    "blurHash": "UbIqy3Nd?w~B_NxuxuofS4%MR5W;ogxvV@WB",
                     "status": "OK"
                 }
             }

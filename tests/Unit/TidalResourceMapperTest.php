@@ -49,7 +49,7 @@ class TidalResourceMapperTest extends TestCase
         // rather than reading `included`. `included` comes back sorted by id, which put
         // "Rebecca" first and Anitta seventh for a search for ANITTA.
         $this->assertSame('Anitta', $artists[0]->name);
-        $this->assertSame('Pedro Sampaio', $artists[1]->name);
+        $this->assertSame('LeXa', $artists[1]->name);
     }
 
     #[Test]
@@ -182,9 +182,9 @@ class TidalResourceMapperTest extends TestCase
 
         $this->assertCount(20, $releases);
 
-        $this->assertSame('LOCA', $releases[0]->title);
-        $this->assertSame(ReleaseType::Single, $releases[0]->type);
-        $this->assertSame('2026-07-10', $releases[0]->releasedOn?->toDateString());
+        $this->assertSame('EQUILIBRIVM', $releases[0]->title);
+        $this->assertSame(ReleaseType::Album, $releases[0]->type);
+        $this->assertSame('2026-07-23', $releases[0]->releasedOn?->toDateString());
         $this->assertStringEndsWith('/320x320.jpg', (string) $releases[0]->coverUrl);
         $this->assertStringStartsWith('https://tidal.com/browse/album/', (string) $releases[0]->link);
     }

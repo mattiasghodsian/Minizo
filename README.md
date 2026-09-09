@@ -155,6 +155,9 @@ knowing about:
 | --- | --- |
 | `TIDAL_CLIENT_ID` / `TIDAL_CLIENT_SECRET` | Powers the Feed. Without them the Feed screen explains itself and the rest of the app is unaffected. Register at [developer.tidal.com](https://developer.tidal.com). |
 | `TIDAL_COUNTRY` | Required by every catalogue call, and decides which releases are visible — availability is licensed per territory. |
+| `TIDAL_TIMEOUT` / `TIDAL_CONNECT_TIMEOUT` | Per-request timeouts, default 15s and 5s. The worst case is `TIDAL_TIMEOUT × TIDAL_RETRIES`. |
+| `TIDAL_RETRIES` / `TIDAL_RETRY_DELAY` | Retries for 429 and 5xx only, default 3 and 200ms, honouring `Retry-After`. Set `TIDAL_RETRIES=1` to disable. |
+| `TIDAL_TOKEN_URI` / `TIDAL_BASE_URI` | API endpoints. Only change these if TIDAL moves the API. |
 | `MUSICBRAINZ_TOKEN` | Optional; only raises the rate limit. Minizo holds itself to one request per second either way. |
 | `MUSICBRAINZ_USER_AGENT` | MusicBrainz answers a request without one with a 503 that looks like rate limiting. Change the URL if you run a fork. |
 | `TRUSTED_PROXIES` | Set this when Minizo sits behind a reverse proxy. Until you do, Laravel sees the proxy as the client: every visitor shares one rate-limit bucket, URLs come out `http://` behind TLS, and passkey login fails on an origin mismatch. |

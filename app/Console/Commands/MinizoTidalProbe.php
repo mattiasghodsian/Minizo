@@ -6,6 +6,7 @@ use App\Exceptions\TidalException;
 use App\Services\Tidal\TidalClient;
 use App\Services\Tidal\TidalDocument;
 use App\Services\Tidal\TidalResourceMapper;
+use App\Services\Tidal\TidalResult;
 use Illuminate\Console\Command;
 
 class MinizoTidalProbe extends Command
@@ -13,6 +14,7 @@ class MinizoTidalProbe extends Command
     protected $signature = 'minizo:tidal:probe
         {query=ANITTA : an artist name to search for}
         {--artist= : a Tidal artist id, to probe that artist\'s releases instead}
+        {--fresh : drop the cached token first, so this exercises a real token fetch}
         {--save : write the raw response to tests/Fixtures/tidal/}';
 
     protected $description = 'Fetch a real Tidal response and show how Minizo maps it';
@@ -28,28 +30,47 @@ class MinizoTidalProbe extends Command
             return self::FAILURE;
         }
 
+        $this->reportConfig();
+
+        if ($this->option('fresh')) {
+            $client->forgetToken();
+        }
+
+        $minted = ! $client->hasCachedToken();
+
         $artistId = $this->option('artist');
 
         [$label, $path, $query] = $artistId !== null
             ? ["releases for artist {$artistId}", 'artists/'.rawurlencode((string) $artistId).'/relationships/albums', ['include' => 'albums.coverArt', 'limit' => 10]]
-            : ['artist search for "'.$this->argument('query').'"', 'searchResults/'.rawurlencode((string) $this->argument('query')), ['include' => 'artists.profileArt']];
+            // The query is a `filter[query]` parameter, not a path segment - Tidal moved the
+            // searchResults resource to an opaque id. This MUST stay identical to
+            // TidalCatalogue::searchArtists(), path included: a probe that asks a different
+            // way captures a fixture production never requested, and cannot reproduce an
+            // outage caused by the request shape itself.
+            : ['artist search for "'.$this->argument('query').'"', 'searchResults', ['include' => 'artists.profileArt', 'filter' => ['query' => (string) $this->argument('query')]]];
 
         $this->components->info('Probing '.$label);
+        $this->line('  token '.($minted ? 'will be minted' : 'reused from cache'));
 
         try {
-            $body = $client->get($path, $query);
+            $result = $client->fetch($path, $query);
         } catch (TidalException $e) {
-            $this->components->error($e->getMessage());
+            // detailedMessage(), not getMessage(): the operator half is the whole point of
+            // running the probe, and bearerRejected() carries its diagnosis there.
+            $this->components->error($e->detailedMessage());
 
             return self::FAILURE;
         }
 
-        if ($body === null) {
-            $this->components->error('Tidal returned no usable response. Check storage/logs for the status and detail.');
+        if (! $result->succeeded()) {
+            $this->components->error('Tidal returned no usable response.');
+            $this->line('  <fg=red>'.$result->summary().'</>');
+            $this->hint($result);
 
             return self::FAILURE;
         }
 
+        $body = $result->body;
         $document = TidalDocument::from($body);
 
         // ---- what the document actually contains
@@ -79,7 +100,8 @@ class MinizoTidalProbe extends Command
 
         if ($artistId !== null) {
             $releases = $mapper->releases($document);
-            $this->components->info('TidalResourceMapper extracted '.count($releases).' release(s)');
+            $mapped = count($releases);
+            $this->components->info('TidalResourceMapper extracted '.$mapped.' release(s)');
 
             foreach (array_slice($releases, 0, 8) as $release) {
                 $this->components->twoColumnDetail(
@@ -93,7 +115,8 @@ class MinizoTidalProbe extends Command
             }
         } else {
             $artists = $mapper->artists($document);
-            $this->components->info('TidalResourceMapper extracted '.count($artists).' artist(s)');
+            $mapped = count($artists);
+            $this->components->info('TidalResourceMapper extracted '.$mapped.' artist(s)');
 
             foreach (array_slice($artists, 0, 8) as $artist) {
                 $this->components->twoColumnDetail(
@@ -103,7 +126,10 @@ class MinizoTidalProbe extends Command
             }
         }
 
-        if (count($byType) === 0) {
+        // Only when the document HAD something to include. A query that genuinely matches
+        // nothing answers 200 with an empty list, and warning there sends the reader after
+        // an include parameter that is fine.
+        if (count($byType) === 0 && $mapped > 0) {
             $this->newLine();
             $this->components->warn('No included resources — the ?include= parameter may be wrong for this endpoint.');
         }
@@ -113,6 +139,48 @@ class MinizoTidalProbe extends Command
         }
 
         return self::SUCCESS;
+    }
+
+    /** The resolved Tidal config, so a stale override shows up in one line. */
+    private function reportConfig(): void
+    {
+        $rows = [
+            'base_uri' => config('services.tidal.base_uri'),
+            'token_uri' => config('services.tidal.token_uri'),
+            'country' => config('services.tidal.country'),
+            'timeout' => config('services.tidal.timeout'),
+            'retries' => config('services.tidal.retries'),
+            'client_id' => config('services.tidal.client_id'),
+            // Never print the secret. Whether one is set is the useful fact.
+            'client_secret' => filled(config('services.tidal.client_secret')) ? '******** (set)' : null,
+        ];
+
+        foreach ($rows as $label => $value) {
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            $this->line(sprintf('    %-14s %s', $label, $value));
+        }
+    }
+
+    /** Turn the status into something actionable. */
+    private function hint(TidalResult $result): void
+    {
+        $hint = match (true) {
+            $result->status === null => 'The request never reached Tidal. Check DNS and outbound HTTPS; Guzzle honours HTTP_PROXY from an environment PHP-FPM does not share with your shell.',
+            $result->status === 400 => 'The request shape is wrong. Compare it against tests/Fixtures/tidal/README.md — this is what an API migration looks like.',
+            $result->status === 401,
+            $result->status === 403 => 'Authenticated but not allowed. Check the app at developer.tidal.com has catalogue access and is approved, and that TIDAL_COUNTRY is a market you are licensed for.',
+            $result->status === 404 => 'Wrong path. Compare TIDAL_BASE_URI against the default in config/services.php; it must end in /v2/.',
+            $result->status === 429 => 'Rate limited. Retry-After is honoured, so this should clear on its own.',
+            $result->status >= 500 => 'Tidal\'s side. Already retried '.config('services.tidal.retries').' times.',
+            default => null,
+        };
+
+        if ($hint !== null) {
+            $this->line('  <fg=cyan>Likely cause:</> '.$hint);
+        }
     }
 
     /**

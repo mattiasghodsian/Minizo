@@ -8,6 +8,7 @@ use App\Support\TidalArtist;
 use App\Support\TidalRelease;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class TidalCatalogue
 {
@@ -46,18 +47,31 @@ class TidalCatalogue
             return array_map(fn (array $row): TidalArtist => TidalArtist::fromArray($row), $cached);
         }
 
+        // Tidal moved this off `searchResults/{query}`: the query used to BE the id, and now
+        // the id is opaque and the query is a filter. The old path answers 400
+        // INVALID_RESOURCE_ID for everything. Nested array, not the literal 'filter[query]',
+        // so Guzzle encodes it once - and no rawurlencode, it is a value now, not a segment.
+        //
         // `artists.profileArt`, not `artists`: an artist resource carries no image
         // attribute, the picture is a related `artworks` resource.
-        $body = $this->client->get(
-            'searchResults/'.rawurlencode($query),
-            ['include' => 'artists.profileArt'],
-        );
+        $result = $this->client->fetch('searchResults', [
+            'include' => 'artists.profileArt',
+            'filter' => ['query' => $query],
+        ]);
 
-        if ($body === null) {
-            throw TidalException::searchFailed();
+        if (! $result->succeeded()) {
+            // The query and country are the half the client does not have. Warning, not
+            // info: no status here means "nothing there" - an unknown name is a 200.
+            Log::warning('Tidal search failed', [
+                'query' => $query,
+                'country' => config('services.tidal.country'),
+                ...$result->context(),
+            ]);
+
+            throw TidalException::searchFailed($result->summary());
         }
 
-        $artists = $this->mapper->artists(TidalDocument::from($body));
+        $artists = $this->mapper->artists(TidalDocument::from($result->body));
 
         Cache::put(
             $cacheKey,
@@ -75,16 +89,18 @@ class TidalCatalogue
      */
     public function artist(string $providerId): ?TidalArtist
     {
-        $body = $this->client->get(
+        $result = $this->client->fetch(
             'artists/'.rawurlencode($providerId),
             ['include' => 'profileArt'],
         );
 
-        if ($body === null) {
+        // Still null: callers treat "no such artist" and "could not ask" alike, and the
+        // status is already in the line send() wrote.
+        if (! $result->succeeded()) {
             return null;
         }
 
-        $document = TidalDocument::from($body);
+        $document = TidalDocument::from($result->body);
 
         return $this->mapper->artist($document, $document->data());
     }
@@ -116,15 +132,30 @@ class TidalCatalogue
         $query = ['include' => 'albums.coverArt', 'limit' => (int) config('minizo.feed.import_limit', 50)];
 
         for ($page = 0; $page < (int) config('minizo.feed.max_pages', 3); $page++) {
-            $body = $this->client->get($path, $query);
+            $result = $this->client->fetch($path, $query);
 
-            if ($body === null) {
-                // A failure partway through pagination keeps what was already collected: a
-                // partial import is strictly better than none, and the next sync completes it.
-                break;
+            if (! $result->succeeded()) {
+                /*
+                 * Failing partway keeps what was collected; the next sync completes it.
+                 *
+                 * Failing on page 0 collected nothing, and breaking used to fall into
+                 * Cache::put - pinning "no releases" for the whole TTL, with last_synced_at
+                 * stamped on top. Throwing caches nothing and SyncArtistReleasesJob already
+                 * catches it. A 404 is exempt: that genuinely means "no albums".
+                 */
+                if ($page > 0 || $result->isNotFound()) {
+                    break;
+                }
+
+                Log::warning('Tidal releases lookup failed', [
+                    'artist' => $artistProviderId,
+                    ...$result->context(),
+                ]);
+
+                throw TidalException::releasesFailed($artistProviderId, $result->summary());
             }
 
-            $document = TidalDocument::from($body);
+            $document = TidalDocument::from($result->body);
 
             foreach ($this->mapper->releases($document) as $release) {
                 // Keyed on identity, not id: Tidal lists regional pressings as separate

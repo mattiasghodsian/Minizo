@@ -54,5 +54,9 @@ class AuthServiceProvider extends ServiceProvider
 
         // The admin-only "viewing as" pills on Download and Feed.
         Gate::define('preview-other-users', fn (User $user): bool => $user->isAdmin());
+
+        // HTTP statuses from an integration failure. Only useful to someone who can change
+        // .env or the app registration, and not to whoever typed an artist name.
+        Gate::define('see-integration-diagnostics', fn (User $user): bool => $user->isAdmin());
     }
 }

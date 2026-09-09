@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\TidalException;
+use App\Services\Tidal\TidalClient;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -12,7 +14,8 @@ use Throwable;
 
 class MinizoDoctor extends Command
 {
-    protected $signature = 'minizo:doctor';
+    protected $signature = 'minizo:doctor
+        {--offline : skip the live integration checks}';
 
     protected $description = 'Check the binaries, disks and integrations Minizo depends on';
 
@@ -49,7 +52,7 @@ class MinizoDoctor extends Command
 
         $failures += $this->checkBinaries();
         $failures += $this->checkLibraryDisk();
-        $this->reportIntegrations();
+        $failures += $this->checkIntegrations();
 
         $this->newLine();
 
@@ -153,26 +156,86 @@ class MinizoDoctor extends Command
         return 0;
     }
 
-    /** Report whether Tidal and MusicBrainz are configured. */
-    private function reportIntegrations(): void
+    /** Report the integrations, and prove Tidal actually answers. */
+    private function checkIntegrations(): int
     {
         $this->newLine();
         $this->line('  Integrations');
 
-        foreach ([
-            'MusicBrainz' => ['services.musicbrainz.token', 'metadata lookup'],
-            // TIDAL needs both halves of the client-credentials pair, so check the
-            // secret: an id without a secret cannot obtain a token.
-            'TIDAL' => ['services.tidal.client_secret', 'the artist feed'],
-        ] as $name => [$key, $feature]) {
-            $configured = filled(config($key));
+        $this->reportToken('MusicBrainz', 'services.musicbrainz.token', 'metadata lookup');
 
-            $this->line($configured
-                ? sprintf('  <fg=green>ok</>      %-12s configured', $name)
-                // Unconfigured is a supported state, not a failure: the feature
-                // degrades and the rest of the app keeps working.
-                : sprintf('  <fg=yellow>warn</>    %-12s no token — %s is unavailable', $name, $feature),
-            );
+        // Both halves, not just the secret: an id without a secret cannot obtain a token,
+        // and checking one meant an install missing the other reported ok.
+        $id = filled(config('services.tidal.client_id'));
+        $secret = filled(config('services.tidal.client_secret'));
+
+        if (! $id || ! $secret) {
+            $missing = match (true) {
+                ! $id && ! $secret => 'no client id or secret',
+                ! $id => 'no client id',
+                default => 'no client secret',
+            };
+
+            // Unconfigured is a supported state, not a failure: the feature degrades and
+            // the rest of the app keeps working.
+            $this->line(sprintf('  <fg=yellow>warn</>    %-12s %s — the artist feed is unavailable', 'TIDAL', $missing));
+
+            return 0;
         }
+
+        $this->line(sprintf('  <fg=green>ok</>      %-12s client id and secret present', 'TIDAL'));
+
+        if ($this->option('offline')) {
+            return 0;
+        }
+
+        return $this->checkTidalReachable();
+    }
+
+    /** Ask Tidal the same thing the Feed asks. A check of some other path proves nothing. */
+    private function checkTidalReachable(): int
+    {
+        $client = app(TidalClient::class);
+        $minted = ! $client->hasCachedToken();
+        $startedAt = microtime(true);
+
+        try {
+            $result = $client->fetch('searchResults', [
+                'include' => 'artists.profileArt',
+                'filter' => ['query' => 'ANITTA'],
+            ]);
+        } catch (TidalException $e) {
+            $this->line(sprintf('  <fg=red>FAIL</>    %-12s %s', 'TIDAL', $e->detailedMessage()));
+            $this->line('          Run `php artisan minizo:tidal:probe ANITTA --fresh` for the full diagnosis.');
+
+            return 1;
+        }
+
+        $elapsed = (int) round((microtime(true) - $startedAt) * 1000);
+
+        if (! $result->succeeded()) {
+            $this->line(sprintf('  <fg=red>FAIL</>    %-12s catalogue refused the request — %s', 'TIDAL', $result->summary()));
+            $this->line('          Run `php artisan minizo:tidal:probe ANITTA --fresh` for the full diagnosis.');
+
+            return 1;
+        }
+
+        $this->line(sprintf(
+            '  <fg=green>ok</>      %-12s catalogue answered in %dms (token %s)',
+            'TIDAL',
+            $elapsed,
+            $minted ? 'minted' : 'reused',
+        ));
+
+        return 0;
+    }
+
+    /** A token-or-not line for an integration with nothing to call. */
+    private function reportToken(string $name, string $key, string $feature): void
+    {
+        $this->line(filled(config($key))
+            ? sprintf('  <fg=green>ok</>      %-12s configured', $name)
+            : sprintf('  <fg=yellow>warn</>    %-12s no token — %s is unavailable', $name, $feature),
+        );
     }
 }

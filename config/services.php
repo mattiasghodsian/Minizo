@@ -88,6 +88,14 @@ return [
         'base_uri' => env('TIDAL_BASE_URI', 'https://openapi.tidal.com/v2/'),
         'country' => env('TIDAL_COUNTRY', 'US'),
         'timeout' => (int) env('TIDAL_TIMEOUT', 15),
+
+        // Only 429 and 5xx are retried - a 400/401/403/404 is a decision Tidal repeats
+        // identically. Note the worst case is timeout x retries, so raising both can hold a
+        // web request for longer than the web server will wait; connect_timeout keeps a dead
+        // host from spending that budget on a connection that was never going to open.
+        'retries' => (int) env('TIDAL_RETRIES', 3),
+        'retry_delay' => (int) env('TIDAL_RETRY_DELAY', 200),
+        'connect_timeout' => (int) env('TIDAL_CONNECT_TIMEOUT', 5),
     ],
 
 ];

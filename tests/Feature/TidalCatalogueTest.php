@@ -5,9 +5,11 @@ namespace Tests\Feature;
 use App\Exceptions\TidalException;
 use App\Services\Tidal\TidalCatalogue;
 use App\Services\Tidal\TidalClient;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Sleep;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\ReadsFixtures;
 use Tests\TestCase;
@@ -28,6 +30,10 @@ class TidalCatalogueTest extends TestCase
         ]);
 
         Cache::flush();
+
+        // The retry policy backs off between attempts. Faked so the negative tests still
+        // exercise the retry without spending the delay.
+        Sleep::fake();
     }
 
     private function fakeToken(int $expiresIn = 3600): void
@@ -128,17 +134,41 @@ class TidalCatalogueTest extends TestCase
     }
 
     #[Test]
-    public function the_query_goes_in_the_path_url_encoded(): void
+    public function the_query_goes_in_a_filter_not_in_the_path(): void
     {
         Http::fake([
             'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
             'openapi.tidal.com/*' => Http::response(['data' => [], 'included' => []]),
         ]);
 
-        // A slash in an artist name would otherwise change which endpoint is being called.
+        // This test used to assert the opposite - `searchResults/AC%2FDC` - and it is why a
+        // total outage shipped green: every other fake is a wildcard, so nothing else looks
+        // at the path. Tidal moved the query off the path and the old shape now 400s.
         app(TidalCatalogue::class)->searchArtists('AC/DC');
 
-        Http::assertSent(fn (Request $request): bool => str_contains($request->url(), 'searchResults/AC%2FDC'));
+        Http::assertSent(function (Request $request): bool {
+            $url = $request->url();
+
+            return str_contains($url, 'searchResults?')
+                && ! str_contains($url, 'searchResults/')
+                // Encoded exactly once. rawurlencode on top of Guzzle's own encoding would
+                // send AC%252FDC and search for a literal percent sign.
+                && str_contains($url, 'filter%5Bquery%5D=AC%2FDC');
+        });
+    }
+
+    #[Test]
+    public function a_non_ascii_query_is_encoded_once(): void
+    {
+        Http::fake([
+            'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
+            'openapi.tidal.com/*' => Http::response(['data' => [], 'included' => []]),
+        ]);
+
+        app(TidalCatalogue::class)->searchArtists('björk');
+
+        // Verified against the live API: this is the form Tidal echoes back unchanged.
+        Http::assertSent(fn (Request $request): bool => str_contains($request->url(), 'filter%5Bquery%5D=bj%C3%B6rk'));
     }
 
     #[Test]
@@ -308,7 +338,7 @@ class TidalCatalogueTest extends TestCase
         // - three ids for one FIFA single, two for one album - so more than half of an
         // unfiltered feed would be visible duplicates.
         $this->assertCount(9, $releases);
-        $this->assertSame('LOCA', $releases[0]->title);
+        $this->assertSame('EQUILIBRIVM', $releases[0]->title);
 
         Http::assertSent(fn (Request $r): bool => str_contains($r->url(), 'artists/4906194/relationships/albums')
             // Nested, for the same reason search needs artists.profileArt: an album's artwork
@@ -388,7 +418,10 @@ class TidalCatalogueTest extends TestCase
 
         Http::fakeSequence('openapi.tidal.com/v2/artists/*')
             ->push($this->tidalFixture('artist-releases'))
-            ->push(['errors' => [['detail' => 'gateway']]], 502);
+            ->push(['errors' => [['detail' => 'gateway']]], 502)
+            // A 502 is retried, and the outage is still there on each attempt. Without this
+            // the sequence empties and throws instead of answering.
+            ->whenEmpty(Http::response(['errors' => [['detail' => 'gateway']]], 502));
 
         $releases = app(TidalCatalogue::class)->releasesFor('4906194');
 
@@ -430,8 +463,8 @@ class TidalCatalogueTest extends TestCase
 
         // The sync job and a page render can ask within seconds of each other.
         $this->assertEquals($first, $second);
-        $this->assertSame('2026-07-10', $second[0]->releasedOn?->toDateString());
-        $this->assertSame('single', $second[0]->type?->value);
+        $this->assertSame('2026-07-23', $second[0]->releasedOn?->toDateString());
+        $this->assertSame('album', $second[0]->type?->value);
         $this->assertStringEndsWith('/320x320.jpg', (string) $second[0]->coverUrl);
     }
 
@@ -467,5 +500,129 @@ class TidalCatalogueTest extends TestCase
         // serve one region's catalogue to another.
         $this->assertNotNull(Cache::get('minizo:tidal:releases:4906194:SE'));
         $this->assertNull(Cache::get('minizo:tidal:releases:4906194:US'));
+    }
+
+    // ----------------------------------------------------------------- diagnostics
+
+    #[Test]
+    public function a_persistently_rejected_token_names_the_status_instead_of_a_search_failure(): void
+    {
+        Http::fake([
+            'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
+            'openapi.tidal.com/*' => Http::response(['errors' => [['detail' => 'Token is not entitled']]], 401),
+        ]);
+
+        // The regression this whole change exists for: two 401s used to return null and
+        // surface as "did not respond", with nothing in the log at all.
+        try {
+            app(TidalCatalogue::class)->searchArtists('Anitta');
+            $this->fail('a rejected bearer should throw');
+        } catch (TidalException $e) {
+            $this->assertStringNotContainsString('did not respond', $e->getMessage());
+            $this->assertStringContainsString('401', (string) $e->diagnostic);
+            $this->assertStringContainsString('Token is not entitled', (string) $e->diagnostic);
+        }
+
+        $this->assertNull(Cache::get('minizo:tidal:search:'.sha1('anitta|SE')));
+    }
+
+    #[Test]
+    public function a_search_failure_carries_the_status_and_detail_without_showing_them_to_everyone(): void
+    {
+        Http::fake([
+            'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
+            'openapi.tidal.com/*' => Http::response(['errors' => [['detail' => 'Invalid resource ID']]], 400),
+        ]);
+
+        try {
+            app(TidalCatalogue::class)->searchArtists('Anitta');
+            $this->fail('a 400 should throw');
+        } catch (TidalException $e) {
+            // The friendly half stays clean; the status rides along for admins only.
+            $this->assertStringNotContainsString('400', $e->getMessage());
+            $this->assertStringContainsString('400', $e->detailedMessage());
+            $this->assertStringContainsString('Invalid resource ID', $e->detailedMessage());
+        }
+    }
+
+    #[Test]
+    public function a_search_that_cannot_connect_says_so_rather_than_naming_a_status(): void
+    {
+        Http::fake([
+            'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
+            'openapi.tidal.com/*' => Http::failedConnection(),
+        ]);
+
+        try {
+            app(TidalCatalogue::class)->searchArtists('Anitta');
+            $this->fail('an unreachable host should throw');
+        } catch (TidalException $e) {
+            $this->assertStringContainsString('could not reach Tidal', (string) $e->diagnostic);
+        }
+    }
+
+    #[Test]
+    public function a_permanent_rejection_is_not_retried(): void
+    {
+        Http::fake([
+            'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
+            'openapi.tidal.com/*' => Http::response(['errors' => [['detail' => 'Invalid resource ID']]], 400),
+        ]);
+
+        try {
+            app(TidalCatalogue::class)->searchArtists('Anitta');
+        } catch (TidalException) {
+            // asserted below
+        }
+
+        // Tidal repeats a 400 identically, so retrying it would only turn a 15s failure
+        // into a 45s one. Token + one attempt.
+        Http::assertSentCount(2);
+    }
+
+    #[Test]
+    public function a_429_is_retried_and_honours_retry_after(): void
+    {
+        Http::fake(['auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600])]);
+
+        Http::fakeSequence('openapi.tidal.com/v2/searchResults*')
+            ->push(['errors' => [['detail' => 'slow down']]], 429, ['Retry-After' => '1'])
+            ->push($this->tidalFixture('artist-search'));
+
+        $this->assertCount(20, app(TidalCatalogue::class)->searchArtists('Anitta'));
+
+        Sleep::assertSlept(fn (CarbonInterval $duration): bool => $duration->totalMilliseconds === 1000.0);
+    }
+
+    #[Test]
+    public function a_total_failure_on_the_first_page_of_releases_caches_nothing(): void
+    {
+        Http::fake([
+            'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
+            'openapi.tidal.com/*' => Http::response(['errors' => [['detail' => 'boom']]], 500),
+        ]);
+
+        // Breaking here used to fall into Cache::put and pin "no releases" for the whole TTL.
+        $this->expectException(TidalException::class);
+
+        try {
+            app(TidalCatalogue::class)->releasesFor('4906194');
+        } finally {
+            $this->assertNull(Cache::get('minizo:tidal:releases:4906194:SE'));
+        }
+    }
+
+    #[Test]
+    public function an_artist_with_no_albums_still_caches_an_empty_list(): void
+    {
+        Http::fake([
+            'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
+            'openapi.tidal.com/*' => Http::response(['errors' => [['detail' => 'not found']]], 404),
+        ]);
+
+        // A 404 is an ANSWER here, not an outage - so unlike the test above it caches, and
+        // does not put a warning in the log on every sync.
+        $this->assertSame([], app(TidalCatalogue::class)->releasesFor('4906194'));
+        $this->assertSame([], Cache::get('minizo:tidal:releases:4906194:SE'));
     }
 }

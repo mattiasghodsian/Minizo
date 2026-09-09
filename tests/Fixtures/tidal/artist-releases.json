@@ -1,6 +1,22 @@
 {
     "data": [
         {
+            "id": "515757594",
+            "type": "albums"
+        },
+        {
+            "id": "545598782",
+            "type": "albums"
+        },
+        {
+            "id": "545562705",
+            "type": "albums"
+        },
+        {
+            "id": "515757561",
+            "type": "albums"
+        },
+        {
             "id": "539663607",
             "type": "albums"
         },
@@ -13,27 +29,11 @@
             "type": "albums"
         },
         {
-            "id": "524841978",
-            "type": "albums"
-        },
-        {
             "id": "524815530",
             "type": "albums"
         },
         {
-            "id": "545598782",
-            "type": "albums"
-        },
-        {
-            "id": "515757594",
-            "type": "albums"
-        },
-        {
-            "id": "545562705",
-            "type": "albums"
-        },
-        {
-            "id": "515757561",
+            "id": "524841978",
             "type": "albums"
         },
         {
@@ -49,7 +49,7 @@
             "type": "albums"
         },
         {
-            "id": "507748355",
+            "id": "508222182",
             "type": "albums"
         },
         {
@@ -57,7 +57,7 @@
             "type": "albums"
         },
         {
-            "id": "508222182",
+            "id": "507748355",
             "type": "albums"
         },
         {
@@ -65,19 +65,19 @@
             "type": "albums"
         },
         {
-            "id": "510836518",
-            "type": "albums"
-        },
-        {
             "id": "507748402",
             "type": "albums"
         },
         {
-            "id": "502695642",
+            "id": "510836518",
             "type": "albums"
         },
         {
-            "id": "502695885",
+            "id": "510836769",
+            "type": "albums"
+        },
+        {
+            "id": "502695642",
             "type": "albums"
         }
     ],
@@ -136,56 +136,6 @@
                     ],
                     "links": {
                         "self": "/albums/502695642/relationships/coverArt?countryCode=US"
-                    }
-                }
-            }
-        },
-        {
-            "id": "502695885",
-            "type": "albums",
-            "attributes": {
-                "title": "Pinterest (Portuguese) - A COLORS SHOW",
-                "barcodeId": "00199957522229",
-                "numberOfVolumes": 1,
-                "numberOfItems": 1,
-                "duration": "PT2M14S",
-                "explicit": false,
-                "releaseDate": "2026-03-06",
-                "copyright": {
-                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
-                },
-                "popularity": 0.2768206674438914,
-                "accessType": "PUBLIC",
-                "availability": [
-                    "STREAM",
-                    "DJ"
-                ],
-                "mediaTags": [
-                    "HIRES_LOSSLESS",
-                    "LOSSLESS"
-                ],
-                "externalLinks": [
-                    {
-                        "href": "https://tidal.com/browse/album/502695885",
-                        "meta": {
-                            "type": "TIDAL_SHARING"
-                        }
-                    }
-                ],
-                "type": "SINGLE",
-                "albumType": "SINGLE",
-                "createdAt": "2026-02-27T02:07:20Z"
-            },
-            "relationships": {
-                "coverArt": {
-                    "data": [
-                        {
-                            "id": "2xpmpI1s9E0hfrOlkUS8fd",
-                            "type": "artworks"
-                        }
-                    ],
-                    "links": {
-                        "self": "/albums/502695885/relationships/coverArt?countryCode=US"
                     }
                 }
             }
@@ -487,6 +437,55 @@
             }
         },
         {
+            "id": "510836769",
+            "type": "albums",
+            "attributes": {
+                "title": "Pinterest – A COLORS SHOW",
+                "barcodeId": "00199957759700",
+                "numberOfVolumes": 1,
+                "numberOfItems": 2,
+                "duration": "PT4M30S",
+                "explicit": false,
+                "releaseDate": "2026-03-06",
+                "copyright": {
+                    "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+                },
+                "popularity": 0.044288395229251466,
+                "accessType": "PUBLIC",
+                "availability": [
+                    "STREAM",
+                    "DJ"
+                ],
+                "mediaTags": [
+                    "DOLBY_ATMOS"
+                ],
+                "externalLinks": [
+                    {
+                        "href": "https://tidal.com/browse/album/510836769",
+                        "meta": {
+                            "type": "TIDAL_SHARING"
+                        }
+                    }
+                ],
+                "type": "SINGLE",
+                "albumType": "SINGLE",
+                "createdAt": "2026-03-28T00:48:57Z"
+            },
+            "relationships": {
+                "coverArt": {
+                    "data": [
+                        {
+                            "id": "2xpmpI1s9E0hl8r3JR7cU5",
+                            "type": "artworks"
+                        }
+                    ],
+                    "links": {
+                        "self": "/albums/510836769/relationships/coverArt?countryCode=US"
+                    }
+                }
+            }
+        },
+        {
             "id": "514187821",
             "type": "albums",
             "attributes": {
@@ -500,7 +499,7 @@
                 "copyright": {
                     "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
                 },
-                "popularity": 0.4188439627899413,
+                "popularity": 0.459635198064409,
                 "accessType": "PUBLIC",
                 "availability": [
                     "STREAM",
@@ -599,7 +598,7 @@
                 "copyright": {
                     "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
                 },
-                "popularity": 0.1824956707732167,
+                "popularity": 0.19551975545394013,
                 "accessType": "PUBLIC",
                 "availability": [
                     "STREAM",
@@ -644,11 +643,11 @@
                 "numberOfItems": 15,
                 "duration": "PT43M13S",
                 "explicit": false,
-                "releaseDate": "2026-04-17",
+                "releaseDate": "2026-07-23",
                 "copyright": {
                     "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
                 },
-                "popularity": 0.2519406736042096,
+                "popularity": 0.29636155832690836,
                 "accessType": "PUBLIC",
                 "availability": [
                     "STREAM",
@@ -693,11 +692,11 @@
                 "numberOfItems": 15,
                 "duration": "PT43M13S",
                 "explicit": false,
-                "releaseDate": "2026-04-17",
+                "releaseDate": "2026-07-23",
                 "copyright": {
                     "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
                 },
-                "popularity": 0.5058343086649745,
+                "popularity": 0.6255560619188167,
                 "accessType": "PUBLIC",
                 "availability": [
                     "STREAM",
@@ -747,7 +746,7 @@
                 "copyright": {
                     "text": "© 2026 SALXCO Records, Inc."
                 },
-                "popularity": 0.2466299272968569,
+                "popularity": 0.26486585124296863,
                 "accessType": "PUBLIC",
                 "availability": [
                     "STREAM",
@@ -796,7 +795,7 @@
                 "copyright": {
                     "text": "© 2026 SALXCO Records, Inc."
                 },
-                "popularity": 0.4496647736162764,
+                "popularity": 0.49461948585454785,
                 "accessType": "PUBLIC",
                 "availability": [
                     "STREAM",
@@ -895,7 +894,7 @@
                 "copyright": {
                     "text": "© 2026 Golden Records, Under Exclusive Distribution To Minos EMI SA / A Universal Music Group Company"
                 },
-                "popularity": 0.335501229025044,
+                "popularity": 0.2215157842701603,
                 "accessType": "PUBLIC",
                 "availability": [
                     "STREAM",
@@ -945,7 +944,7 @@
                 "copyright": {
                     "text": "© 2026 Golden Records, Under Exclusive Distribution To Minos EMI SA / A Universal Music Group Company"
                 },
-                "popularity": 0.335501229025044,
+                "popularity": 0.23285419589738948,
                 "accessType": "PUBLIC",
                 "availability": [
                     "STREAM",
@@ -990,11 +989,11 @@
                 "numberOfItems": 32,
                 "duration": "PT1H33M16S",
                 "explicit": false,
-                "releaseDate": "2026-04-17",
+                "releaseDate": "2026-07-23",
                 "copyright": {
                     "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
                 },
-                "popularity": 0.15693529862331881,
+                "popularity": 0.23746048319740662,
                 "accessType": "PUBLIC",
                 "availability": [
                     "STREAM",
@@ -1039,11 +1038,11 @@
                 "numberOfItems": 32,
                 "duration": "PT1H33M16S",
                 "explicit": false,
-                "releaseDate": "2026-04-17",
+                "releaseDate": "2026-07-23",
                 "copyright": {
                     "text": "© 2026 Floresta Records Inc., under exclusive license to Republic Records, a division of UMG Recordings, Inc."
                 },
-                "popularity": 0.45678142975571434,
+                "popularity": 0.6255560619188167,
                 "accessType": "PUBLIC",
                 "availability": [
                     "STREAM",
@@ -1138,69 +1137,6 @@
                 "visualMetadata": {
                     "selectedPaletteColor": "#2B5172",
                     "blurHash": "UHG,*TV[80Xo$yt6Shr?pekC-4WBb_s-xWRk",
-                    "status": "OK"
-                }
-            }
-        },
-        {
-            "id": "2xpmpI1s9E0hfrOlkUS8fd",
-            "type": "artworks",
-            "attributes": {
-                "mediaType": "IMAGE",
-                "files": [
-                    {
-                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/1280x1280.jpg",
-                        "meta": {
-                            "width": 1280,
-                            "height": 1280
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/1080x1080.jpg",
-                        "meta": {
-                            "width": 1080,
-                            "height": 1080
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/750x750.jpg",
-                        "meta": {
-                            "width": 750,
-                            "height": 750
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/640x640.jpg",
-                        "meta": {
-                            "width": 640,
-                            "height": 640
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/320x320.jpg",
-                        "meta": {
-                            "width": 320,
-                            "height": 320
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/160x160.jpg",
-                        "meta": {
-                            "width": 160,
-                            "height": 160
-                        }
-                    },
-                    {
-                        "href": "https://resources.tidal.com/images/1ce353b6/789d/4b36/9b59/beed9b31d052/80x80.jpg",
-                        "meta": {
-                            "width": 80,
-                            "height": 80
-                        }
-                    }
-                ],
-                "visualMetadata": {
-                    "selectedPaletteColor": "#581111",
-                    "blurHash": "UKF}1l~qR69G00DiR+tSXTbbbEs.o}x]xujF",
                     "status": "OK"
                 }
             }
@@ -1570,6 +1506,69 @@
                     },
                     {
                         "href": "https://resources.tidal.com/images/31598760/d0b8/4fad/9cd6/64b18adb9f0e/80x80.jpg",
+                        "meta": {
+                            "width": 80,
+                            "height": 80
+                        }
+                    }
+                ],
+                "visualMetadata": {
+                    "selectedPaletteColor": "#630F32",
+                    "blurHash": "UJH0o1~q9sIA0J8_RQyDEdoztRWAcC%M%2RP",
+                    "status": "OK"
+                }
+            }
+        },
+        {
+            "id": "2xpmpI1s9E0hl8r3JR7cU5",
+            "type": "artworks",
+            "attributes": {
+                "mediaType": "IMAGE",
+                "files": [
+                    {
+                        "href": "https://resources.tidal.com/images/7d84f0be/e0d9/469c/af2a/faafeceb92fd/1280x1280.jpg",
+                        "meta": {
+                            "width": 1280,
+                            "height": 1280
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/7d84f0be/e0d9/469c/af2a/faafeceb92fd/1080x1080.jpg",
+                        "meta": {
+                            "width": 1080,
+                            "height": 1080
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/7d84f0be/e0d9/469c/af2a/faafeceb92fd/750x750.jpg",
+                        "meta": {
+                            "width": 750,
+                            "height": 750
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/7d84f0be/e0d9/469c/af2a/faafeceb92fd/640x640.jpg",
+                        "meta": {
+                            "width": 640,
+                            "height": 640
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/7d84f0be/e0d9/469c/af2a/faafeceb92fd/320x320.jpg",
+                        "meta": {
+                            "width": 320,
+                            "height": 320
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/7d84f0be/e0d9/469c/af2a/faafeceb92fd/160x160.jpg",
+                        "meta": {
+                            "width": 160,
+                            "height": 160
+                        }
+                    },
+                    {
+                        "href": "https://resources.tidal.com/images/7d84f0be/e0d9/469c/af2a/faafeceb92fd/80x80.jpg",
                         "meta": {
                             "width": 80,
                             "height": 80

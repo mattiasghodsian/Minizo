@@ -12,6 +12,8 @@ use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Sleep;
+use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\ReadsFixtures;
 use Tests\TestCase;
@@ -30,6 +32,9 @@ class SyncArtistReleasesJobTest extends TestCase
         ]);
 
         Cache::flush();
+
+        // Outage tests now retry; faked so the backoff costs nothing.
+        Sleep::fake();
     }
 
     #[Test]
@@ -157,5 +162,29 @@ class SyncArtistReleasesJobTest extends TestCase
             app(RateLimiter::class)->limiter('tidal'),
             'the "tidal" rate limiter must be defined for RateLimited middleware to do anything',
         );
+    }
+
+    #[Test]
+    public function a_total_release_failure_leaves_last_synced_at_alone_so_the_next_tick_retries(): void
+    {
+        Http::fake([
+            'auth.tidal.com/*' => Http::response(['access_token' => 't', 'expires_in' => 3600]),
+            'openapi.tidal.com/*' => Http::response(['errors' => [['detail' => 'boom']]], 500),
+        ]);
+
+        $artist = Artist::factory()->create(['provider_id' => '4906194', 'last_synced_at' => null]);
+
+        // The artist refresh, the releases fetch, the catalogue and the job each log one, so
+        // pin the job's own line rather than a count that moves with the layering.
+        Log::shouldReceive('warning')->with('Artist release sync could not run', Mockery::any())->once();
+        Log::shouldReceive('warning')->zeroOrMoreTimes();
+        Log::shouldReceive('info')->zeroOrMoreTimes();
+
+        (new SyncArtistReleasesJob($artist))->handle(app(FeedService::class));
+
+        // Stamping it on a total failure used to hide the outage for hours: the scheduler
+        // only picks up artists whose data has gone stale.
+        $this->assertNull($artist->fresh()?->last_synced_at);
+        $this->assertNull(Cache::get('minizo:tidal:releases:4906194:US'));
     }
 }
