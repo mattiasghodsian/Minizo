@@ -510,6 +510,16 @@ new class extends Component
         </section>
     @endif
 
+    {{-- API ================================================================
+         Its own section rather than a third card under Security, which would mean
+         unwrapping that section's 2FA/passkeys condition for a card that is
+         always available. --}}
+    <section class="flex flex-col gap-3">
+        <x-ui.section-label tone="muted">{{ __('API') }}</x-ui.section-label>
+
+        <livewire:pages::settings.api-token />
+    </section>
+
     {{-- DANGER ZONE ======================================================== --}}
     <section class="flex flex-col gap-3">
         <x-ui.section-label tone="muted">{{ __('Danger zone') }}</x-ui.section-label>

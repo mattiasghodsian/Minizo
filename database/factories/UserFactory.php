@@ -6,6 +6,7 @@ use App\Enums\AudioFormat;
 use App\Enums\Permission;
 use App\Enums\Role;
 use App\Models\User;
+use App\Support\ApiToken;
 use App\Support\FolderAccess;
 use App\Support\Permissions;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -159,6 +160,18 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Holds this API token. The plaintext is the caller's to send; only its hash is stored.
+     */
+    public function withApiToken(string $plain = 'mnz_test-token'): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'api_token' => ApiToken::hash($plain),
+            'api_token_created_at' => now(),
+            'api_token_last_used_at' => null,
         ]);
     }
 

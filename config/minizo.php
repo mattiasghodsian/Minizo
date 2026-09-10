@@ -267,6 +267,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | API
+    |--------------------------------------------------------------------------
+    |
+    | The read-only feed endpoint, authenticated with a per-user token generated on
+    | the Settings screen. See routes/api.php.
+    |
+    | Only the limit is configurable. The token's prefix and length are constants in
+    | App\Support\ApiToken, because changing either would invalidate every live token.
+    |
+    */
+
+    'api' => [
+        'rate_limit' => (int) env('MINIZO_API_RATE_LIMIT', 60),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Page headings
     |--------------------------------------------------------------------------
     |

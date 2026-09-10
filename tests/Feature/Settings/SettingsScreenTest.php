@@ -36,6 +36,7 @@ class SettingsScreenTest extends TestCase
             ->assertOk()
             ->assertSee('Profile')
             ->assertSee('Password')
+            ->assertSee('API access')
             ->assertSee('Delete account');
     }
 

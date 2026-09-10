@@ -43,6 +43,7 @@ with what you actually own.
 - **Download.** Queue a URL and watch it land as a FLAC in the folder you picked, via yt-dlp and ffmpeg.
 - **Metadata.** Search MusicBrainz, pick the release and track, and write tags and cover art into the file.
 - **Feed.** Follow artists and see their new releases, refreshed hourly from TIDAL.
+- **API.** A read-only JSON feed endpoint, authenticated with a personal token from Settings, so your own apps can consume what you follow.
 - **Share links.** Publish an expiring public link to a track or folder, with a kill switch and an audit trail.
 - **Users & permissions.** Roles, per-folder access, and six permissions — edit, move, download, delete, downloader, share.
 - **Accounts.** Password login, reset and verification, TOTP two-factor with recovery codes, and passkeys.
@@ -164,10 +165,33 @@ knowing about:
 | `SESSION_SECURE_COOKIE` | Set to `true` when you serve over HTTPS. Left `false` by default so a plain-HTTP LAN install can log in at all. |
 | `APP_REGISTER` / `APP_FORGOTPASS` | Turn public registration and password reset on or off. |
 | `MINIZO_SHARING_ENABLED` | Whether public sharing starts on for a **fresh** install. Once an admin flips the toggle on the Users screen, the stored value wins. |
+| `MINIZO_API_RATE_LIMIT` | Requests per minute per API token against `GET /api/feed`, default 60. Keyed on the token, not the IP. |
 
 Everything else — cache TTLs, download retries and stall timeout, FLAC compression level,
 rate limits, share retention, feed sync batching — lives in [config/minizo.php](config/minizo.php),
 where each option is documented next to the reasoning for its default.
+
+## API
+Minizo exposes one read-only endpoint, so you can render your own feed in your own apps.
+
+Generate a token under **Settings -> API**. 
+
+```
+GET /api/feed
+Authorization: Bearer mnz_...
+```
+
+```bash
+curl -H "Authorization: Bearer mnz_..." https://example.com/api/feed
+```
+
+| Status | Meaning |
+| --- | --- |
+| `200` | The feed, including an empty `data` array if you follow nobody. |
+| `401` | Token missing, malformed or unknown. |
+| `403` | The account behind the token has been deactivated. |
+| `429` | Over `MINIZO_API_RATE_LIMIT` for this token. |
+
 
 ## COMMANDS
 | Command | Purpose |

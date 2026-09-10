@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
@@ -39,11 +40,14 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $download_folder_lock
  * @property AudioFormat|null $download_format_lock
  * @property int $pagination_size
+ * @property string|null $api_token
+ * @property Carbon|null $api_token_created_at
+ * @property Carbon|null $api_token_last_used_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
 #[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+#[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token', 'api_token'])]
 class User extends Authenticatable implements PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
@@ -69,6 +73,8 @@ class User extends Authenticatable implements PasskeyUser
             'can_downloader' => 'boolean',
             'can_share' => 'boolean',
             'download_format_lock' => AudioFormat::class,
+            'api_token_created_at' => 'datetime',
+            'api_token_last_used_at' => 'datetime',
         ];
     }
 
@@ -100,6 +106,24 @@ class User extends Authenticatable implements PasskeyUser
             ->using(ArtistFollow::class)
             ->withPivot('last_viewed_at')
             ->withTimestamps();
+    }
+
+    /**
+     * Followed artists with their recent releases: the read behind both the Feed screen and the API.
+     *
+     * Stored rows only, no Tidal call — which is what lets the API serve it without the
+     * Tidal service, and keep working when credentials are absent.
+     *
+     * @return Collection<int, Artist>
+     */
+    public function feed(): Collection
+    {
+        $perArtist = (int) config('minizo.feed.releases_per_artist', 6);
+
+        return $this->followedArtists()
+            ->with(['releases' => fn ($query) => $query->newestFirst()->limit($perArtist)])
+            ->orderBy('name')
+            ->get();
     }
 
     /** Which folders this user may see. */

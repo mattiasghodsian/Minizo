@@ -180,16 +180,14 @@ class FeedService
     /**
      * The Feed screen's data: each followed artist with their recent releases.
      *
+     * Lives on the model so the API can read it without resolving this service, which
+     * would drag the Tidal HTTP stack in for a query that never uses it.
+     *
      * @return Collection<int, Artist>
      */
     public function feedFor(User $user): Collection
     {
-        $perArtist = (int) config('minizo.feed.releases_per_artist', 6);
-
-        return $user->followedArtists()
-            ->with(['releases' => fn ($query) => $query->newestFirst()->limit($perArtist)])
-            ->orderBy('name')
-            ->get();
+        return $user->feed();
     }
 
     /**

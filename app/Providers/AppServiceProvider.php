@@ -43,6 +43,12 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('tidal', fn () => Limit::perMinute(
             (int) config('minizo.feed.requests_per_minute', 60)
         ));
+
+        // Keyed on the token, not the IP: several users behind one NAT would otherwise
+        // share a bucket. Hashed, because a cache key is no place for a live credential.
+        RateLimiter::for('minizo-api', fn (Request $request) => Limit::perMinute(
+            (int) config('minizo.api.rate_limit', 60)
+        )->by(hash('sha256', (string) ($request->bearerToken() ?: $request->ip() ?: 'unknown'))));
     }
 
     /** Teach `composer dev` about the downloads queue. */
